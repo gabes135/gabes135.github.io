@@ -19,9 +19,9 @@
 # in the templates via {{ site.myvariable }}.
 
 title: Gabe Schumm
-email: gschum  at bu  dot com
+email: gschumm  at bu  dot com
 description: >- # this means to ignore newlines until "baseurl:"
-  A website to share my personal projects and research. 
+  Physics PhD candidate at Boston University.
 baseurl: "" # the subpath of your site, e.g. /blog
 url: "" # the base hostname & protocol for your site, e.g. http://example.com
 # twitter_username: jekyllrb
@@ -29,18 +29,30 @@ github_username: gabes135
 permalink: none
 
 collections:
-  baking:
-    output: true
   sports:
     output: true
   research:
     output: true
+
+
+header_pages:
+  - cv.md
+  - research.md
+  - projects.md
+
 
 # Build settings
 theme: minima
 plugins:
   - jekyll-feed
   - jekyll-seo-tag
+
+
+carousels:
+  - images: 
+    - image: /assets/images/other/PJ_graphic.jpg
+    - image: /assets/images/other/so_composition_verlander.jpg
+    - image: /assets/images/other/career_scoring.jpg
 
 
 
