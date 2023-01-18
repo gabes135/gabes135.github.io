@@ -33,6 +33,8 @@ collections:
     output: true
   research:
     output: true
+  slides:
+    output: true
 
 
 header_pages:
@@ -46,6 +48,16 @@ theme: minima
 plugins:
   - jekyll-feed
   - jekyll-seo-tag
+
+
+defaults:
+  -
+    scope:
+      path: "_slides" 
+    values:
+      layout: "iframe"
+
+
 
 
 # Exclude from processing.

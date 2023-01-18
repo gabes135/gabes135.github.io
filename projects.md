@@ -1,11 +1,13 @@
 ---
-layout: projects
+layout: page
 title: Projects
 permalink: /projects/
 
-image_sliders:
-  - slider1
+
 ---
 
+Test
 
-{% include slider.html selector="slider3" %}
+<iframe class="slideshow-iframe" src="https://gabes135.github.io/slides/my-pics1.html"
+style="width:100%" frameborder="0" scrolling="no" onload="resizeIframe(this)"></iframe>
+
