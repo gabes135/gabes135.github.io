@@ -2,8 +2,10 @@
 layout: page
 title: Projects
 permalink: /projects/
+
+image_sliders:
+  - slider1
 ---
 
-Test
 
-{% include carousel.html height="50" unit="%" duration="7" number="1" %}
+{% include slider.html selector="slider3" %}

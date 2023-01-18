@@ -48,15 +48,6 @@ plugins:
   - jekyll-seo-tag
 
 
-carousels:
-  - images: 
-    - image: /assets/images/other/PJ_graphic.jpg
-    - image: /assets/images/other/so_composition_verlander.jpg
-    - image: /assets/images/other/career_scoring.jpg
-
-
-
-
 # Exclude from processing.
 # The following items will not be processed, by default.
 # Any item listed under the `exclude:` key here will be automatically added to
