@@ -1,10 +1,11 @@
 ---
 layout: iframe
 title: My pictures gallery
+permalink: /slides/my-pics2.html
 item: 1
 auto: true
 loop: true
-speed: 1000
+speed: 100
 pause: 4000
 pager: "false"
 controls: "false"
