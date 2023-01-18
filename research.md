@@ -9,6 +9,8 @@ I am currently in the third year my PhD program at Boston University, where I st
 
 My research focuses on computational studies of these quantum systems. Often times, the quantum interactions governing the system we are studying are far too complex to fully understand using the analytic tools we have, which is where numerics comes in. Using the methods of Computational Many Body Physics, we can simulate, to high precision, the electronic and magnetic properties of a wealth of different interacting materials in their equillibrium states. 
 
+In addition to my work on individual quantum systems, I also help develop computational methods that can be applied to a wide range of both quantum and classical systems.
+
 $$
 \tilde{}
 $$
@@ -20,4 +22,4 @@ One of the most powerful tools in Computational Physicist's toolbox is **Monte C
 	<img src="/assets/images/pi_100.gif" width="400" height="400">
 </p>
 
-[jekyll-organization]: https://github.com/jekyll
+
