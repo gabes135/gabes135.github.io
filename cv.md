@@ -21,8 +21,10 @@ title_custom: Curriculum Vitae
 #### Research with the the Space Sciences Laboratory at UC Berkeley
 * **Schumm, G.**, Bonnell, J. W., Wygant, J. R., & Mozer, F. S. (2020). Calculation of the atomic oxygen fluence on the Van Allen Probes. *Journal of Geophysical Research: Space Physics*, 125, e2020JA027944. ([link](https://doi.org/10.1029/2020JA027944))
 
-## Talks:
-* *Finite Temperature Phase Diagram of the Fully Frustrated Transverse Field Ising Model*, American Physical Society March Meeting 2022
+## Talks and Presentations:
+* *Cross Validation in the Stochastic Analytic Continuation (SAC) Method*, American Physical Society March Meeting (2024)
+* *Primary and Secondary Order Parameters in the Fully Frustrated Transverse Field Ising Model on the Square Lattice*, Workshop on Criticality, Dynamics, and Nonequilibrium Behavior in Quantum Systems, Evora, Portugal (2023)
+* *Finite Temperature Phase Diagram of the Fully Frustrated Transverse Field Ising Model*, American Physical Society March Meeting (2023)
 
 ## Techincal Skills:
 * Programming languages: Python, Julia, Linux, Fortran, SQL, IDL
