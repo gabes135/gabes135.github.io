@@ -11,5 +11,5 @@ pause: 10000
 
 * ![Another nice pic of mine](sports/PJ_graphic.jpg)
 * ![Another nice pic of mine](sports/so_composition_verlander.png)
-* ![A nice pic of mine](sports/career_scoring.jpg)
+
 

@@ -15,8 +15,11 @@ title_custom: Curriculum Vitae
 * B.A. in Physics, University of California, Berkeley (2019)
 
 ## Publications:
+#### Research with the the Boston University
+* **Schumm, G.**, Shao, H., Guo, W., Mila, F., & Sandvik, A. (2024). Primary and secondary order parameters in the fully frustrated transverse-field Ising model on the square lattice. *Phys. Rev. B*, 109, L140408. ([link](https://doi.org/10.1103/PhysRevB.109.L140408))
+
 #### Research with the the Space Sciences Laboratory at UC Berkeley
-* **Schumm, G.**, Bonnell, J. W., Wygant, J. R., & Mozer, F. S. (2020). Calculation of the atomic oxygen fluence on the Van Allen Probes. *Journal of Geophysical Research: Space Physics*, 125, e2020JA027944. [https://doi.org/10.1029/2020JA027944](https://doi.org/10.1029/2020JA027944)
+* **Schumm, G.**, Bonnell, J. W., Wygant, J. R., & Mozer, F. S. (2020). Calculation of the atomic oxygen fluence on the Van Allen Probes. *Journal of Geophysical Research: Space Physics*, 125, e2020JA027944. ([link](https://doi.org/10.1029/2020JA027944))
 
 ## Talks:
 * *Finite Temperature Phase Diagram of the Fully Frustrated Transverse Field Ising Model*, American Physical Society March Meeting 2022
