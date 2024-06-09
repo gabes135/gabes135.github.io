@@ -2,16 +2,14 @@
 layout: gallery
 title: Projects
 permalink: /projects/
-
-images:
-  - image_path: /assets/sports/PJ_graphic.jpg
-    title: PJ
-  - image_path: /assets/sports/so_composition.png
-    title: Ks
 ---
 
-<ul class="photo-gallery">
-  {% for image in page.images %}
-    <li><img src="{{ image.image_path }}" alt="{{ image.title}}"/></li>
+<div class="gallery">
+  {% for image in site.static_files %}
+    {% if image.path contains '/assets/sports/' %}
+      <div class="gallery-item">
+        <img src="{{ image.path | relative_url }}" alt="{{ image.name }}">
+      </div>
+    {% endif %}
   {% endfor %}
-</ul>
+</div>
