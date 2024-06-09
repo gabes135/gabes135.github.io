@@ -14,11 +14,15 @@ style="width:100%" frameborder="0" scrolling="yes" onload="resizeIframe(this)"><
  -->
 
  ---
-layout: default
-title: My Image Gallery
+layout: page
+title: Projects
+permalink: /projects/
 ---
 
-{% gallery %}
+<!-- {% gallery %}
 ![Image 1](/assets/sports/PJ_graphic.jpg)
 ![Image 2](/assets/sports/so_composition.png)
 {% endgallery %}
+
+ -->
+{% include image-gallery.html folder="/assets/sports" %}
