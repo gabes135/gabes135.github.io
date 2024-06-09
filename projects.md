@@ -20,5 +20,5 @@ title: My Image Gallery
 
 {% gallery %}
 ![Image 1](/assets/sports/PJ_graphic.jpg)
-![Image 2](/assets/sports/so_composition_verlander.png)
+![Image 2](/assets/sports/so_composition.png)
 {% endgallery %}

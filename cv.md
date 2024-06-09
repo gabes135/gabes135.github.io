@@ -15,7 +15,7 @@ title_custom: Curriculum Vitae
 * B.A. in Physics, University of California, Berkeley (2019)
 
 ## Publications:
-#### Research with the the Boston University
+#### Research with Boston University
 * **Schumm, G.**, Shao, H., Guo, W., Mila, F., & Sandvik, A. (2024). Primary and secondary order parameters in the fully frustrated transverse-field Ising model on the square lattice. *Phys. Rev. B*, 109, L140408. ([link](https://doi.org/10.1103/PhysRevB.109.L140408))
 
 #### Research with the the Space Sciences Laboratory at UC Berkeley
