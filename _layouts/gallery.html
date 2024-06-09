@@ -1,12 +1,29 @@
+---
+layout: default
+---
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{{ page.title }}</title>
-  <link rel="stylesheet" href="{{ "/assets/css/gallery.css" | relative_url }}">
-</head>
-<body>
-  {{ content }}
-</body>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ page.title }}</title>
+    <!-- Include the gallery CSS file -->
+    <link rel="stylesheet" href="{{ "/assets/css/gallery.css" | relative_url }}">
+    <!-- You may also include other CSS files here -->
+  </head>
+
+  <body>
+    <article class="post">
+
+      <header class="post-header">
+        <h1 class="post-title">{{ page.title | escape }}</h1>
+      </header>
+
+      <div class="post-content">
+        {{ content }}
+      </div>
+
+
+    </article>
+  </body>
 </html>
