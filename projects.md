@@ -5,7 +5,7 @@ permalink: /projects/
 
 images:
   - path: /assets/sports/PJ_graphic.jpg
-    url: /page1.html
+    url: /pj/
     alt: Image 1
   - path: /assets/sports/so_composition.png
     url: /page2.html

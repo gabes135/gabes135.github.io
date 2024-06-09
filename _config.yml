@@ -58,6 +58,9 @@ defaults:
     values:
       layout: "iframe"
 
+include:
+  - _posts/
+
 
 
 
