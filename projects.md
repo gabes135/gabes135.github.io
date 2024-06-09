@@ -13,6 +13,10 @@ images:
 
 ---
 
+
+Click on images for more info.
+
+### Sports Infographics
 <div class="gallery">
   {% for img in page.images %}
     <div class="gallery-item">
