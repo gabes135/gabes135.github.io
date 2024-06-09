@@ -27,7 +27,6 @@ baseurl: "" # the subpath of your site, e.g. /blog
 url: "" # the base hostname & protocol for your site, e.g. http://example.com
 # twitter_username: jekyllrb
 github_username: gabes135
-permalink: none
 
 collections:
   sports:
@@ -42,6 +41,9 @@ header_pages:
   - cv.md
   - research.md
   - projects.md
+
+include:
+  - "_posts"
 
 
 # Build settings
@@ -58,8 +60,6 @@ defaults:
     values:
       layout: "iframe"
 
-include:
-  - _posts/
 
 
 
