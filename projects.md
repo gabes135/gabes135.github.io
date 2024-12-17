@@ -7,9 +7,12 @@ images:
   - path: /assets/sports/PJ_graphic.jpg
     url: /pj/
     alt: Image 1
-  - path: /assets/sports/so_composition.png
-    url: /page2.html
+  - path: /assets/sports/salaries.png
+    url: /contracts/
     alt: Image 2
+  - path: /assets/sports/contract_values.png
+    url: /contracts/
+    alt: Image 3
 
 ---
 
