@@ -7,10 +7,10 @@ images:
   - path: /assets/sports/PJ_graphic.jpg
     url: /pj/
     alt: Image 1
-  - path: /assets/sports/salaries.pdf
+  - path: /assets/sports/salaries.png
     url: /contracts/
     alt: Image 2
-  - path: /assets/sports/contract_values.pdf
+  - path: /assets/sports/contract_values.png
     url: /contracts/
     alt: Image 3
 
