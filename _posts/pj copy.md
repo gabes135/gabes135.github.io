@@ -14,6 +14,6 @@ $$
 
 
 <p align="center">
-  <img width="75%" src="/assets/sports/salaries.jpg">
-   <img width="75%" src="/assets/sports/contract_values.jpg">
+  <img width="75%" src="/assets/sports/salaries.pdf">
+   <img width="75%" src="/assets/sports/contract_values.pdf">
 </p>
