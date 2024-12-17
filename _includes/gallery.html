@@ -1,11 +1,10 @@
 <div class="gallery">
-{% for img in page.images %}
+  {% assign gallery_images = images | where: "gallery", include.gallery_filter %}
+  {% for img in gallery_images %}
     <div class="gallery-item">
-        <a href="{{ img.url }}">
+      <a href="{{ img.url }}">
         <img src="{{ img.path | relative_url }}" alt="{{ img.alt }}">
-        </a>
+      </a>
     </div>
-{% endfor %}
+  {% endfor %}
 </div>
-
-

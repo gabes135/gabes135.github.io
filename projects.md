@@ -7,12 +7,15 @@ images:
   - path: /assets/sports/PJ_graphic.jpg
     url: /pj/
     alt: Image 1
+    gallery: 1
   - path: /assets/sports/salaries.png
     url: /contracts/
     alt: Image 2
+    gallery: 0
   - path: /assets/sports/contract_values.png
     url: /contracts/
     alt: Image 3
+    gallery: 0
 
 ---
 
@@ -22,7 +25,9 @@ Click on images for more info.
 ### Sports Infographics
 
 
-{% include gallery.html %}
+{% include gallery.html gallery_filter=1 %}
+
+<!-- {% include gallery.html gallery_number=2 %} -->
 
 
 <!-- <div class="gallery">

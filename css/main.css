@@ -87,14 +87,12 @@ nav {
 }
 
 .gallery-item {
-  display: inline-block; /* Shrink-wrap container to image dimensions */
-  margin: 0; /* Removes extra space */
-  line-height: 0; /* Fixes inline spacing issue caused by images */
+  display: inline-block; /* Let the box fit the content */
+  box-sizing: border-box;
 }
 
 .gallery-item img {
-  display: block; /* Ensures no bottom spacing */
-  width: auto; /* Keep natural width */
-  height: auto; /* Maintain aspect ratio */
-  max-width: 100%; /* Prevent oversized images */
+  display: block; /* Remove extra bottom spacing caused by inline elements */
+  height: auto; /* Preserve the image's aspect ratio */
+  width: 100%; /* Ensure images take full width of their container */
 }
