@@ -1,5 +1,5 @@
 ---
-layout: gallery
+layout: projects
 title: Projects
 permalink: /projects/
 
@@ -8,14 +8,16 @@ images:
     url: /pj/
     alt: Image 1
     gallery: 1
+
   - path: /assets/sports/salaries.png
     url: /contracts/
     alt: Image 2
-    gallery: 0
+    gallery: 2
+   
   - path: /assets/sports/contract_values.png
     url: /contracts/
     alt: Image 3
-    gallery: 0
+    gallery: 2
 
 ---
 
@@ -25,9 +27,12 @@ Click on images for more info.
 ### Sports Infographics
 
 
-{% include gallery.html gallery_filter=1 %}
 
-<!-- {% include gallery.html gallery_number=2 %} -->
+{% include gallery.html filter=1 %}
+
+
+{% include gallery.html filter=2 %}
+
 
 
 <!-- <div class="gallery">

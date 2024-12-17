@@ -1,10 +1,11 @@
 <div class="gallery">
-  {% assign gallery_images = images | where: "gallery", include.gallery_filter %}
-  {% for img in gallery_images %}
-    <div class="gallery-item">
-      <a href="{{ img.url }}">
-        <img src="{{ img.path | relative_url }}" alt="{{ img.alt }}">
-      </a>
-    </div>
+  {% for img in page.images %}
+    {% if img.gallery == include.filter %}
+      <div class="gallery-item">
+        <a href="{{ img.url }}">
+          <img src="{{ img.path | relative_url }}" alt="{{ img.alt }}">
+        </a>
+      </div>
+    {% endif %}
   {% endfor %}
 </div>

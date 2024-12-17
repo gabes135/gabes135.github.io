@@ -1,0 +1,58 @@
+/* Gallery container styling */
+.gallery {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px; /* Increased gap for better spacing */
+  justify-content: center; /* Center the gallery items */
+  padding: 20px; /* Add some padding around the gallery */
+  background-color: #f9f9f9; /* Light background color */
+  max-height: 300px; /* Set a maximum height for the gallery */
+  overflow: hidden; /* Hide overflow if gallery exceeds max-height */
+}
+
+/* Individual gallery item styling */
+.gallery-item {
+  flex: 1 1 calc(33.333% - 30px); /* Responsive flex item with space for gap */
+  box-sizing: border-box;
+  overflow: hidden; /* Ensure items don’t overflow */
+  border: 2px solid #ddd; /* Add a light border */
+  border-radius: 8px; /* Rounded corners */
+  background-color: #fff; /* White background for each item */
+  height: 100%; /* Ensure gallery items stretch to fill available height */
+  display: flex;
+  justify-content: center;
+  align-items: center; /* Center the images within the gallery item */
+}
+
+/* Image styling within each gallery item */
+.gallery-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain; /* Scale image to fit the container, maintaining aspect ratio */
+  display: block;
+  border-radius: 8px; /* Match the border-radius of the container */
+  transition: transform 0.2s; /* Smooth hover effect */
+}
+
+/* Hover effects for gallery items */
+.gallery-item:hover {
+  transform: scale(1.05); /* Slight zoom effect */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
+}
+
+.gallery-item img:hover {
+  transform: scale(1.1); /* Zoom the image slightly on hover */
+}
+
+/* Responsive adjustments */
+@media (max-width: 1200px) {
+  .gallery-item {
+    flex: 1 1 calc(50% - 30px); /* 2 items per row on medium screens */
+  }
+}
+
+@media (max-width: 768px) {
+  .gallery-item {
+    flex: 1 1 calc(100% - 30px); /* 1 item per row on small screens */
+  }
+}

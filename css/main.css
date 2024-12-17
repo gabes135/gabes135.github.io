@@ -79,20 +79,3 @@ nav {
 }
 
 
-.gallery {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px; /* spacing between items */
-  justify-content: flex-start; /* aligns items to the left */
-}
-
-.gallery-item {
-  display: inline-block; /* Let the box fit the content */
-  box-sizing: border-box;
-}
-
-.gallery-item img {
-  display: block; /* Remove extra bottom spacing caused by inline elements */
-  height: auto; /* Preserve the image's aspect ratio */
-  width: 100%; /* Ensure images take full width of their container */
-}
