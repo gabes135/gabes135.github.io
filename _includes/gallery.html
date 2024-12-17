@@ -1,0 +1,11 @@
+<div class="gallery">
+{% for img in page.images %}
+    <div class="gallery-item">
+        <a href="{{ img.url }}">
+        <img src="{{ img.path | relative_url }}" alt="{{ img.alt }}">
+        </a>
+    </div>
+{% endfor %}
+</div>
+
+

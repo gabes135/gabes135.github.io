@@ -77,3 +77,24 @@ nav {
 	border-width: 1px;
 	padding: 7px;
 }
+
+
+.gallery {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px; /* spacing between items */
+  justify-content: flex-start; /* aligns items to the left */
+}
+
+.gallery-item {
+  display: inline-block; /* Shrink-wrap container to image dimensions */
+  margin: 0; /* Removes extra space */
+  line-height: 0; /* Fixes inline spacing issue caused by images */
+}
+
+.gallery-item img {
+  display: block; /* Ensures no bottom spacing */
+  width: auto; /* Keep natural width */
+  height: auto; /* Maintain aspect ratio */
+  max-width: 100%; /* Prevent oversized images */
+}

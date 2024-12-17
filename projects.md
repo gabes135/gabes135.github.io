@@ -20,7 +20,12 @@ images:
 Click on images for more info.
 
 ### Sports Infographics
-<div class="gallery">
+
+
+{% include gallery.html %}
+
+
+<!-- <div class="gallery">
   {% for img in page.images %}
     <div class="gallery-item">
       <a href="{{ img.url }}">
@@ -28,4 +33,5 @@ Click on images for more info.
       </a>
     </div>
   {% endfor %}
-</div>
+</div> -->
+
