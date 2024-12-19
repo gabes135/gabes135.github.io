@@ -19,10 +19,12 @@ If you squint your eyes, you can see why X team gave out Y contract to Z player,
 
 ![Forever greatful](../assets/gif/wiggins.gif){:style="display:block; margin-left:auto; margin-right:auto"}
 
-We can contrast that to the MLB, where the most widely used Sabermetric stat is literally called wins above *replacement*. There are so many players than can do an alright enough job that to really value a player, you need to compare them to what the [MLB defines as](https://www.mlb.com/glossary/advanced-stats/wins-above-replacement) as "a Minor League replacement or a readily available fill-in free agent." So someone not in the major leagues. Baseball is just as much about winning on the margins as it is about rostering the biggrst starts (didn't someone write a book about this?). As a result, it's harder to justify giving out big money to someone who may be top hitter or top pitcher in the league; better to spread that money out a amongst your roster so that you don't put out an infield of replacement players.
+We can contrast that to the MLB, where the most widely used Sabermetric stat is literally called wins above *replacement*. There are so many players than can do an alright enough job that to really value a player, you need to compare them to what the [MLB defines as](https://www.mlb.com/glossary/advanced-stats/wins-above-replacement) as "a Minor League replacement or a readily available fill-in free agent." So someone not in the major leagues. Baseball is just as much about winning on the margins as it is about rostering the highest profile, highest paid stats (didn't someone write a book about this?). As a result, it's harder to justify giving out big money to someone who just may play at an All Star level; better to spread that money out a amongst your roster so that you don't put out an infield of replacement players.
 
 
 ![Contract Values](/assets/sports/contract_values.png)
+
+The distribution of total contract values is a different story. There are a ton of high AAV contracts in the NBA, but they just aren't that long. The 
 
 
 
