@@ -26,11 +26,12 @@ Click on images for more info.
 
 ### Sports Infographics
 
-
+# Phil Jackson's "40 Wns Before 20 Loses" Rule
 
 {% include gallery.html filter=1 %}
 
 
+# Distributions of Salaries within each Sport
 {% include gallery.html filter=2 %}
 
 
