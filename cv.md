@@ -6,7 +6,7 @@ title_custom: Curriculum Vitae
 ---
 
 
-
+[PDF Version](/assets/cv/CV.pdf)
 
 ## Education:
 
