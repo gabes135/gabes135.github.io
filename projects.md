@@ -30,8 +30,7 @@ Click on images for more info.
 
 {% include gallery.html filter=1 %}
 
-
-
+<br>
 
 # Distributions of Salaries within each Sport
 {% include gallery.html filter=2 %}
