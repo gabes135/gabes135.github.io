@@ -1,6 +1,6 @@
 ---
 layout: default
-title: Image 1
+title: 40 Before 20
 permalink: /pj/
 ---
 

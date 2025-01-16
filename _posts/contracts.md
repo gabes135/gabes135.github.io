@@ -1,6 +1,6 @@
 ---
 layout: default
-title: Image 2
+title: Sports Contracts
 permalink: /contracts/
 ---
 
