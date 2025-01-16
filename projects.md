@@ -32,7 +32,7 @@ Click on images for more info.
 
 <br>
 
-# Distributions of Salaries within each Sport
+# Distributions of Salaries Within Each Sports League
 {% include gallery.html filter=2 %}
 
 
