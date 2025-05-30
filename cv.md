@@ -6,22 +6,24 @@ title_custom: Curriculum Vitae
 ---
 
 
-[PDF Version](/assets/cv/CV.pdf)
+[PDF Version](/assets/cv/resume.pdf)
 
 ## Education:
 
-* Ph.D in Physics, Boston University (2020 - present)
-* Masters in Physics, Boston University (2022)
+* Ph.D in Physics, Boston University (2025)
+	* Thesis: *Static and Dynamic Properties of Quantum Magnets*
 * B.A. in Physics, University of California, Berkeley (2019)
+	* Phi Beta Kappa, Highest Honors in Physics
 
 ## Publications:
-#### Research with Boston University
-* **Schumm, G.**, Yang, S., & Sandvik, A. W. (2024). Cross validation in stochastic analytic continuation. *Phys. Rev. E*, 110, 055307. (2024) ([link](https://doi.org/10.1103/PhysRevE.110.055307))
+Full list on [Google Scholar Profile](https://tinyurl.com/scholargs)
+* **Schumm, G.**, Zhang, S., & Sandvik, A. W. Single-Particle Dispersion and Density of States of the Half-Filled 2D Hubbard Model
+. arXiv:2504.02614. (2025) ([link](https://arxiv.org/pdf/2504.02614))
+
+* **Schumm, G.**, Yang, S., & Sandvik, A. W. Cross validation in stochastic analytic continuation. *Phys. Rev. E*, 110, 055307. (2024) ([link](https://doi.org/10.1103/PhysRevE.110.055307))
 
 * **Schumm, G.**, Shao, H., Guo, W., Mila, F., & Sandvik, A. W. (2024). Primary and secondary order parameters in the fully frustrated transverse-field Ising model on the square lattice. *Phys. Rev. B*, 109, L140408. (2024) ([link](https://doi.org/10.1103/PhysRevB.109.L140408))
 
-#### Research with the the Space Sciences Laboratory at UC Berkeley
-* **Schumm, G.**, Bonnell, J. W., Wygant, J. R., & Mozer, F. S. (2020). Calculation of the atomic oxygen fluence on the Van Allen Probes. *Journal of Geophysical Research: Space Physics*, 125, e2020JA027944. ([link](https://doi.org/10.1029/2020JA027944))
 
 ## Talks and Presentations:
 * *Insights on Quantum Annealing of the Fully Frustrated Transverse Field Ising Model* (invited), Scientific Applications of Quantum Annealers and Simulators Workshop (October 2024).
@@ -31,11 +33,13 @@ title_custom: Curriculum Vitae
 * *Finite Temperature Phase Diagram of the Fully Frustrated Transverse Field Ising Model*, American Physical Society March Meeting (2023)
 
 ## Techincal Skills:
-* Programming languages: Python, Julia, Linux, Fortran, SQL, IDL
-* Formatting languages: LATEX, HTML
-* Software: Adobe Photoshop, Microsoft Office, LabVIEW
+* Programming languages: Python, Julia, Fortran, C (basic) SQL, Bash, R
+* Libraries: Numpy, SciPy, Pandas, Matplotlib, Scikit‑Learn, PyTorch, TensforFlow, BigQuery
+* Computing and software: Git, LaTeX, Jupyter, SLURM, Microsoft Oﬃce
 
 ## Awards, Honors, and Fellowships
+* Alvaro Roccaro Memorial Prize at Boston University (2025)
+	* "in recognition of outstanding achievement overall in physics by a graduate student"
 * Predoctoral Research Fellow at the Flatiron Center for Computational Quantum Physics Spring 2024, Advisor: Shiwei Zhang
 
 ## Teaching Experience:
