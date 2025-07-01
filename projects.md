@@ -24,11 +24,25 @@ images:
     alt: Image 4
     gallery: 3
 
+  - path: /assets/sports/w_100m_fr.png
+    url: /swimming/
+    alt: Image 4
+    gallery: 4
+
+  - path: /assets/sports/m_100m_fr.png
+    url: /swimming/
+    alt: Image 5
+    gallery: 4
+
 ---
 
 
 Click on images for more info.
 
+# Evolution of Olympic Swimming Gold Medal Times
+{% include gallery.html filter=4 %}
+
+<br>
 
 # Jump Shot Zone Breakdown by Year
 {% include gallery.html filter=3 %}

@@ -78,4 +78,14 @@ nav {
 	padding: 7px;
 }
 
+.hover-zoom {
+  transition: transform 0.3s ease;
+  cursor: pointer;
+}
+.hover-zoom:hover {
+  transform: scale(1.1);
+  z-index: 2;
+}
+
+
 
