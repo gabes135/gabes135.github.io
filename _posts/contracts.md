@@ -1,10 +1,10 @@
 ---
-layout: default
-title: Sports Contracts
-permalink: /contracts/
----
+layout: post
+title: Distribution of Annual Salaries and Total Contract Values for each of the Big Four Sports Leagues
 
-# Distribution of Annual Salaries and Total Contract Values for each of the Big Four Sports Leagues
+permalink: /contracts/
+date: 2025-01-15
+---
 
 
 ![Salaries](/assets/sports/salaries.png)

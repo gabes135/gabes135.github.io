@@ -1,7 +1,8 @@
 ---
-layout: default
+layout: post
 title: 40 Before 20
 permalink: /pj/
+date: 2024-06-09
 ---
 
 # Phil Jackson's "40 Wns Before 20 Loses" Rule

@@ -34,10 +34,20 @@ images:
     alt: Image 5
     gallery: 4
 
+  - path: /assets/sports/top3_k_bb.png
+    url: /k_bb_9/
+    alt: Image 6
+    gallery: 5
+
 ---
 
 
 Click on images for more info.
+
+# Tarik Skubal is on a Historic Pace
+{% include gallery.html filter=5 %}
+
+<br>
 
 # Evolution of Olympic Swimming Gold Medal Times
 {% include gallery.html filter=4 %}

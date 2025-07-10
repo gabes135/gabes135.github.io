@@ -1,10 +1,9 @@
 ---
-layout: default
-title: Evolution of the Shot Chart
+layout: post
+title: Evolution of the NBA Shot Chart
 permalink: /shot_chart/
+date: 2025-05-30
 ---
-
-# Evolution of the NBA Shot Chart
 
 <div style="text-align: center;">
 <video width="640" height="360" controls autoplay loop muted playsinline>

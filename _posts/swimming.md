@@ -1,11 +1,9 @@
 ---
-layout: default
-title: olympics swimming
+layout: post
+title: Evolution Olympic Swimming Gold Medal Times from 1912–2024
 permalink: /swimming/
+date: 2025-07-01
 ---
-
-# Evolution Olympic Swimming Gold Medal Times from 1912–2024
-
 
 
 <figure style="text-align: center;">
