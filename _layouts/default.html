@@ -15,6 +15,29 @@
 
     {%- include footer.html -%}
 
+
+<script src="{{ '/assets/js/jquery-3.7.1.min.js' | relative_url }}"></script>
+<script src="{{ '/assets/slick/slick.min.js' | relative_url }}"></script>
+
+<script>
+  $(document).ready(function(){
+    $('.post-slider').slick({
+      slidesToShow: 1,
+      slidesToScroll: 1,
+      accessibility: true,
+      centerMode: true,
+      variableWidth: false,
+      dots: true,
+      swipe:true,
+      draggable: true,
+      autoplay: true,
+      autoplaySpeed: 10000,
+
+    });
+  });
+</script>
+
+
   </body>
 
 </html>

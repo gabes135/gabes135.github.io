@@ -38,9 +38,9 @@ collections:
 
 
 header_pages:
+  - portfolio.md
   - cv.md
   - research.md
-  - projects.md
 
 include:
   - "_posts"

@@ -1,7 +1,6 @@
 ---
 layout: default
 ---
-
 <div class="home">
   {%- if page.title -%}
     <h1 class="page-heading">{{ page.title }}</h1>
@@ -17,11 +16,28 @@ layout: default
   {% endif %}
 
 
-  {%- if posts.size > 0 -%}
+ {%- if posts.size > 0 -%}
     {%- if page.list_title -%}
       <h2 class="post-list-heading">{{ page.list_title }}</h2>
     {%- endif -%}
-    <ul class="post-list">
+
+    <div class="post-slider">
+      {% assign posts = site.posts | where_exp:"p","p.preview_image" %}
+      {% for post in posts limit:6 %}
+       
+        <div class="slider-item">
+          <a href="{{ post.url | relative_url }}">
+           <!-- <p>{{ post.title }}</p> -->
+            <img src="{{ post.preview_image }}" alt="{{ post.title }}"/>
+            <div class="title">{{ post.title }}</div>
+             <div class="description">{{ post.description }}</div>
+          </a>
+        </div>
+
+      {% endfor %}
+    </div>
+
+    <!-- <ul class="post-list">
       {%- assign date_format = site.minima.date_format | default: "%b %-d, %Y" -%}
       {%- for post in posts -%}
       <li>
@@ -36,7 +52,8 @@ layout: default
         {%- endif -%}
       </li>
       {%- endfor -%}
-    </ul>
+    </ul> -->
+
 
     {% if site.paginate %}
       <div class="pager">
@@ -59,3 +76,6 @@ layout: default
   {%- endif -%}
 
 </div>
+
+
+

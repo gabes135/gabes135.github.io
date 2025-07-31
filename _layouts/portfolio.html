@@ -1,0 +1,67 @@
+---
+layout: default
+---
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+ 
+</head>
+
+<div class="home">
+  {%- if page.title -%}
+    <h1 class="page-heading">{{ page.title }}</h1>
+  {%- endif -%}
+
+  {{ content }}
+
+  {% assign posts = site.posts %}
+
+
+
+  <ul class="post-list">
+      {%- assign date_format = site.minima.date_format | default: "%b %-d, %Y" -%}
+      {%- for post in posts -%}
+        <li class="post-preview">
+
+        <span class="post-meta">{{ post.date | date: date_format }}</span>
+        <h3>
+          <a class="post-link" href="{{ post.url | relative_url }}">
+            {{ post.title | escape }}
+          </a>
+        </h3>
+         <div class="preview-container">
+        {%- if post.preview_image -%}
+          <a href="{{ post.url | relative_url }}">
+            <img src="{{ post.preview_image }}" alt="{{ post.title }} preview" class="preview-image" />
+          </a>
+        {%- endif -%}
+
+        <div class="preview-text">
+          
+           <br/>
+            <p class="post-excerpt">{{ post.description | strip_html | truncatewords: 40 }}</p>
+
+            <!-- <p class="post-tools">Tools used: {{ post.tools | join: ', ' }}</p> -->
+            <p class="post-tools">
+              Tools used:&nbsp;
+              {%- for tool in post.tools -%}
+                {%- if tool contains "`" -%}
+                  <code>{{ tool | remove: "`" }}</code> 
+                {%- else -%}
+                  {{ tool }}
+                {%- endif -%}
+                {%- unless forloop.last %}, {% endunless -%}
+              {%- endfor -%}
+            </p>
+         
+        </div>
+      </div>
+
+      {%- endfor -%}
+    </ul>
+
+
+
+</div>
