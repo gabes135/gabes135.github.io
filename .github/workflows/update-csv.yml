@@ -1,5 +1,5 @@
 # .github/workflows/update-csv.yml
-name: Update Baseball CSV with pybaseball
+name: Update Baseball CSV from Savant
 
 # on:
 #   schedule:
@@ -31,7 +31,7 @@ jobs:
         run: |
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
-          git add data.csv
-          git commit -m "Update data.csv via pybaseball" || echo "No changes"
+          git add assets/savant_data/data.csv
+          git commit -m "Update data.csv via savant" || echo "No changes"
           git push
 
