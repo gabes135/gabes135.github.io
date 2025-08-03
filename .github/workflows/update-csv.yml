@@ -21,10 +21,13 @@ jobs:
         with:
           python-version: 3.14.0-rc.1
 
-      - name: Install dependencies
+      - name: Install system dependencies for lxml
+        run: sudo apt-get update && sudo apt-get install -y libxml2-dev libxslt1-dev
+
+      - name: Install pybaseball
         run: pip install pybaseball
 
-      - name: Run download script
+      - name: Run script
         run: python download_savant.py
 
       - name: Commit and push if changed
