@@ -22,7 +22,7 @@ jobs:
           python-version: 3.14.0-rc.1
 
       - name: Install dependencies
-        run: pip install pandas
+        run: pip install pandas requests
 
       - name: Run script
         run: python download_savant.py
