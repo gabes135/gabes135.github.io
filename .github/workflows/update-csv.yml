@@ -1,0 +1,37 @@
+# .github/workflows/update-csv.yml
+name: Update Baseball CSV with pybaseball
+
+# on:
+#   schedule:
+#     - cron: '0 12 * * *'  # every day at 12 UTC
+#   workflow_dispatch:
+on:
+  workflow_dispatch:
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: 3.10
+
+      - name: Install dependencies
+        run: pip install pybaseball
+
+      - name: Run download script
+        run: python download_savant.py
+
+      - name: Commit and push if changed
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git add data.csv
+          git commit -m "Update data.csv via pybaseball" || echo "No changes"
+          git push
+

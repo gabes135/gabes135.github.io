@@ -208,3 +208,31 @@
 .arrow-button:hover {
   transform: scale(1.2);  /* Slightly increase the button size on hover */
 }
+
+
+
+/* Define a reusable class for framed, centered figures with captions */
+.framed-figure {
+  text-align: center;
+  border: 2px solid #ccc;
+  padding: 15px;
+  background-color: #f9f9f9;
+  display: inline-block;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  width: 100%; /* Adjust width as needed */
+  margin: 20px 0; /* Adds space above and below the figure */
+}
+
+.framed-figure img {
+  max-width: 100%;  /* Ensures image is responsive */
+  height: auto;
+  border-radius: 5px; /* Optional: adds rounded corners to the image */
+}
+
+.framed-figure figcaption {
+  font-style: italic;
+  margin-top: 10px;
+  color: #555;
+  font-size: 14px;
+}

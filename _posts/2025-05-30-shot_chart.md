@@ -4,7 +4,7 @@ title: Evolution of the NBA Shot Chart
 permalink: /shot_chart/
 date: 2025-05-30
 preview_image: /assets/sports/hm_gif.gif
-description: The rise of the three point shot in the NBA is well documented and well understood. In this post, I explore this trend in detail using shot chart data scraped from the NBA Stats website and managed using the peewee Python ORM.
+description: The rise of the three point shot in the NBA is well documented and well understood. In this post, I explore this trend in further detail using shot chart data scraped from the NBA Stats website and managed using the peewee Python ORM.
 tools: 
   - Python
   - SQLite

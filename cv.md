@@ -50,6 +50,6 @@ Full list on [Google Scholar Profile](https://tinyurl.com/scholargs)
 * PY 502: Graduate Computational Physics - Grader
 
 ## Service and Outreach:
-* Member of the [Boston Univeristy Graduate Student Union]((https://www.bugradworkers.org/)) Organizing Commity and Physics Union Representative
-* Boston Univeristy Physics Department Teaching Fellow Peer Mentor
-* Physics Representative for Boston Univeristy's [Graduate Student Organization](https://www.bu.edu/gso/)
+* Member of the [Boston University Graduate Student Union]((https://www.bugradworkers.org/)) Organizing Commity and Physics Union Representative
+* Boston University Physics Department Teaching Fellow Peer Mentor
+* Physics Representative for Boston University's [Graduate Student Organization](https://www.bu.edu/gso/)
