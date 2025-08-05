@@ -1,0 +1,82 @@
+---
+layout: default
+---
+
+<html>
+
+
+{%- if page.title -%}
+    <h1 class="page-heading">{{ page.title }}</h1>
+  {%- endif -%}
+
+{{ content }}
+
+<body>
+  <script src="../assets/js/papaparse.min.js"></script>
+     <script src="https://cdn.plot.ly/plotly-3.0.1.min.js" charset="utf-8"></script>
+
+  <script src="../assets/js/ode.js"></script>
+   <script src="../assets/js/pitch_graphic.js"></script>
+    <script src="../assets/js/traj.js"></script>
+
+  <div class="dropdown">
+    <button onclick="toggleDropdown()" class="dropbtn">Choose a pitch</button>
+    <div id="myDropdown" class="dropdown-content">
+    </div>
+  </div>
+
+  <div id="output" style="margin-top: 20px;"></div>
+
+<!-- <div id="plot" style="width: 100%; height: 400px;"></div> -->
+
+<div class="plot-wrapper">
+  <div id="plot"></div>
+</div>
+ <!--  <h1>CSV Table</h1>
+  <div id="csv-table"></div>
+
+  <script src="../assets/js/papaparse.min.js"></script>
+  <script src="../assets/js/pitch_graphic.js"></script>
+
+  <script>
+    // Load the CSV file
+    fetch('/assets/savant_data/data.csv')
+      .then(response => response.text())
+      .then(csv => {
+        const parsed = Papa.parse(csv, { header: true });
+        const data = parsed.data;
+
+        const table = document.createElement('table');
+        table.border = '1';
+
+        // Create header row
+        const thead = document.createElement('thead');
+        const headerRow = document.createElement('tr');
+        for (const key of Object.keys(data[0])) {
+          const th = document.createElement('th');
+          th.textContent = key;
+          headerRow.appendChild(th);
+        }
+        thead.appendChild(headerRow);
+        table.appendChild(thead);
+
+        // Create data rows
+        const tbody = document.createElement('tbody');
+        const maxRows = 2; // Change this to whatever number you want
+        for (let i = 0; i < Math.min(data.length, maxRows); i++) {
+          const row = data[i];
+          const tr = document.createElement('tr');
+          for (const key of Object.keys(row)) {
+            const td = document.createElement('td');
+            td.textContent = row[key];
+            tr.appendChild(td);
+          }
+          tbody.appendChild(tr);
+        }
+        table.appendChild(tbody);
+
+        document.getElementById('csv-table').appendChild(table);
+      });
+  </script> -->
+</body>
+</html>

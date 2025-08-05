@@ -18,4 +18,72 @@
 }
 
 
+.plot-wrapper {
+  border: 2px solid #ccc;      /* light gray frame */
+  border-radius: 8px;          /* rounded corners */
+  padding: 10px;               /* space between border and plot */
+  background: #fff;            /* optional background */
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1); /* subtle drop-shadow */
+  display: inline-block;       /* shrink-wrap to plot width */
+}
+#plot {
+  width: 800px;   /* or 100% if you want it responsive */
+  height: 400px;
+}
+
+/* Dropdown Button */
+.dropbtn {
+  background-color: #26f7fd;
+  border: 2px solid black;
+  color: black;
+  padding: 6px;
+  font-size: 20px;
+  cursor: pointer;
+  border-radius: 8px; 
+}
+
+
+
+
+/* Dropdown button on hover & focus */
+.dropbtn:hover, .dropbtn:focus {
+  background-color: #98eff9;
+}
+
+/* The container <div> - needed to position the dropdown content */
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+/* Dropdown Content (Hidden by Default) */
+
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f9f9f9;
+  min-width: 500px;
+  max-height: 400px; /* Limit height */
+  overflow-y: auto;  /* Add vertical scrollbar */
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+/* Links inside the dropdown */
+.dropdown-content a {
+  color: black;
+  padding: 14px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+/* Change color of dropdown links on hover */
+.dropdown-content a:hover {background-color: #ddd;}
+
+/* Show the dropdown menu (use JS to add this class to the .dropdown-content container when the user clicks on the dropdown button) */
+.show {display:block;}
+
+
+
 
