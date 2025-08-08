@@ -262,11 +262,11 @@
   border: 2px solid #ccc;
   padding: 15px;
   background-color: #f9f9f9;
-  display: inline-block;
+  display: block;
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   width: 100%; /* Adjust width as needed */
-  margin: 20px 0; /* Adds space above and below the figure */
+  margin: 20px auto; /* Adds space above and below the figure */
 }
 
 .framed-figure img {
