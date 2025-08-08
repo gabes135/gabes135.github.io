@@ -17,8 +17,7 @@ title_custom: Curriculum Vitae
 
 ## Publications:
 Full list on [Google Scholar Profile](https://tinyurl.com/scholargs)
-* **Schumm, G.**, Zhang, S., & Sandvik, A. W. Single-Particle Dispersion and Density of States of the Half-Filled 2D Hubbard Model
-. arXiv:2504.02614. (2025) ([link](https://arxiv.org/pdf/2504.02614))
+* **Schumm, G.**, Zhang, S., & Sandvik, A. W. Single-Particle Dispersion and Density of States of the Half-Filled 2D Hubbard Model. *Phys. Rev. B* 112, 085109. (2025) ([link](https://journals.aps.org/prb/abstract/10.1103/8dnp-w7c6))
 
 * **Schumm, G.**, Yang, S., & Sandvik, A. W. Cross validation in stochastic analytic continuation. *Phys. Rev. E*, 110, 055307. (2024) ([link](https://doi.org/10.1103/PhysRevE.110.055307))
 

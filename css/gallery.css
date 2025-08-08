@@ -211,6 +211,51 @@
 
 
 
+.float-left-figure {
+  float: left;
+  width: 48%;
+  margin-right: 50px;
+  margin-bottom: 10px;
+}
+
+.float-left-figure img {
+  width: 100%;
+  height: auto;
+  border-radius: 5px;
+  display: block; /* Ensures no space below image */
+}
+
+.float-left-figure figcaption {
+  font-style: italic;
+  color: #555;
+  font-size: 14px;
+  margin-top: 5px;
+  text-align: left;
+}
+
+
+.center-figure {
+  float: center;
+  width: 98%;
+  margin-right: 50px;
+  margin-bottom: 10px;
+}
+
+.center-figure img {
+  width: 100%;
+  height: auto;
+  border-radius: 5px;
+  display: block; /* Ensures no space below image */
+}
+
+.center-figure figcaption {
+  font-style: italic;
+  color: #555;
+  font-size: 14px;
+  margin-top: 5px;
+  text-align: center;
+}
+
 /* Define a reusable class for framed, centered figures with captions */
 .framed-figure {
   text-align: center;
