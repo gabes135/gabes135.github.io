@@ -144,7 +144,7 @@ Just as with win percentage model, I imposed the constraint that each team must 
 ### Choosing a Minimum Games Played Cutoff
 
 <figure class="center-figure">
-  <img src="/assets/win_projector/running_avg_cut off_bts.png" alt="cut off">
+  <img src="/assets/win_projector/running_avg_cutoff_bts.png" alt="cut off">
   <figcaption>Performance of model trained on data using different minimum games played cut offs.</figcaption>
 </figure>
 
@@ -161,9 +161,9 @@ In any case, just as our validation results predicts, the model trained using a 
 <figure class="framed-figure">
   <img src="/assets/win_projector/four_factor_50.png" alt="season_four_50">
   <figcaption>Logistic regression model based on season-to-date four factor stats (50 game cut off).</figcaption>
-</figure>f
+</figure>
 
-While the accuracy score matches our Bayes' rate of ~69%, I'm not sure that imposing a 50 game cut off model really represents an improved model. The lower loss implies that the predictions are better calibrated, but only being able to predict games 51 through 82, as opposed to 11 through 82, is fairly constraining for only a 3% increase in the model accuracy from the 10 game cut off model. And since the sportsbooks' predictions don't require such a cuttoff, I'm hesitant to say this model matches their performance.
+While the accuracy score matches our Bayes' rate of ~69%, I'm not sure that imposing a 50 game cut off model really represents an improved model. The lower loss implies that the predictions are better calibrated, but only being able to predict games 51 through 82, as opposed to 11 through 82, is fairly constraining for only a 3% increase in the model accuracy from the 10 game cut off model. And since the sportsbooks' predictions don't require such a cuttoff, I'm hesitant to say this model matches their performance. To reach 
 
 
 To be continued...
