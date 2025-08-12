@@ -28,7 +28,8 @@ jobs:
         run: |
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
-          git add assets/savant_data/data.csv
-          git commit -m "Update data.csv via savant" || echo "No changes"
+          git add assets/savant_data/data_z.csv
+          git add assets/savant_data/data_x.csv
+          git commit -m "Update data_x.csv and data_z.csv via savant" || echo "No changes" 
           git push
 
