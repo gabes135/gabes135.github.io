@@ -26,8 +26,8 @@ function getPitchName(code) {
 }
 
 
-function toggleDropdown() {
-  document.getElementById("myDropdown").classList.toggle("show");
+function toggleDropdown(name) {
+  document.getElementById(name).classList.toggle("show");
 }
 
 function showRow(row) {
@@ -236,45 +236,50 @@ function calcOdeRK4(solver, resolution) {
 
 
 // Load CSV using PapaParse
-Papa.parse("../assets/savant_data/data.csv", {
-  download: true,
-  header: true,
-  complete: function(results) {
-    fullData = results.data;
+function parse_csv(button, file) {
+  Papa.parse(file, {
+    download: true,
+    header: true,
+    complete: function(results) {
+      fullData = results.data;
 
-    const dropdown = document.getElementById("myDropdown");
-    dropdown.innerHTML = ""; // Clear previous content
+      const dropdown = document.getElementById(button);
+      dropdown.innerHTML = ""; // Clear previous content
 
-    fullData.forEach((row, index) => {
-      const a = document.createElement("a");
+      fullData.forEach((row, index) => {
+        const a = document.createElement("a");
 
-      const name = row.player_name;  // Make sure this is the correct column name
-      const ivbIn = (parseFloat(row.pfx_z) * 12).toFixed(1);
-      let formattedName = name;
+        const name = row.player_name;  // Make sure this is the correct column name
+        const ivbIn = (parseFloat(row.pfx_z) * 12).toFixed(1);
+        let formattedName = name;
 
-      if (typeof name === "string" && name.includes(",")) {
-        const [last, first] = name.split(',').map(s => s.trim());
-        formattedName = `${first} ${last}`;
-      }
+        if (typeof name === "string" && name.includes(",")) {
+          const [last, first] = name.split(',').map(s => s.trim());
+          formattedName = `${first} ${last}`;
+        }
 
-      a.textContent = `${formattedName} - ${row.release_speed} MPH ${row.pitch_type} - IVB: ${ivbIn} in.` || `Row ${index}`;
-      a.href = "#";
-      a.dataset.index = index;
-      a.addEventListener("click", function(e) {
-        e.preventDefault();
-        const idx = parseInt(this.dataset.index);
-        showRow(fullData[idx], a);
+        a.textContent = `${formattedName} - ${row.release_speed} MPH ${row.pitch_type} - IVB: ${ivbIn} in.` || `Row ${index}`;
+        a.href = "#";
+        a.dataset.index = index;
+        a.addEventListener("click", function(e) {
+          e.preventDefault();
+          const idx = parseInt(this.dataset.index);
+          showRow(fullData[idx], a);
+        });
+        dropdown.appendChild(a);
       });
-      dropdown.appendChild(a);
-    });
 
-     if (fullData.length) {
-      // find the first <a> so we can pass it in for textContent updates
-      const firstLink = dropdown.querySelector('a');
-      showRow(fullData[0], firstLink);
+       if (fullData.length) {
+        // find the first <a> so we can pass it in for textContent updates
+        const firstLink = dropdown.querySelector('a');
+        showRow(fullData[0], firstLink);
+      }
     }
-  }
-});
+  });
+}
+
+parse_csv("myDropdown_z", "../assets/savant_data/data_z.csv")
+parse_csv("myDropdown_x", "../assets/savant_data/data_x.csv")
 
 // Close dropdown if user clicks outside
 window.onclick = function(event) {

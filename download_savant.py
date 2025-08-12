@@ -25,10 +25,14 @@ df = df.sort_values(by = 'pfx_z', ascending = False)
 
 if df.shape[0] > 0:	
 	df.to_csv("assets/savant_data/data_z.csv", index=False)
-	print("Saved data_z.csv with", len(df), "rows")
+	print("Exported data_z.csv with", len(df), "rows")
+else:
+	print("No data_z.csv to export.")
 
 df = df.sort_values(by = 'pfx_x', ascending = False)
 
 if df.shape[0] > 0:	
 	df.to_csv("assets/savant_data/data_x.csv", index=False)
-	print("Saved data_x.csv with", len(df), "rows")
+	print("Exported data_x.csv with", len(df), "rows")
+else:
+	print("No data_x.csv to export.")
