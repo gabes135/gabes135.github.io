@@ -32,7 +32,7 @@ function toggleDropdown(name) {
 }
 
 function showRow(row, button) {
-  const output = document.getElementById("output");
+  let output = document.getElementById("output");
   // output.innerHTML = `<pre>${JSON.stringify(row, null, 2)}</pre>`;
   pitch_state = new PitchState(row);
   let sz_b = row['sz_bot'] 
@@ -52,11 +52,11 @@ function showRow(row, button) {
   };
   // const ivbIn = (parseFloat(row.pfx_z) * 12).toFixed(1);
 
-  const hand = row.p_throws 
-  const IVB = (parseFloat(row.pfx_z) * 12).toFixed(2)
-  const HB = (parseFloat(row.pfx_x) * 12).toFixed(2)
+  let hand = row.p_throws 
+  let IVB = (parseFloat(row.pfx_z) * 12).toFixed(2)
+  let HB = (parseFloat(row.pfx_x) * 12).toFixed(2)
 
-    rowInfo = `
+  let rowInfo = `
       <h3>Pitch Information</h3>
       <p><strong>Pitcher:</strong> ${row.player_name}</p>
       <p><strong>Pitch Type:</strong> ${getPitchName(row.pitch_type)}</p>
@@ -65,7 +65,8 @@ function showRow(row, button) {
       <p><strong>Induced Vertical Break:</strong> ${IVB} in.</p>
       <p><strong>Horizontal Break:</strong> ${HB} in.</p>
     `
-  
+  console.log(button)
+  console.log(rowInfo)
 
   
   // Insert the row data into the "output" div
@@ -243,37 +244,33 @@ function calcOdeRK4(solver, resolution) {
 
 
 
-// Load CSV using PapaParse
+const datasets = {}; // stores data separately for each button
+
 function parse_csv(button, file) {
   Papa.parse(file, {
     download: true,
     header: true,
     complete: function(results) {
-      fullData = results.data;
+      datasets[button] = results.data; // save to button-specific slot
 
       const dropdown = document.getElementById(button);
-      dropdown.innerHTML = ""; // Clear previous content
+      dropdown.innerHTML = "";
 
-      fullData.forEach((row, index) => {
+      datasets[button].forEach((row, index) => {
         const a = document.createElement("a");
+        const name = row.player_name;
 
-        const name = row.player_name;  // Make sure this is the correct column name
-        
-        let len = ""
-        let text = ""
+        let len = "";
+        let text = "";
         if (button == "myDropdown_x") {
-            len = (parseFloat(row.pfx_x) * 12).toFixed(1);
-            text = "HB";
-          }
-          else{
-            len = (parseFloat(row.pfx_z) * 12).toFixed(1);
-            text = "IVB";
-          }
-        
-        // const ivbIn = (parseFloat(row.pfx_z) * 12).toFixed(1);
-        // const hbbIn = (parseFloat(row.pfx_x) * 12).toFixed(1);
-        let formattedName = name;
+          len = (parseFloat(row.pfx_x) * 12).toFixed(1);
+          text = "HB";
+        } else {
+          len = (parseFloat(row.pfx_z) * 12).toFixed(1);
+          text = "IVB";
+        }
 
+        let formattedName = name;
         if (typeof name === "string" && name.includes(",")) {
           const [last, first] = name.split(',').map(s => s.trim());
           formattedName = `${first} ${last}`;
@@ -285,22 +282,21 @@ function parse_csv(button, file) {
         a.addEventListener("click", function(e) {
           e.preventDefault();
           const idx = parseInt(this.dataset.index);
-          showRow(fullData[idx], button);
+          showRow(datasets[button][idx], button); // use saved data
         });
         dropdown.appendChild(a);
       });
 
-       if (fullData.length) {
-        // find the first <a> so we can pass it in for textContent updates
-        const firstLink = dropdown.querySelector('a');
-        showRow(fullData[0], button);
+      if (datasets[button].length && button == "myDropdown_z") {
+        showRow(datasets[button][0], button);
       }
     }
   });
 }
 
-parse_csv("myDropdown_z", "../assets/savant_data/data_z.csv")
-parse_csv("myDropdown_x", "../assets/savant_data/data_x.csv")
+parse_csv("myDropdown_z", "../assets/savant_data/data_z.csv");
+parse_csv("myDropdown_x", "../assets/savant_data/data_x.csv");
+
 
 // Close dropdown if user clicks outside
 window.onclick = function(event) {
