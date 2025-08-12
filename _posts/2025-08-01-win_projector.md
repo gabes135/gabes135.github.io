@@ -166,7 +166,9 @@ In any case, just as our validation results predicts, the model trained using a 
 While the accuracy score matches our Bayes' rate of ~69%, I'm not sure that imposing a 50 game cut off model really represents an improved model. The lower loss implies that the predictions are better calibrated, but only being able to predict games 51 through 82, as opposed to 11 through 82, is fairly constraining for only a 3% increase in the model accuracy from the 10 game cut off model. And since the sportsbooks' predictions don't require such a cuttoff, I'm hesitant to say this model matches their performance. To reach 
 
 
-To be continued...
+## Future Directions
+
+At this point, I've reached a snag in this project
 
 <!-- ## Four Factor + Rolling Average
 The issue with the current set up is that temporal information is highly suppressed by using a rolling average. If a team makes a midseason trade, loses a key player to injury, or is just in a cold/hot streak (the existence of such a thing being left for another discussion), we would expect a change in their likelihood of winning any given matchup. This would be reflected in the team's season-long running averages, but the strength of this signal may be small depending on when these changes occur. A way to capture this temporal data is to include a team's *rolling* average over the previous $$n$$ games in our feature matrix.

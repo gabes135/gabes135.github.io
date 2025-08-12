@@ -1,13 +1,10 @@
 # .github/workflows/update-csv.yml
 name: Update Baseball CSV from Savant
 
-# on:
-#   schedule:
-#     - cron: '0 12 * * *'  # every day at 12 UTC
-#   workflow_dispatch:
 on:
+  schedule:
+    - cron: '0 12 * * *'  # every day at 12 UTC
   workflow_dispatch:
-
 jobs:
   update:
     runs-on: ubuntu-latest

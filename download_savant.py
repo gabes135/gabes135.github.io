@@ -2,10 +2,10 @@ import requests, io
 import pandas as pd
 import datetime
 
-# Set the pitcher ID and date range
-pitcher_id = 669373  # Example: Gerrit Cole
-start_date = "2025-07-29"
-end_date = "2025-08-03"
+# # Set the pitcher ID and date range
+# pitcher_id = 669373  # Example: Gerrit Cole
+# start_date = "2025-07-29"
+# end_date = "2025-08-03"
 
 today = datetime.datetime.now()
 yesterday  = today - datetime.timedelta(days = 1)
@@ -24,5 +24,11 @@ df = df[df.description.isin(['swinging_strike', 'called_strike', 'swinging_strik
 df = df.sort_values(by = 'pfx_z', ascending = False)
 
 if df.shape[0] > 0:	
-	df.to_csv("assets/savant_data/data.csv", index=False)
-	print("Saved data.csv with", len(df), "rows")
+	df.to_csv("assets/savant_data/data_z.csv", index=False)
+	print("Saved data_z.csv with", len(df), "rows")
+
+df = df.sort_values(by = 'pfx_x', ascending = False)
+
+if df.shape[0] > 0:	
+	df.to_csv("assets/savant_data/data_x.csv", index=False)
+	print("Saved data_x.csv with", len(df), "rows")
