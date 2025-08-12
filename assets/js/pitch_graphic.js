@@ -18,6 +18,7 @@ const pitchNames = {
   SC: 'Screwball',
   KN: 'Knuckleball',
   FS: 'Splitter',
+  ST: 'Sweeper',
   UN: 'Unknown'
 };
 
@@ -30,7 +31,7 @@ function toggleDropdown(name) {
   document.getElementById(name).classList.toggle("show");
 }
 
-function showRow(row) {
+function showRow(row, button) {
   const output = document.getElementById("output");
   // output.innerHTML = `<pre>${JSON.stringify(row, null, 2)}</pre>`;
   pitch_state = new PitchState(row);
@@ -49,16 +50,23 @@ function showRow(row) {
     data_nospin[i] = data_nospin[i].map((val) => val / 0.3048);
   }
   };
-  const ivbIn = (parseFloat(row.pfx_z) * 12).toFixed(1);
+  // const ivbIn = (parseFloat(row.pfx_z) * 12).toFixed(1);
+
   const hand = row.p_throws 
-  const rowInfo = `
-    <h3>Pitch Information</h3>
-    <p><strong>Player:</strong> ${row.player_name}</p>
-    <p><strong>Pitch Type:</strong> ${getPitchName(row.pitch_type)}</p>
-    <p><strong>Release Speed:</strong> ${row.release_speed} MPH</p>
-    <p><strong>Spin Rate:</strong> ${row.release_spin_rate} RPM</p>
-    <p><strong>Induced Vertical Break:</strong> ${ivbIn} in.</p>
-  `;
+  const IVB = (parseFloat(row.pfx_z) * 12).toFixed(2)
+  const HB = (parseFloat(row.pfx_x) * 12).toFixed(2)
+
+    rowInfo = `
+      <h3>Pitch Information</h3>
+      <p><strong>Pitcher:</strong> ${row.player_name}</p>
+      <p><strong>Pitch Type:</strong> ${getPitchName(row.pitch_type)}</p>
+      <p><strong>Release Speed:</strong> ${row.release_speed} MPH</p>
+      <p><strong>Spin Rate:</strong> ${row.release_spin_rate} RPM</p>
+      <p><strong>Induced Vertical Break:</strong> ${IVB} in.</p>
+      <p><strong>Horizontal Break:</strong> ${HB} in.</p>
+    `
+  
+
   
   // Insert the row data into the "output" div
   output.innerHTML = rowInfo;
@@ -250,7 +258,20 @@ function parse_csv(button, file) {
         const a = document.createElement("a");
 
         const name = row.player_name;  // Make sure this is the correct column name
-        const ivbIn = (parseFloat(row.pfx_z) * 12).toFixed(1);
+        
+        let len = ""
+        let text = ""
+        if (button == "myDropdown_x") {
+            len = (parseFloat(row.pfx_x) * 12).toFixed(1);
+            text = "HB";
+          }
+          else{
+            len = (parseFloat(row.pfx_z) * 12).toFixed(1);
+            text = "IVB";
+          }
+        
+        // const ivbIn = (parseFloat(row.pfx_z) * 12).toFixed(1);
+        // const hbbIn = (parseFloat(row.pfx_x) * 12).toFixed(1);
         let formattedName = name;
 
         if (typeof name === "string" && name.includes(",")) {
@@ -258,13 +279,13 @@ function parse_csv(button, file) {
           formattedName = `${first} ${last}`;
         }
 
-        a.textContent = `${formattedName} - ${row.release_speed} MPH ${row.pitch_type} - IVB: ${ivbIn} in.` || `Row ${index}`;
+        a.textContent = `${formattedName} - ${row.release_speed} MPH ${row.pitch_type} - ${text}: ${len} in.` || `Row ${index}`;
         a.href = "#";
         a.dataset.index = index;
         a.addEventListener("click", function(e) {
           e.preventDefault();
           const idx = parseInt(this.dataset.index);
-          showRow(fullData[idx], a);
+          showRow(fullData[idx], button);
         });
         dropdown.appendChild(a);
       });
@@ -272,7 +293,7 @@ function parse_csv(button, file) {
        if (fullData.length) {
         // find the first <a> so we can pass it in for textContent updates
         const firstLink = dropdown.querySelector('a');
-        showRow(fullData[0], firstLink);
+        showRow(fullData[0], button);
       }
     }
   });
