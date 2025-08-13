@@ -9,11 +9,12 @@ function makeLineTrace(x, y, z, color, width = 4, opacity = 1, hover ='none', te
 };
 }
 
-function makeMarkerTrace(x, y, z, color, size){
+function makeMarkerTrace(x, y, z, color, size,  hover ='none', text='none'){
   return { x, y, z,
   type: 'scatter3d',
   mode: 'markers',
-  hoverinfo: 'none',
+  hoverinfo: hover,
+  text: text,
   marker: { color, size }
 };
 }
@@ -131,11 +132,13 @@ function plot_traj(row, button) {
     const start = makeMarkerTrace([data[1][0]], [data[2][0]], [data[3][0]], 'red', 3);
     const end = makeMarkerTrace(
       [data[1].at(-2)], [data[2].at(-2)], [data[3].at(-2)],
-      'blue', 5
+      'blue', 5,
+      'text', 'With Spin'
     );
     const end_nospin = makeMarkerTrace(
       [data_nospin[1].at(-2)], [data_nospin[2].at(-2)], [data_nospin[3].at(-2)],
-      'rgba(0, 0, 255, 0.33)', 5
+      'rgba(0, 0, 255, 0.33)', 5,
+      'text', 'Without Spin'
     );
 
     // End point movement line
