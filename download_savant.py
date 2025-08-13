@@ -21,18 +21,33 @@ data = requests.get(url)
 df = pd.read_csv(io.StringIO(data.text))
 
 df = df[df.description.isin(['swinging_strike', 'called_strike', 'swinging_strike_blocked'])]
+
+if df.shape[0] == 0:	
+	print("No data to export.")
+	exit()
+
 df = df.sort_values(by = 'pfx_z', ascending = False)
+df.to_csv("assets/savant_data/data_z_pos.csv", index=False)
+print("Exported data_z_pos.csv with", len(df), "rows")
 
-if df.shape[0] > 0:	
-	df.to_csv("assets/savant_data/data_z.csv", index=False)
-	print("Exported data_z.csv with", len(df), "rows")
-else:
-	print("No data_z.csv to export.")
+df_drop = df.copy()
+df_drop['pfx_z'] *= -1
+df_drop = df_drop.sort_values(by = 'pfx_z', ascending = False)
+df_drop.to_csv("assets/savant_data/data_z_neg.csv", index=False)
+print("Exported data_z_neg.csv with", len(df_drop), "rows")
 
-df = df.sort_values(by = 'pfx_x', ascending = False)
+df_R = df[df['p_throws'] == 'R']
+df_L = df[df['p_throws'] == 'L'].copy()
+df_L['pfx_x'] *= -1
 
-if df.shape[0] > 0:	
-	df.to_csv("assets/savant_data/data_x.csv", index=False)
-	print("Exported data_x.csv with", len(df), "rows")
-else:
-	print("No data_x.csv to export.")
+df_glove = pd.concat([df_R, df_L])
+df_glove = df_glove.sort_values(by = 'pfx_x', ascending = False)
+
+df_glove.to_csv("assets/savant_data/data_x_glove.csv", index=False)
+print("Exported data_x_glove.csv with", len(df_glove), "rows")
+
+
+df_arm = df_glove.sort_values(by = 'pfx_x', ascending = True)
+df_arm['pfx_x'] *= -1
+df_arm.to_csv("assets/savant_data/data_x_arm.csv", index=False)
+print("Exported data_x_glove.csv with", len(df_arm), "rows")

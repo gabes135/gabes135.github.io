@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="{{ page.lang | default: site.lang | default: "en" }}">
+
+  {%- include head.html -%}
+
+  <body>
+
+    {%- include wide_header.html -%}
+
+    <main class="page-content" aria-label="Content">
+      <div class="wrapper" style="max-width: 1000px; margin: 0 auto;">
+        {{ content }}
+      </div>
+    </main>
+
+    {%- include footer.html -%}
+
+
+<script src="{{ '/assets/js/jquery-3.7.1.min.js' | relative_url }}"></script>
+<script src="{{ '/assets/slick/slick.min.js' | relative_url }}"></script>
+
+<script>
+  $(document).ready(function(){
+    $('.post-slider').slick({
+      slidesToShow: 1,
+      slidesToScroll: 1,
+      accessibility: true,
+      centerMode: true,
+      variableWidth: false,
+      dots: true,
+      swipe:true,
+      draggable: true,
+      autoplay: true,
+      autoplaySpeed: 10000,
+
+    });
+  });
+</script>
+
+
+  </body>
+
+</html>

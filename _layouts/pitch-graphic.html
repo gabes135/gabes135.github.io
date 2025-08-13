@@ -1,5 +1,5 @@
 ---
-layout: default
+layout: wide
 ---
 
 <html>
@@ -11,18 +11,21 @@ layout: default
 
 {{ content }}
 
-<body>
+<body >
   <script src="../assets/js/papaparse.min.js"></script>
-     <script src="https://cdn.plot.ly/plotly-3.0.1.min.js" charset="utf-8"></script>
+  <script src="https://cdn.plot.ly/plotly-3.0.1.min.js" charset="utf-8"></script>
 
-  <script src="../assets/js/slider.js"></script>
+  <h2 class="menu-title">Top Pitches by:</h2>
+  <div id="menu-bar"></div>
+
+  <!-- <script src="../assets/js/slider.js"></script> -->
   <script src="../assets/js/ode.js"></script>
   <script src="../assets/js/plotter.js"></script>
   <script src="../assets/js/pitch_graphic.js"></script>
   <script src="../assets/js/traj.js"></script>
 
 
-
+<!-- 
   <div class="dropdown">
     <button onclick="toggleDropdown('z')" class="dropbtn">
       Top Pitches by Induced Vertical Break  <img src="../assets/images/down.png" alt="▼" style="width:20px; height:20px; vertical-align:middle;padding-bottom:4px;">
@@ -36,6 +39,9 @@ layout: default
   </button>
     <div id="myDropdown_x" class="dropdown-content"></div>
   </div>
+ -->
+
+  
 
   <p id="dateDisplay" style="font-size:14px; padding-left: 8px;"></p>
 
@@ -68,6 +74,7 @@ layout: default
     <div id="plot"></div>
   </div>
 </div>
+
 
 
 </body>

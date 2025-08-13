@@ -142,15 +142,29 @@ function plot_traj(row, button) {
     );
 
     // End point movement line
-    const diff = makeLineTrace(
-      [data_nospin[1].at(-2), data[1].at(-2), data[1].at(-2)],
-      [data_nospin[2].at(-2), data[2].at(-2), data[2].at(-2)],
-      [data_nospin[3].at(-2), data_nospin[3].at(-2), data[3].at(-2)],
-      'rgba(255, 0, 0, .75)',
-      4, 1,
-      'text',
-      `IVB: ${IVB} in., HB: ${HB} in.`,
-    );
+    let diff;
+    if (data_nospin[3].at(-2) < data[3].at(-2)) {
+      diff = makeLineTrace(
+        [data_nospin[1].at(-2), data[1].at(-2), data[1].at(-2)],
+        [data_nospin[2].at(-2), data[2].at(-2), data[2].at(-2)],
+        [data_nospin[3].at(-2), data_nospin[3].at(-2), data[3].at(-2)],
+        'rgba(255, 0, 0, .75)',
+        4, 1,
+        'text',
+        `IVB: ${IVB} in., HB: ${HB} in.`);}
+    else {
+      diff = makeLineTrace(
+        [data_nospin[1].at(-2), data_nospin[1].at(-2), data[1].at(-2)],
+        [data_nospin[2].at(-2), data_nospin[2].at(-2), data[2].at(-2)],
+        [data_nospin[3].at(-2), data[3].at(-2), data[3].at(-2)],
+        'rgba(255, 0, 0, .75)',
+        4, 1,
+        'text',
+        `IVB: ${-IVB} in., HB: ${HB} in.`);}
+
+    
+
+    console.log([(data[1].at(-2)-data_nospin[1].at(-2))/scale_factor,  HB/12])
 
 
     const kzone = makeSurface(

@@ -41,7 +41,7 @@ header_pages:
   - portfolio.md
   - pitch_graphic.md
   - cv.md
-  - research.md
+  # - research.md
 
 include:
   - "_posts"
