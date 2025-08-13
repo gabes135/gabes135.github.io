@@ -11,6 +11,8 @@ function  addVectors(v1, v2) {
     return v1.map((val, i) => val + v2[i]);
 }
 
+
+
 class PitchState {
     constructor(row, f_L = 1) {
         this.g = 9.81;
@@ -113,7 +115,6 @@ class PitchState {
         this.C_L = C_L;
         this.omega_hat = omega_hat;
         this.omega_mag = omega_mag;
-        console.log(this.omega_hat)
     }
 
 

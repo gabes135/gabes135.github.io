@@ -15,72 +15,60 @@ layout: default
   <script src="../assets/js/papaparse.min.js"></script>
      <script src="https://cdn.plot.ly/plotly-3.0.1.min.js" charset="utf-8"></script>
 
+  <script src="../assets/js/slider.js"></script>
   <script src="../assets/js/ode.js"></script>
-   <script src="../assets/js/pitch_graphic.js"></script>
-    <script src="../assets/js/traj.js"></script>
+  <script src="../assets/js/plotter.js"></script>
+  <script src="../assets/js/pitch_graphic.js"></script>
+  <script src="../assets/js/traj.js"></script>
+
+
 
   <div class="dropdown">
-    <button onclick="toggleDropdown('myDropdown_z')" class="dropbtn">Top Pitches by Induced Vertical Break</button>
+    <button onclick="toggleDropdown('z')" class="dropbtn">
+      Top Pitches by Induced Vertical Break  <img src="../assets/images/down.png" alt="▼" style="width:20px; height:20px; vertical-align:middle;padding-bottom:4px;">
+    </button>
     <div id="myDropdown_z" class="dropdown-content"></div>
   </div>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
   <div class="dropdown">
-    <button onclick="toggleDropdown('myDropdown_x')" class="dropbtn">Top Pitches by Horizontal Break</button>
+    <button onclick="toggleDropdown('x')" class="dropbtn">
+    Top Pitches by Horizontal Break  <img src="../assets/images/down.png" alt="▼" style="width:20px; height:20px; vertical-align:middle;padding-bottom:4px;">
+  </button>
     <div id="myDropdown_x" class="dropdown-content"></div>
   </div>
 
-  <div id="output" style="margin-top: 20px;"></div>
+  <p id="dateDisplay" style="font-size:14px; padding-left: 8px;"></p>
 
-<!-- <div id="plot" style="width: 100%; height: 400px;"></div> -->
+
+<!-- <div class="pitch_info_wrapper">
+
+  <div id="output" style="margin-top: 5px;"></div>
+</div>
+
+<br/><br/>
 
 <div class="plot-wrapper">
   <div id="plot"></div>
+</div> -->
+
+<!-- <br/>
+<div class="slidecontainer">
+  <input type="range" min="1" max="100" value="50" class="slider" id="myRange">
 </div>
- <!--  <h1>CSV Table</h1>
-  <div id="csv-table"></div>
+<br/>
+<p>Value: <span id="demo"></span></p> -->
 
-  <script src="../assets/js/papaparse.min.js"></script>
-  <script src="../assets/js/pitch_graphic.js"></script>
 
-  <script>
-    // Load the CSV file
-    fetch('/assets/savant_data/data.csv')
-      .then(response => response.text())
-      .then(csv => {
-        const parsed = Papa.parse(csv, { header: true });
-        const data = parsed.data;
+<div class="pitch-viz-container">
+  <div class="pitch_info_wrapper">
+    <div id="output" style="margin-top: 5px;"></div>
+  </div>
 
-        const table = document.createElement('table');
-        table.border = '1';
+  <div class="plot-wrapper">
+    <div id="plot"></div>
+  </div>
+</div>
 
-        // Create header row
-        const thead = document.createElement('thead');
-        const headerRow = document.createElement('tr');
-        for (const key of Object.keys(data[0])) {
-          const th = document.createElement('th');
-          th.textContent = key;
-          headerRow.appendChild(th);
-        }
-        thead.appendChild(headerRow);
-        table.appendChild(thead);
 
-        // Create data rows
-        const tbody = document.createElement('tbody');
-        const maxRows = 2; // Change this to whatever number you want
-        for (let i = 0; i < Math.min(data.length, maxRows); i++) {
-          const row = data[i];
-          const tr = document.createElement('tr');
-          for (const key of Object.keys(row)) {
-            const td = document.createElement('td');
-            td.textContent = row[key];
-            tr.appendChild(td);
-          }
-          tbody.appendChild(tr);
-        }
-        table.appendChild(tbody);
-
-        document.getElementById('csv-table').appendChild(table);
-      });
-  </script> -->
 </body>
 </html>

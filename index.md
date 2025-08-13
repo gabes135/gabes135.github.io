@@ -16,5 +16,10 @@ A collection of [projects]({{ site.baseurl }}{% link portfolio.md %}) I've worke
 
 <br/><br/><br/>
 
-# Portfolio
 
+<!-- # [Portfolio]({{ site.baseurl }}{% link portfolio.md %}) -->
+<h1>
+  <a href="{{ site.baseurl }}{% link portfolio.md %}" class="black-link">
+    Portfolio
+  </a>
+</h1>
