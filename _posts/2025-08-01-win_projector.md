@@ -168,7 +168,9 @@ While the accuracy score matches our Bayes' rate of ~69%, I'm not sure that impo
 
 ## Future Directions
 
-At this point, I've reached a snag in this project
+...
+
+<!-- At this point, I've hit a wall in this project.  -->
 
 <!-- ## Four Factor + Rolling Average
 The issue with the current set up is that temporal information is highly suppressed by using a rolling average. If a team makes a midseason trade, loses a key player to injury, or is just in a cold/hot streak (the existence of such a thing being left for another discussion), we would expect a change in their likelihood of winning any given matchup. This would be reflected in the team's season-long running averages, but the strength of this signal may be small depending on when these changes occur. A way to capture this temporal data is to include a team's *rolling* average over the previous $$n$$ games in our feature matrix.
