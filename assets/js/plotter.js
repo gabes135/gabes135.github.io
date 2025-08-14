@@ -165,6 +165,7 @@ function plot_traj(row, button) {
     
 
     console.log([(data[1].at(-2)-data_nospin[1].at(-2))/scale_factor,  HB/12])
+    console.log([(data[3].at(-2)-data_nospin[3].at(-2))/scale_factor,  IVB/12])
 
 
     const kzone = makeSurface(

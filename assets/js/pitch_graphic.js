@@ -1,12 +1,5 @@
-
-
-
-let data = [];
-let pitch_state; // Declare globally
-let solver
-let x_open
-let z_open
-
+// -------------------------- Global variables --------------------------
+const button_ids = ["z_p", "z_n", "x_g", "x_a"];
 const pitchNames = {
   FF: 'Four-Seam Fastball',
   FT: 'Two-Seam Fastball',
@@ -23,29 +16,56 @@ const pitchNames = {
   UN: 'Unknown'
 };
 
+let dropdownConfig = [];   // make globally accessible
+let datasets = {};         // global datasets for each button
+let data_folder = "";      // global data folder path
+
+// -------------------------- Utility functions --------------------------
 function getPitchName(code) {
   return pitchNames[code] || 'Unknown Pitch';
 }
 
-const button_ids = ["z_p", "z_n", "x_g", "x_a"]
+// -------------------------- Async helpers --------------------------
+async function fileExists(path) {
+  try {
+    const res = await fetch(path, { method: 'HEAD' });
+    return res.ok;
+  } catch {
+    return false;
+  }
+}
 
-// const dropdownConfig = [
-//   { id: "z_p", label: "Top Pitches by<br>Rise", csv: "../assets/savant_data/data_z_pos.csv" },
-//   { id: "z_n", label: "Top Pitches by<br>Drop", csv: "../assets/savant_data/data_z_neg.csv" },
-//   { id: "x_g", label: "Top Pitches by<br>Glove Side Break", csv: "../assets/savant_data/data_x_glove.csv" },
-//   { id: "x_a", label: "Top Pitches by<br>Arm Side Break", csv: "../assets/savant_data/data_x_arm.csv" }
-// ];
+async function getDataFolder() {
+  const today = new Date();
+  const yesterday = new Date(today);
+  yesterday.setDate(yesterday.getDate() - 1);
+  const dateStr = yesterday.toISOString().split('T')[0];
 
-const dropdownConfig = [
-  { id: "z_p", label: "Rise", csv: "../assets/savant_data/data_z_pos.csv" },
-  { id: "z_n", label: "Drop", csv: "../assets/savant_data/data_z_neg.csv" },
-  { id: "x_g", label: "Glove Side Break", csv: "../assets/savant_data/data_x_glove.csv" },
-  { id: "x_a", label: "Arm Side Break", csv: "../assets/savant_data/data_x_arm.csv" }
-];
+  const dailyFolder = `../assets/savant_data/${dateStr}`;
+  const backupFolder = "../assets/savant_data/backup";
 
+  const exists = await fileExists(dailyFolder);
+  return exists ? dailyFolder : backupFolder;
+}
 
+async function initDropdownConfig() {
+  data_folder = await getDataFolder(); // update global folder
+
+  dropdownConfig = [
+    { id: "z_p", label: "Rise", csv: `${data_folder}/data_z_pos.csv` },
+    { id: "z_n", label: "Drop", csv: `${data_folder}/data_z_neg.csv` },
+    { id: "x_g", label: "Glove Side Break", csv: `${data_folder}/data_x_glove.csv` },
+    { id: "x_a", label: "Arm Side Break", csv: `${data_folder}/data_x_arm.csv` }
+  ];
+
+  console.log("Using data folder:", data_folder);
+  console.log("Dropdown config:", dropdownConfig);
+}
+
+// -------------------------- Dropdown and UI functions --------------------------
 function createMenuBar() {
   const menuBar = document.getElementById("menu-bar");
+  menuBar.innerHTML = ""; // clear previous content
 
   dropdownConfig.forEach(cfg => {
     const wrapper = document.createElement("div");
@@ -54,7 +74,8 @@ function createMenuBar() {
     wrapper.innerHTML = `
       <button onclick="toggleDropdown('${cfg.id}')" class="dropbtn">
         ${cfg.label}
-        <img src="../assets/images/down.png" alt="▼" style="width:20px; height:20px; vertical-align:middle;padding-bottom:4px;">
+        <img src="../assets/images/down.png" alt="▼" style="width:20px; height:20px;
+         vertical-align:middle;padding-bottom:4px; pointer-events: none;">
       </button>
       <div id="myDropdown_${cfg.id}" class="dropdown-content"></div>
     `;
@@ -66,42 +87,47 @@ function createMenuBar() {
   });
 }
 
-
-
-
-
 function toggleDropdown(id_show) {
-
   const clickedMenu = document.getElementById(`myDropdown_${id_show}`);
   const isOpen = clickedMenu.classList.contains('show');
 
-  button_ids.forEach((id, i) =>  document.querySelectorAll(".dropdown-content").forEach(d => document.getElementById(`myDropdown_${id}`).classList.remove('show')))
-  
-  // document.getElementById(`myDropdown_${id_show}`).classList.toggle("show")
+  // Close all dropdowns
+  button_ids.forEach(id => document.getElementById(`myDropdown_${id}`).classList.remove('show'));
+
   if (!isOpen) {
     clickedMenu.classList.add('show');
   }
+}
 
-
+// Close dropdown if user clicks outside
+window.onclick = function(event) {
+  if (!event.target.matches('.dropbtn')) {
+    document.querySelectorAll(".dropdown-content").forEach(d => d.classList.remove('show'));
+  }
 };
 
 function showRow(row, button) {
-  let output = document.getElementById("output");
-  document.getElementById("dateDisplay").innerText = `Last updated ${row.game_date}`;
-  // output.innerHTML = `<pre>${JSON.stringify(row, null, 2)}</pre>`;
+  const output = document.getElementById("output");
+  if (data_folder == "../assets/savant_data/backup") {
+    document.getElementById("dateDisplay").innerText = `Selection of pitches from ${row.game_date.slice(0, 4)} season`;
+  }
+  else {
+    document.getElementById("dateDisplay").innerText = `Last updated ${row.game_date}`;
+
+  }
   
-  let hand = row.p_throws
-  let IVB = (parseFloat(row.pfx_z) * 12).toFixed(2)
-  let HB = (parseFloat(row.pfx_x) * 12).toFixed(2)
+  const hand = row.p_throws;
+  const IVB = (parseFloat(row.pfx_z) * 12).toFixed(2);
+  const HB = (parseFloat(row.pfx_x) * 12).toFixed(2);
 
-  let name = row.player_name
+  const name = row.player_name;
   let formattedName = name;
-    if (typeof name === "string" && name.includes(",")) {
-      const [last, first] = name.split(',').map(s => s.trim());
-      formattedName = `${first} ${last}`;
-    }
+  if (typeof name === "string" && name.includes(",")) {
+    const [last, first] = name.split(',').map(s => s.trim());
+    formattedName = `${first} ${last}`;
+  }
 
-  let rowInfo = `
+  const rowInfo = `
       <h3><strong>Pitch Information</strong></h3>
       <p><strong>Pitcher:</strong> ${formattedName} (${hand})</p>
       <p><strong>Pitch Type:</strong> ${getPitchName(row.pitch_type)}</p>
@@ -109,35 +135,24 @@ function showRow(row, button) {
       <p><strong>Spin Rate:</strong> ${row.release_spin_rate} RPM</p>
       <p><strong>Induced Vertical Break:</strong> ${IVB} in.</p>
       <p><strong>Horizontal Break:</strong> ${HB} in.</p>
-    `
-  console.log(button)
-  console.log(rowInfo)
+    `;
 
-  // Insert the row data into the "output" div
   output.innerHTML = rowInfo;
-
-  plot_traj(row, button)
-
-
-};
-
-
-
-const datasets = {}; // stores data separately for each button
+  plot_traj(row, button);
+}
 
 function parse_csv(button, file) {
   Papa.parse(file, {
     download: true,
     header: true,
     complete: function(results) {
-      datasets[button] = results.data; // save to button-specific slot
+      datasets[button] = results.data;
 
       const dropdown = document.getElementById(button);
       dropdown.innerHTML = "";
 
       datasets[button].forEach((row, index) => {
         const a = document.createElement("a");
-        const name = row.player_name;
 
         let len = "";
         let text = "";
@@ -149,20 +164,19 @@ function parse_csv(button, file) {
           text = "IVB";
         }
 
-        let formattedName = name;
-        if (typeof name === "string" && name.includes(",")) {
-          const [last, first] = name.split(',').map(s => s.trim());
+        let formattedName = row.player_name;
+        if (typeof formattedName === "string" && formattedName.includes(",")) {
+          const [last, first] = formattedName.split(',').map(s => s.trim());
           formattedName = `${first} ${last}`;
         }
 
-        // a.textContent = `${formattedName} - ${row.release_speed} MPH ${row.pitch_type} - ${text}: ${len} in.` || `Row ${index}`;
-        a.textContent = `${formattedName} - ${row.pitch_type} - ${text}: ${len} in.` || `Row ${index}`;
+        a.textContent = `${formattedName} - ${row.pitch_type} - ${text}: ${len} in.`;
         a.href = "#";
         a.dataset.index = index;
         a.addEventListener("click", function(e) {
           e.preventDefault();
           const idx = parseInt(this.dataset.index);
-          showRow(datasets[button][idx], button); // use saved data
+          showRow(datasets[button][idx], button);
         });
         dropdown.appendChild(a);
       });
@@ -174,16 +188,11 @@ function parse_csv(button, file) {
   });
 }
 
+// -------------------------- Main initialization --------------------------
+async function main() {
+  await initDropdownConfig(); // ensures data_folder and dropdownConfig are ready
+  createMenuBar();             // safe to use dropdownConfig now
+}
 
-// Close dropdown if user clicks outside
-window.onclick = function(event) {
-  if (!event.target.matches('.dropbtn')) {
-    document.querySelectorAll(".dropdown-content").forEach(d => d.classList.remove('show'));
-  }
-};
-
-
-// parse_csv("myDropdown_z", "../assets/savant_data/data_z.csv");
-// parse_csv("myDropdown_x", "../assets/savant_data/data_x.csv");
-createMenuBar();
-
+// call main
+main();
