@@ -13,7 +13,7 @@ layout: home
 
 ###  I recently defended my Ph.D. in computational physics and am seeking opportunities in data science and machine learning.
 
-### A collection of [projects]({{ site.baseurl }}{% link portfolio.md %}) I've worked on over the years can be found below. Click for more info!
+### A collection of [projects]({{ site.baseurl }}{% link portfolio.md %}) I've worked on over the years can be found below. Also check out my [pitch visualizer]({{ site.baseurl }}{% link pitch_graphic.md %}), a light weight JavaScript application for analyzing trajectories.
 
 
 <br/><br/>

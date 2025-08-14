@@ -68,7 +68,7 @@ async function getDataFolder() {
   const dailyFolder = `../assets/savant_data/${dateStr}`;
   const backupFolder = "../assets/savant_data/backup";
 
-  const exists = await fileExists(dailyFolder);
+  const exists = await fileExists(`${dailyFolder}/data_z_pos.csv`);
   return exists ? dailyFolder : backupFolder;
 }
 
