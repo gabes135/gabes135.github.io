@@ -107,7 +107,7 @@ h1 a.black-link:hover {
   background: #fff;            /* optional background */
   box-shadow: 0 2px 6px rgba(0,0,0,0.1); /* subtle drop-shadow */
   display: inline-block;       /* shrink-wrap to plot width */
-  flex: 0 0 60%;  /* fixed 60% width */
+  flex: 0 0 70%;  /* fixed 60% width */
   box-sizing: border-box;
 }
 
@@ -125,7 +125,7 @@ h1 a.black-link:hover {
   background: #fff;            /* optional background */
   box-shadow: 0 2px 6px rgba(0,0,0,0.1); /* subtle drop-shadow */
   display: inline-block;       /* shrink-wrap to plot width */
-  flex: 0 0 40%;  /* don’t grow/shrink, fixed 40% width */
+  flex: 0 0 30%;  /* don’t grow/shrink, fixed 40% width */
   box-sizing: border-box; /* include padding/border in width */
 }
 
