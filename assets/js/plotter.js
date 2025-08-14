@@ -94,10 +94,42 @@ m_to_feet = m_to_feet / scale_factor
 
 
 
-// Main plotter
-function plot_traj(row, button) {
+function generateDiff(data, data_nospin) {
+    if (data_nospin[3].at(-2) < data[3].at(-2)) {
+        return [
+            [data_nospin[1].at(-2), data[1].at(-2), data[1].at(-2)],
+            [data_nospin[2].at(-2), data[2].at(-2), data[2].at(-2)],
+            [data_nospin[3].at(-2), data_nospin[3].at(-2), data[3].at(-2)]
+        ];
+    } else {
+        return [
+            [data_nospin[1].at(-2), data_nospin[1].at(-2), data[1].at(-2)],
+            [data_nospin[2].at(-2), data_nospin[2].at(-2), data[2].at(-2)],
+            [data_nospin[3].at(-2), data[3].at(-2), data[3].at(-2)]
+        ];
+    }
+}
 
-    pitch_state = new PitchState(row);
+function recalcTraj(row, f_L, omega_hat){
+  pitch_state_prime = new PitchState(row, f_L);
+  pitch_state_prime.omega_hat = omega_hat
+  solver_prime = new ODEsolver(pitch_state_prime.derivs.bind(pitch_state_prime), pitch_state_prime.initial_conditions, 0, 1)
+  data_prime = calcOdeRK4(solver_prime, 10000)
+
+  for (let i = 1; i <= 3; i++) {
+      if (data_prime[i]) {
+          data_prime[i] = data_prime[i].map((val) => val / m_to_feet);
+  }
+  };
+
+  return data_prime
+}
+
+// Main plotter
+function plot_traj(row, f_L=1) {
+
+    pitch_state = new PitchState(row, f_L);
+
     let sz_b = row['sz_bot'] 
     let sz_t = row['sz_top']
 
@@ -106,12 +138,12 @@ function plot_traj(row, button) {
     let HB = (parseFloat(row.pfx_x) * 12).toFixed(2)
 
 
-    var solver = new ODEsolver(pitch_state.derivs.bind(pitch_state), pitch_state.initial_conditions, 0, 1)
+    let solver = new ODEsolver(pitch_state.derivs.bind(pitch_state), pitch_state.initial_conditions, 0, 1)
     data = calcOdeRK4(solver, 10000)
 
 
     pitch_state_nospin = new PitchState(row, 0);
-    var solver_nospin = new ODEsolver(pitch_state_nospin.derivs.bind(pitch_state_nospin), pitch_state_nospin.initial_conditions, 0, 1)
+    let solver_nospin = new ODEsolver(pitch_state_nospin.derivs.bind(pitch_state_nospin), pitch_state_nospin.initial_conditions, 0, 1)
     data_nospin = calcOdeRK4(solver_nospin, 10000)
 
 
@@ -127,7 +159,7 @@ function plot_traj(row, button) {
     const pitch = makeLineTrace(data[1], data[2], data[3], 'black');
     const pitch_nospin = makeLineTrace(data_nospin[1], data_nospin[2], data_nospin[3], 'rgba(0, 0, 0, 0.33)');
 
-
+    console.log("init", [data[1].at(-2)], [data[2].at(-2)], [data[3].at(-2)])
     // Start and end points
     const start = makeMarkerTrace([data[1][0]], [data[2][0]], [data[3][0]], 'red', 3);
     const end = makeMarkerTrace(
@@ -142,41 +174,30 @@ function plot_traj(row, button) {
     );
 
     // End point movement line
-    let diff;
-    if (data_nospin[3].at(-2) < data[3].at(-2)) {
-      diff = makeLineTrace(
-        [data_nospin[1].at(-2), data[1].at(-2), data[1].at(-2)],
-        [data_nospin[2].at(-2), data[2].at(-2), data[2].at(-2)],
-        [data_nospin[3].at(-2), data_nospin[3].at(-2), data[3].at(-2)],
-        'rgba(255, 0, 0, .75)',
-        4, 1,
-        'text',
-        `IVB: ${IVB} in., HB: ${HB} in.`);}
-    else {
-      diff = makeLineTrace(
-        [data_nospin[1].at(-2), data_nospin[1].at(-2), data[1].at(-2)],
-        [data_nospin[2].at(-2), data_nospin[2].at(-2), data[2].at(-2)],
-        [data_nospin[3].at(-2), data[3].at(-2), data[3].at(-2)],
-        'rgba(255, 0, 0, .75)',
-        4, 1,
-        'text',
-        `IVB: ${-IVB} in., HB: ${HB} in.`);}
+    let x_diff
+    let y_diff
+    let z_diff
+    [x_diff, y_diff, z_diff] = generateDiff(data, data_nospin)
 
-    
-
-    console.log([(data[1].at(-2)-data_nospin[1].at(-2))/scale_factor,  HB/12])
-    console.log([(data[3].at(-2)-data_nospin[3].at(-2))/scale_factor,  IVB/12])
+    const diff = makeLineTrace(
+      x_diff,
+      y_diff,
+      z_diff,
+      'rgba(255, 0, 0, .75)',
+      4, 1,
+      'text',
+      `IVB: ${Math.abs(IVB)} in., HB: ${Math.abs(HB)} in.`);
 
 
     const kzone = makeSurface(
         [-0.71, 0.71, 0.71, -0.71, -0.71].map((val) => val * scale_factor),
-        [.5, .5, .5, .5, .5].map((val) => val * scale_factor),
+        [1.5, 1.5, 1.5, 1.5, 1.5].map((val) => val * scale_factor),
         [sz_b, sz_b, sz_t, sz_t, sz_b].map((val) => val * scale_factor),
          'rgba(0, 0, 0, 0.05)');
 
     const kzone_border = makeLineTrace(
         [-0.71, 0.71, 0.71, -0.71, -0.71].map((val) => val * scale_factor),
-        [.5, .5, .5, .5, .5].map((val) => val * scale_factor),
+        [1.5, 1.5, 1.5, 1.5, 1.5].map((val) => val * scale_factor),
         [sz_b, sz_b, sz_t, sz_t, sz_b].map((val) => val * scale_factor),
          'rgba(0, 0, 0, 0.75)');
 
@@ -305,6 +326,7 @@ function plot_traj(row, button) {
 
 
     // 
+    return [pitch_state.C_L, pitch_state.S, data_nospin, pitch_state.omega_hat, pitch_state.omega_G_mag, pitch_state.omega_T_mag]
 
 }
 

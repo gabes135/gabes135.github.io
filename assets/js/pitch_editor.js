@@ -20,6 +20,30 @@ let dropdownConfig = [];   // make globally accessible
 let datasets = {};         // global datasets for each button
 let data_folder = "";      // global data folder path
 
+const spin_rate = document.getElementById("spin_rate");
+const spin_rate_val = document.getElementById("spin_rate_value");
+
+
+const spin_axis = document.getElementById("spin_axis");
+const spin_axis_val = document.getElementById("spin_axis_value");
+
+
+
+const A = 0.336;
+const B = 6.041;
+let C_L; 
+let S;
+let S_prime;
+let C_L_prime;
+let f_L;
+let data_nospin;
+let x_diff;
+let y_diff;
+let z_diff;
+let omega_hat = [];
+let omega_xy;
+
+
 // -------------------------- Utility functions --------------------------
 function getPitchName(code) {
   return pitchNames[code] || 'Unknown Pitch';
@@ -59,7 +83,6 @@ async function initDropdownConfig() {
   ];
 
   console.log("Using data folder:", data_folder);
-  console.log("Dropdown config:", dropdownConfig);
 }
 
 // -------------------------- Dropdown and UI functions --------------------------
@@ -118,7 +141,8 @@ function showRow(row, button) {
   
   const hand = row.p_throws;
   const IVB = (parseFloat(row.pfx_z) * 12).toFixed(2);
-  const HB = (parseFloat(row.pfx_x) * 12).toFixed(2);
+  const HB = Math.abs((parseFloat(row.pfx_x) * 12)).toFixed(2);
+
 
   const name = row.player_name;
   let formattedName = name;
@@ -128,7 +152,7 @@ function showRow(row, button) {
   }
 
   const rowInfo = `
-      <h3><strong>Pitch Information</strong></h3>
+      <h3><strong>Original Pitch Information</strong></h3>
       <p><strong>Pitcher:</strong> ${formattedName} (${hand})</p>
       <p><strong>Pitch Type:</strong> ${getPitchName(row.pitch_type)}</p>
       <p><strong>Release Speed:</strong> ${row.release_speed} MPH</p>
@@ -138,8 +162,24 @@ function showRow(row, button) {
     `;
 
   output.innerHTML = rowInfo;
-  plot_traj(row);
+
+  [C_L, S, data_nospin, omega_hat, omega_G_mag, omega_T_mag] = plot_traj(row);
+
+  omega_xy = Math.sqrt(Math.pow(omega_hat[1], 0) + Math.pow(omega_hat[1], 2))
+  const theta = (360 + ((180/Math.PI) * Math.atan2(omega_hat[2], omega_hat[0])))%360
+  console.log(theta, omega_hat)
+
+  spin_rate.value = parseInt(row.release_spin_rate)
+  spin_rate_val.innerHTML = `${parseInt(row.release_spin_rate)} RPM`;
+  spin_rate.row = row;
+
+  spin_axis.value = theta
+  spin_axis_val.innerHTML = `${parseInt(theta)}&deg`;
+  spin_axis.row = row;
+
+
 }
+
 
 function parse_csv(button, file) {
   Papa.parse(file, {
@@ -188,7 +228,50 @@ function parse_csv(button, file) {
   });
 }
 
-// -------------------------- Main initialization --------------------------
+// -------------------------- Slider Updates --------------------------
+
+function updatePitchPlot() {
+    // Read slider values
+    const spinVal = parseFloat(spin_rate.value);
+    const axisVal = parseFloat(spin_axis.value);
+
+    // Update display text
+    spin_rate_val.innerHTML = `${spinVal} RPM`;
+    spin_axis_val.innerHTML = `${parseInt(axisVal)}&deg`;
+
+    // Compute f_L based on spin rate
+    const ratio = spinVal / spin_rate.row['release_spin_rate'];
+    const S_prime = S * ratio;
+    const C_L_prime = A * (1 - Math.exp(-B * S_prime));
+    const f_L = C_L_prime / C_L;
+
+    
+    const omega_hat_prime = omega_hat
+    omega_hat_prime[0] = omega_xy * Math.cos((Math.PI/180) * axisVal)
+    omega_hat_prime[2] = omega_xy * Math.sin((Math.PI/180) * axisVal)
+    console.log(omega_hat_prime)
+
+    // Recalculate trajectory
+    const data_prime = recalcTraj(spin_rate.row, f_L, omega_hat_prime);
+
+    // Compute diff line
+    const [x_diff, y_diff, z_diff] = generateDiff(data_prime, data_nospin);
+
+    // Update Plotly traces
+    Plotly.restyle('plot', { x: [data_prime[1]], y: [data_prime[2]], z: [data_prime[3]] }, 0);
+    Plotly.restyle('plot', { x: [[data_prime[1].at(-2)]], y: [[data_prime[2].at(-2)]], z: [[data_prime[3].at(-2)]] }, 4);
+    Plotly.restyle('plot', { x: [x_diff], y: [y_diff], z: [z_diff] }, 2);
+}
+
+// Attach same function to both sliders
+spin_rate.oninput = updatePitchPlot;
+spin_axis.oninput = updatePitchPlot;
+
+
+
+
+
+
 async function main() {
   await initDropdownConfig(); // ensures data_folder and dropdownConfig are ready
   createMenuBar();             // safe to use dropdownConfig now

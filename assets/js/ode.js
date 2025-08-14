@@ -12,6 +12,7 @@ class ODEsolver {
 
 
     rk4(resolution) {
+        const y_home = 1.417 * 0.3048
         const h = (this.t1 - this.t0) / resolution
         var ts = Array.from(Array(resolution + 1), (_, k) => k * h + this.t0) //time series datapoints
         var ys = Array.from(Array(resolution + 1), () => Array(this.y0.length).fill(0))
@@ -34,7 +35,7 @@ class ODEsolver {
             const k4 = this.ode(s3) // f(t + h, y_n + k3*h)
             ys[i + 1] = ys[i].map((x, j) => x + (k1[j] / 6 + k2[j] / 3 + k3[j] / 3 + k4[j] / 6) * h) //y_n+1 = y_n + (k1 +2*k2 + 2*k3 +k4)/6 *h
             
-            if (ys[i + 1][1] < 0) {
+            if (ys[i + 1][1] < y_home) {
                 lastIndex = i + 1;
                 break;
             }

@@ -4,11 +4,15 @@ layout: wide
 
 <html>
 
+<div class="header-row">
 
-{%- if page.title -%}
-    <h1 class="page-heading">{{ page.title }}</h1>
-  {%- endif -%}
+  <h1 class="page-heading">{{ page.title }}</h1>
 
+  <a href="{{ site.baseurl }}{% link pitch_editor.md %}">
+      <button class="pitch-btn">Pitch Editor</button>
+  </a>
+
+</div>
 {{ content }}
 
 <body >
@@ -25,44 +29,10 @@ layout: wide
   <script src="../assets/js/traj.js"></script>
 
 
-<!-- 
-  <div class="dropdown">
-    <button onclick="toggleDropdown('z')" class="dropbtn">
-      Top Pitches by Induced Vertical Break  <img src="../assets/images/down.png" alt="▼" style="width:20px; height:20px; vertical-align:middle;padding-bottom:4px;">
-    </button>
-    <div id="myDropdown_z" class="dropdown-content"></div>
-  </div>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-  <div class="dropdown">
-    <button onclick="toggleDropdown('x')" class="dropbtn">
-    Top Pitches by Horizontal Break  <img src="../assets/images/down.png" alt="▼" style="width:20px; height:20px; vertical-align:middle;padding-bottom:4px;">
-  </button>
-    <div id="myDropdown_x" class="dropdown-content"></div>
-  </div>
- -->
-
   
 
   <p id="dateDisplay" style="font-size:14px; padding-left: 8px;"></p>
 
-
-<!-- <div class="pitch_info_wrapper">
-
-  <div id="output" style="margin-top: 5px;"></div>
-</div>
-
-<br/><br/>
-
-<div class="plot-wrapper">
-  <div id="plot"></div>
-</div> -->
-
-<!-- <br/>
-<div class="slidecontainer">
-  <input type="range" min="1" max="100" value="50" class="slider" id="myRange">
-</div>
-<br/>
-<p>Value: <span id="demo"></span></p> -->
 
 
 <div class="pitch-viz-container">

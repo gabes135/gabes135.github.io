@@ -11,6 +11,10 @@ function  addVectors(v1, v2) {
     return v1.map((val, i) => val + v2[i]);
 }
 
+function dotVectors(v1, v2) {
+    return v1.reduce((sum, val, i) => sum + val * v2[i], 0);
+}
+
 
 
 class PitchState {
@@ -26,6 +30,8 @@ class PitchState {
         
         // Example of how to handle `df` here, as it's not specified in JS
     
+    
+
         this.state = [
           parseFloat(row['release_pos_x']),
           parseFloat(row['release_pos_y']),
@@ -42,14 +48,16 @@ class PitchState {
         this.state = this.state.map(v => v * 0.3048);
         this.state[9] =this.state[9] * (0.10472 / 0.3048);
 
+        let vy_f = -Math.sqrt(this.state[4] ** 2 + 2 * (this.state[7] * (this.y_home-this.state[1])));
+        this.t_f =  (vy_f - this.state[4]) / this.state[7];
+   
         this.N_t = 100000
-        
-        this.get_coeffs();
         this.get_release_velo();
+        this.get_coeffs();
+        
         this.C_L *= f_L;
 
-        let vy_f = -Math.sqrt(this.state[4] ** 2 - 2 * this.state[7] * (this.state[1] - this.y_home));
-        this.t_f = 1.1 * (vy_f - this.state[4]) / this.state[7];
+        
 
         this.traj = new Array(3).fill(0).map(() => new Array(this.N_t).fill(0));
         this.traj[0] = this.state.slice(0, 3);
@@ -79,11 +87,20 @@ class PitchState {
         let v0_mag = Math.hypot(...v0);
         let v0_hat = v0.map(val => val / v0_mag);
 
+        // let vfx =  v0[0] + this.t_f * state[6]
+        // let vfy =  v0[1] + this.t_f * state[7]
+        // let vfz =  v0[2] + this.t_f * state[8]
+        // let vbar = [(v0[0] + vfx)/2, (v0[1] + vfy)/2, (v0[2] + vfz)/2]
+        // let vbar_mag = Math.hypot(...vbar)
+        // let vbar_hat = vbar.map(val => val / vbar_mag);
+
         let a_g = [0, 0, -this.g];
         let a_star = state.slice(6, 9).map((val, i) => val - a_g[i]);
 
-        let a_D = a_star.map((val, i) => -Math.abs(val * v0_hat[i]) * v0_hat[i]);
-        let a_D_mag = Math.hypot(...a_D);
+   
+        let a_D_mag = Math.abs(dotVectors(a_star, v0_hat));
+        let a_D = v0_hat.map((val, i) => -a_D_mag * val);
+        
         
         let a_M = a_star.map((val, i) => val - a_D[i]);
         let a_M_mag = Math.hypot(...a_M);
@@ -91,11 +108,13 @@ class PitchState {
 
         let C_D = a_D_mag / (this.K * v0_mag ** 2);
         let C_L = a_M_mag / (this.K * v0_mag ** 2);
+    
 
         let S = (1 / B) * Math.log(A / (A - C_L));
         let omega_T_mag = (v0_mag / this.R) * S;
+      
         let omega_T_hat = cross(v0_hat, a_M_hat);
-
+     
         let omega_G_mag = 0;
         if (state[9] > omega_T_mag) {
             omega_G_mag = Math.sqrt(state[9] ** 2 - omega_T_mag ** 2);
@@ -104,8 +123,10 @@ class PitchState {
         this.omega_T = omega_T_hat.map(v => omega_T_mag * v);
         this.omega_G = v0_hat.map(v => omega_G_mag * v);
 
-        // console.log(this.omega_T)
-        // console.log(this.omega_G)
+        this.omega_T_hat = omega_T_hat
+        this.omega_G_hat = v0_hat
+
+        
 
         let omega = addVectors(this.omega_T, this.omega_G);
         let omega_mag = Math.hypot(...omega);
@@ -115,6 +136,12 @@ class PitchState {
         this.C_L = C_L;
         this.omega_hat = omega_hat;
         this.omega_mag = omega_mag;
+
+        this.v = v0_mag
+        this.omega_T_mag = omega_T_mag
+        this.omega_G_mag = omega_G_mag
+
+        this.S = S
     }
 
 
