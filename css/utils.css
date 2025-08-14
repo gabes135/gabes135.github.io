@@ -181,3 +181,11 @@ h1 a.black-link:hover {
   border-radius: 70%;
   cursor: pointer; /* Cursor on hover */
 }
+
+
+img.prof-pic {
+  float: left;
+  margin-right: 1em;
+  width: 25%;
+  border-radius: 50%;
+}
