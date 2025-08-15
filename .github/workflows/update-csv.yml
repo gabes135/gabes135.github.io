@@ -28,7 +28,7 @@ jobs:
         run: |
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
-          git add assets/savant_data/*/
+          git add -A assets/savant_data
           git commit -m "Update data_x's and data_z's via savant" || echo "No changes" 
           git push
 
