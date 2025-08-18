@@ -4,7 +4,7 @@ title: NBA Matchup Predictor
 permalink: /matchup_pred/
 date: 2025-08-01
 preview_image: /assets/win_projector/sportsbook.png
-description: “Can a machine learning model outperform Las Vegas in predicting NBA matchups? Using team gamelog stats, I built a model to forecast game outcomes and compare its performance against the sportsbooks' predictions.”
+description: Can a machine learning model outperform Las Vegas in predicting NBA matchups? Using team gamelog stats, I built a model to forecast game outcomes and compare its performance against the sportsbooks' predictions.
 tools: 
   - Python
   - SQLite
