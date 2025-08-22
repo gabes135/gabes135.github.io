@@ -208,7 +208,7 @@ function showRow(row, button) {
 
   [C_T, C_L, C_S, data_nospin, omega_hat] = plot_traj(row);
 
-  animatePitch(omega_hat)
+  // animatePitch(omega_hat)
 
   omega_xz = Math.sqrt(Math.pow(omega_hat[0], 2) + Math.pow(omega_hat[2], 2))
   const spin_dir = (360 + ((180/Math.PI) * Math.atan2(omega_hat[2], omega_hat[0])))%360
@@ -285,6 +285,7 @@ function updatePitchPlot() {
     spin_axis_val.innerHTML = `${parseInt(axisVal)}&deg`;
 
     // Compute f_L based on spin rate
+    console.log(spin_rate.row)
     const ratio = spinVal / spin_rate.row['release_spin_rate'];
 
     const S = (1/B) * Math.log(A/(A-C_T))
