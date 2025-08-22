@@ -152,16 +152,57 @@ h1 a.black-link:hover {
   aspect-ratio: 1.5 / 1;  /* width:height = 2:1, so height = 50% width */
 }
 
+
+
+.pitch-viz-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;       /* spacing between top and main row */
+  width: 100%;     /* full available width */
+}
+
+//* Top panel stretches across both columns */
+.pitch-info-top {
+  width: 100%;
+  box-sizing: border-box; /* include padding in width */
+}
+
+/* Container holding multiple info boxes */
+.pitch-info-boxes {
+  display: flex;
+  gap: 20px;        /* spacing between boxes */
+  margin-top: 10px;
+  /* no border or background here */
+}
+
+/* Individual info boxes */
+.info-box,
 .pitch_info_wrapper {
-  border: 2px solid #ccc;      /* light gray frame */
-  border-radius: 8px;          /* rounded corners */
-  padding-left: 15px;   
-  padding-right: 15px;               /* space between border and plot */
-  background: #fff;            /* optional background */
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1); /* subtle drop-shadow */
-  display: inline-block;       /* shrink-wrap to plot width */
-  flex: 0 0 30%;  /* don’t grow/shrink, fixed 40% width */
-  box-sizing: border-box; /* include padding/border in width */
+  border: 2px solid #ccc;           
+  border-radius: 8px;                
+  padding: 10px;        /* reduced padding */
+  background: #fff;                  
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1); 
+  text-align: center;                
+  box-sizing: border-box;            
+}
+
+/* Each info-box shares equal width */
+.info-box {
+  flex: 1;  
+  padding: 5px;        /* slightly smaller than pitch_info_wrapper */
+}
+
+/* Inner text in pitch_info_wrapper */
+.pitch_info_wrapper {
+  text-align: left;   
+  font-size: 16px;       /* slightly smaller font */
+}
+
+/* Inner div text inside info-box */
+.info-box div {
+  font-size: 18px;       /* slightly smaller font */
+  font-weight: 500;
 }
 
 
@@ -169,11 +210,56 @@ h1 a.black-link:hover {
   display: flex;
   gap: 20px;  /* spacing between the two boxes */
   align-items: flex-start; /* align them at top */
+   margin-top: 0px; 
+}
+
+/* Left column stacks pitch info + new plot vertically */
+.left-column {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  flex: 0 0 30%; /* same width as pitch info */
+}
+
+
+
+
+
+.spin-axis-wrapper {
+  border: 2px solid #ccc;
+  border-radius: 8px;
+  padding: 0px;
+  background: #fff;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+
+  /* Fix the height smaller */
+  height: 250px;        /* adjust as needed */
+  width: 100%;          /* full width of left column */
+  
+  /* Center the spin-axis plot vertically */
+  display: flex;
+  justify-content: center;   /* horizontal centering if needed */
+  align-items: center;       /* vertical centering */
+}
+
+#spin_axis_plot {
+  width: 100%;      /* leave some margin inside wrapper */
+  height: 100%;     /* fill most of wrapper */
 }
 
 
 
 /* Slider */
+
+.sliders-panel {
+  display: flex;
+  gap: 0px;          /* space between spin rate and spin axis sliders */
+  margin: 0px 0;     /* spacing above/below sliders */
+  margin-bottom: -5px; 
+ flex-direction: column;
+}
+
+
 .slider-wrapper {
   border: 2px solid #ccc;
   border-radius: 8px;
@@ -188,15 +274,17 @@ h1 a.black-link:hover {
   margin-bottom: 20px;
 }
 
+
 .slide-title {
-  width: 10%;
+  width: 12%;
   font-size: 20px;
   display: flex;
-  justify-content: center;
-  align-items: ceter;   /* vertical centering */
+  justify-content: flex-start;
+  align-items: center;   /* vertical centering */
   /*transform: translateY(6.5px);*/
-   padding: 0px;
-   margin: 0;
+  padding-left: 10px;
+  margin: 0px;
+  box-sizing: border-box;
 }
 
 .slide-text {
@@ -227,7 +315,7 @@ h1 a.black-link:hover {
   outline: none;
   opacity: 0.7;
   transition: opacity .2s;
-  margin-left:15px;
+  margin-left:0px;
   /*margin: auto;   /* ensures slider is centered in its flex container */*/
 }
 
@@ -241,6 +329,8 @@ h1 a.black-link:hover {
   background: #95d0fc;
   border: 2px solid black;
   cursor: pointer;
+  margin-top: -5px; 
+
 }
 
 .slider::-moz-range-thumb {
@@ -249,5 +339,12 @@ h1 a.black-link:hover {
   background: #95d0fc;
   border-radius: 70%;
   cursor: pointer;
+}
+
+.slider::-webkit-slider-runnable-track {
+  height: 15px;
+  /*border-radius: 5px;*/
+  background: #d3d3d3;
+  border-radius: 5px;  
 }
 

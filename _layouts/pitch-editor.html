@@ -22,50 +22,85 @@ layout: wide
   <h2 class="menu-title">Top Pitches by:</h2>
   <div id="menu-bar"></div>
 
-  <p id="dateDisplay" style="font-size:14px; padding-left: 8px;"></p>
+  <p id="dateDisplay" style="font-size:14px; padding-left: 8px;margin-top: -15px"></p>
 
-
-  <div class = "slider-wrapper">
-        <p class="slide-title"><strong>Spin Rate:</strong> </p>
-    <div class="slidecontainer">
-      <input type="range" min="0" max="5000" class="slider" id="spin_rate">
-    </div>
-
-    <p id="spin_rate_value" class="slide-text"></p>
- </div>
-
-
-  <div class = "slider-wrapper">
-    <p class="slide-title"><strong>Spin Axis:</strong> </p>
-
-    <div class="slidecontainer">
-      <input type="range" min="0" max="360" class="slider" step=".1" id="spin_axis">
-    </div>
-
-    <p id="spin_axis_value" class="slide-text"></p>
- </div>
 
 
 
   <script src="../assets/js/ode.js"></script>
   <script src="../assets/js/plotter.js"></script>
-  <script src="../assets/js/pitch_editor.js"></script>
+
   <script src="../assets/js/traj.js"></script>
 
 
- 
 
 
-<div class="pitch-viz-container">
+
+<div class="pitch-viz-wrapper">
+  <!-- Top info panel -->
+  <div class="pitch-info-top">
+      <div id="output"></div>
+    </div>
+
+   <div class="sliders-panel">
+    <div class="slider-wrapper">
+      <p class="slide-title"><strong>Spin Rate:</strong></p>
+      <div class="slidecontainer">
+        <input type="range" min="0" max="5000" class="slider" id="spin_rate">
+      </div>
+      <p id="spin_rate_value" class="slide-text"></p>
+    </div>
+
+    <div class="slider-wrapper">
+      <p class="slide-title"><strong>Spin Axis:</strong></p>
+      <div class="slidecontainer">
+        <input type="range" min="0" max="360" class="slider" step=".1" id="spin_axis">
+      </div>
+      <p id="spin_axis_value" class="slide-text"></p>
+    </div>
+  </div>
+
+
+  <!-- Main viz row -->
+  <div class="pitch-viz-container">
+    <div class="left-column">
+      <div class="pitch_info_wrapper">
+        <div id="dynamic-output"></div>
+      </div>
+
+<!--        <div class="spin-axis-wrapper">
+         <div id="spin_axis_plot"></div>
+      </div> -->
+      
+    </div>
+
+    <div class="plot-wrapper">
+      <div id="plot"></div>
+    </div>
+  </div>
+</div>
+
+
+
+<!-- <div class="pitch-viz-container">
+  <div class="left-column">
   <div class="pitch_info_wrapper">
     <div id="output" style="margin-top: 5px;"></div>
+  </div>
+
+  <div class="bottom-plot-wrapper">
+      
+       <div id="spin_axis"></div>
+  </div>
   </div>
 
   <div class="plot-wrapper">
     <div id="plot"></div>
   </div>
-</div>
+</div> -->
 
+ <script src="../assets/js/spin_axis.js"></script>
+  <script src="../assets/js/pitch_editor.js"></script>
 
 
 </body>

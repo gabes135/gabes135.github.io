@@ -86,11 +86,11 @@ function calcOdeRK4(solver, resolution) {
   return [times, pos_x, pos_y, pos_z];
 }
 
-let m_to_feet = 0.3048
+let m_to_feet = 1/0.3048
 
 let scale_factor = .05
 
-m_to_feet = m_to_feet / scale_factor
+m_to_feet = m_to_feet * scale_factor
 
 
 
@@ -118,7 +118,7 @@ function recalcTraj(row, f_L, omega_hat){
 
   for (let i = 1; i <= 3; i++) {
       if (data_prime[i]) {
-          data_prime[i] = data_prime[i].map((val) => val / m_to_feet);
+          data_prime[i] = data_prime[i].map((val) => val * m_to_feet);
   }
   };
 
@@ -141,6 +141,7 @@ function plot_traj(row, f_L=1) {
     let solver = new ODEsolver(pitch_state.derivs.bind(pitch_state), pitch_state.initial_conditions, 0, 1)
     data = calcOdeRK4(solver, 10000)
 
+    
 
     pitch_state_nospin = new PitchState(row, 0);
     let solver_nospin = new ODEsolver(pitch_state_nospin.derivs.bind(pitch_state_nospin), pitch_state_nospin.initial_conditions, 0, 1)
@@ -150,16 +151,19 @@ function plot_traj(row, f_L=1) {
     // Feet
     for (let i = 1; i <= 3; i++) {
         if (data[i]) {
-            data[i] = data[i].map((val) => val / m_to_feet);
-            data_nospin[i] = data_nospin[i].map((val) => val / m_to_feet);
+            data[i] = data[i].map((val) => val * m_to_feet);
+            data_nospin[i] = data_nospin[i].map((val) => val * m_to_feet);
     }
     };
+
+    console.log(`Statcast final pos: (${pitch_state.x_sc}, ${pitch_state.z_sc})`)
+    console.log(`My final pos: (${(data[1].at(-2)/scale_factor).toFixed(3)}, ${(data[3].at(-2)/scale_factor).toFixed(3)})`)
 
     // Pitch paths
     const pitch = makeLineTrace(data[1], data[2], data[3], 'black');
     const pitch_nospin = makeLineTrace(data_nospin[1], data_nospin[2], data_nospin[3], 'rgba(0, 0, 0, 0.33)');
 
-    console.log("init", [data[1].at(-2)], [data[2].at(-2)], [data[3].at(-2)])
+
     // Start and end points
     const start = makeMarkerTrace([data[1][0]], [data[2][0]], [data[3][0]], 'red', 3);
     const end = makeMarkerTrace(
@@ -326,7 +330,7 @@ function plot_traj(row, f_L=1) {
 
 
     // 
-    return [pitch_state.C_L, pitch_state.S, data_nospin, pitch_state.omega_hat, pitch_state.omega_G_mag, pitch_state.omega_T_mag]
+    return [pitch_state.C_T, pitch_state.C_L, pitch_state.C_S, data_nospin, pitch_state.omega_hat]
 
 }
 

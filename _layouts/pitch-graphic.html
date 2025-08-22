@@ -28,22 +28,62 @@ layout: wide
   <script src="../assets/js/pitch_graphic.js"></script>
   <script src="../assets/js/traj.js"></script>
 
-
   
 
-  <p id="dateDisplay" style="font-size:14px; padding-left: 8px;"></p>
+  <p id="dateDisplay" style="font-size:14px; padding-left: 8px; margin-top: -15px"></p>
 
 
 
-<div class="pitch-viz-container">
-  <div class="pitch_info_wrapper">
-    <div id="output" style="margin-top: 5px;"></div>
+
+<div class="pitch-viz-wrapper" >
+  <!-- Top info panel -->
+  <div class="pitch-info-top">
+      <div id="output"></div>
+    </div>
+
+
+  <!-- Main viz row -->
+  <div class="pitch-viz-container">
+    <div class="left-column">
+      <div class="pitch_info_wrapper">
+        <div id="dynamic-output"></div>
+      </div>
+
+      <div class="spin-axis-wrapper">
+         <div id="spin_axis_plot"></div>
+      </div>
+
+    </div>
+
+    <div class="plot-wrapper">
+      <div id="plot"></div>
+    </div>
   </div>
+</div>
+
+
+
+
+
+
+<!-- <div class="pitch-viz-container">
+  <div class="left-column">
+    <div class="pitch_info_wrapper">
+      <div id="output" style="margin-top: 5px;"></div>
+    </div>
+ -->
+    <!-- <div class="spin-axis-wrapper"> -->
+        <!-- <p> Test </p> -->
+         <!-- <div id="spin_axis"></div> -->
+    <!-- </div> -->
+<!--   </div>
 
   <div class="plot-wrapper">
     <div id="plot"></div>
   </div>
-</div>
+</div> -->
+
+<script src="../assets/js/spin_axis.js"></script>
 
 
 

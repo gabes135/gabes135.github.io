@@ -31,6 +31,8 @@ const spin_axis_val = document.getElementById("spin_axis_value");
 
 const A = 0.336;
 const B = 6.041;
+let C_T;
+let C_S;
 let C_L; 
 let S;
 let S_prime;
@@ -41,14 +43,72 @@ let x_diff;
 let y_diff;
 let z_diff;
 let omega_hat = [];
-let omega_xy;
-
+let omega_xz;
+let rowInfo;
+const output = document.getElementById("output");
+const dynamic_output = document.getElementById("dynamic-output");
 
 // -------------------------- Utility functions --------------------------
 function getPitchName(code) {
   return pitchNames[code] || 'Unknown Pitch';
 }
+function getStaticInfo(row) {
 
+  const name = row.player_name;
+
+  let formattedName = name;
+  if (typeof name === "string" && name.includes(",")) {
+    const [last, first] = name.split(',').map(s => s.trim());
+    formattedName = `${first} ${last}`;
+  }
+
+
+  let eta = Math.round(parseFloat(row[`eta_${row.pitch_type}`])*100) 
+  let phi = Math.round(row.spin_axis)
+
+
+  return `
+  <div class="pitch-info-boxes">
+    <div class="info-box">
+      <strong>Pitcher</strong>
+      <div>${formattedName} (${row.p_throws})</div>
+    </div>
+    <div class="info-box">
+      <strong>Pitch Type</strong>
+      <div>${getPitchName(row.pitch_type)}</div>
+    </div>
+    <div class="info-box">
+      <strong>Release Speed</strong>
+      <div>${row.release_speed} MPH</div>
+    </div>
+  </div>
+`;
+
+}
+
+function getDynamicInfo(row, IVB, HB) {
+
+  const name = row.player_name;
+
+  let formattedName = name;
+  if (typeof name === "string" && name.includes(",")) {
+    const [last, first] = name.split(',').map(s => s.trim());
+    formattedName = `${first} ${last}`;
+  }
+
+
+  let eta = Math.round(parseFloat(row[`eta_${row.pitch_type}`])*100) 
+  let phi = Math.round(row.spin_axis)
+
+  return `
+      <h3 style="text-align: center;"><strong>Movement Information</strong></h3>
+      <p><strong>Spin Rate:</strong> ${row.release_spin_rate} RPM</p>
+      <p><strong>Spin Axis:</strong> ${phi}&deg</p>
+      <p><strong>Spin Efficiency:</strong> ${eta}%</p>
+      <p><strong>Induced Vertical Break:</strong> ${IVB} in.</p>
+      <p><strong>Horizontal Break:</strong> ${HB} in.</p>
+    `;
+}
 // -------------------------- Async helpers --------------------------
 async function fileExists(path) {
   try {
@@ -130,7 +190,6 @@ window.onclick = function(event) {
 };
 
 function showRow(row, button) {
-  const output = document.getElementById("output");
   if (data_folder == "../assets/savant_data/backup") {
     document.getElementById("dateDisplay").innerText = `Selection of pitches from ${row.game_date.slice(0, 4)} season`;
   }
@@ -139,42 +198,28 @@ function showRow(row, button) {
 
   }
   
-  const hand = row.p_throws;
   const IVB = (parseFloat(row.pfx_z) * 12).toFixed(2);
   const HB = Math.abs((parseFloat(row.pfx_x) * 12)).toFixed(2);
 
 
-  const name = row.player_name;
-  let formattedName = name;
-  if (typeof name === "string" && name.includes(",")) {
-    const [last, first] = name.split(',').map(s => s.trim());
-    formattedName = `${first} ${last}`;
-  }
+  output.innerHTML = getStaticInfo(row);
+  dynamic_output.innerHTML = getDynamicInfo(row, IVB, HB);
 
-  const rowInfo = `
-      <h3><strong>Original Pitch Information</strong></h3>
-      <p><strong>Pitcher:</strong> ${formattedName} (${hand})</p>
-      <p><strong>Pitch Type:</strong> ${getPitchName(row.pitch_type)}</p>
-      <p><strong>Release Speed:</strong> ${row.release_speed} MPH</p>
-      <p><strong>Spin Rate:</strong> ${row.release_spin_rate} RPM</p>
-      <p><strong>Induced Vertical Break:</strong> ${IVB} in.</p>
-      <p><strong>Horizontal Break:</strong> ${HB} in.</p>
-    `;
 
-  output.innerHTML = rowInfo;
+  [C_T, C_L, C_S, data_nospin, omega_hat] = plot_traj(row);
 
-  [C_L, S, data_nospin, omega_hat, omega_G_mag, omega_T_mag] = plot_traj(row);
+  animatePitch(omega_hat)
 
-  omega_xy = Math.sqrt(Math.pow(omega_hat[1], 0) + Math.pow(omega_hat[1], 2))
-  const theta = (360 + ((180/Math.PI) * Math.atan2(omega_hat[2], omega_hat[0])))%360
-  console.log(theta, omega_hat)
+  omega_xz = Math.sqrt(Math.pow(omega_hat[0], 2) + Math.pow(omega_hat[2], 2))
+  const spin_dir = (360 + ((180/Math.PI) * Math.atan2(omega_hat[2], omega_hat[0])))%360
+
 
   spin_rate.value = parseInt(row.release_spin_rate)
   spin_rate_val.innerHTML = `${parseInt(row.release_spin_rate)} RPM`;
   spin_rate.row = row;
 
-  spin_axis.value = theta
-  spin_axis_val.innerHTML = `${parseInt(theta)}&deg`;
+  spin_axis.value = spin_dir
+  spin_axis_val.innerHTML = `${parseInt(spin_dir)}&deg`;
   spin_axis.row = row;
 
 
@@ -241,18 +286,34 @@ function updatePitchPlot() {
 
     // Compute f_L based on spin rate
     const ratio = spinVal / spin_rate.row['release_spin_rate'];
+
+    const S = (1/B) * Math.log(A/(A-C_T))
     const S_prime = S * ratio;
-    const C_L_prime = A * (1 - Math.exp(-B * S_prime));
-    const f_L = C_L_prime / C_L;
+    const C_T_prime = A * (1 - Math.exp(-B * S_prime));
+    const f_L = C_T_prime / C_T;
 
     
-    const omega_hat_prime = omega_hat
-    omega_hat_prime[0] = omega_xy * Math.cos((Math.PI/180) * axisVal)
-    omega_hat_prime[2] = omega_xy * Math.sin((Math.PI/180) * axisVal)
+    const omega_hat_prime = [...omega_hat];
+    omega_hat_prime[0] = omega_xz * Math.cos((Math.PI/180) * axisVal)
+    omega_hat_prime[2] = omega_xz * Math.sin((Math.PI/180) * axisVal)
     console.log(omega_hat_prime)
+
+    // alignSphere([0, 0, 1])
+    // alignSphere(omega_hat_prime)
+    // currentOmega[0] = omega_hat_prime[0]; // X component
+    // currentOmega[1] = omega_hat[1];                              // Y component
+    // currentOmega[2] = omega_hat_prime[2]; // Z compo
+
+    
+    // animatePitch(omega_hat)
 
     // Recalculate trajectory
     const data_prime = recalcTraj(spin_rate.row, f_L, omega_hat_prime);
+
+    //  change this if changed in plotter.js
+    let scale_factor = .05 
+    let IVB = (Math.abs(data_prime[3].at(-2) - data_nospin[3].at(-2))*(12/scale_factor)).toFixed(2)
+    let HB = (Math.abs(data_prime[1].at(-2) - data_nospin[1].at(-2))*(12/scale_factor)).toFixed(2)
 
     // Compute diff line
     const [x_diff, y_diff, z_diff] = generateDiff(data_prime, data_nospin);
@@ -261,6 +322,9 @@ function updatePitchPlot() {
     Plotly.restyle('plot', { x: [data_prime[1]], y: [data_prime[2]], z: [data_prime[3]] }, 0);
     Plotly.restyle('plot', { x: [[data_prime[1].at(-2)]], y: [[data_prime[2].at(-2)]], z: [[data_prime[3].at(-2)]] }, 4);
     Plotly.restyle('plot', { x: [x_diff], y: [y_diff], z: [z_diff] }, 2);
+
+
+    dynamic_output.innerHTML = getDynamicInfo(spin_rate.row, IVB, HB);
 }
 
 // Attach same function to both sliders

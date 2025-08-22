@@ -20,9 +20,73 @@ let dropdownConfig = [];   // make globally accessible
 let datasets = {};         // global datasets for each button
 let data_folder = "";      // global data folder path
 
+let C_L; 
+let S;
+let data_nospin;
+let omega_hat = [];
+
+
 // -------------------------- Utility functions --------------------------
 function getPitchName(code) {
   return pitchNames[code] || 'Unknown Pitch';
+}
+
+function getStaticInfo(row) {
+
+  const name = row.player_name;
+
+  let formattedName = name;
+  if (typeof name === "string" && name.includes(",")) {
+    const [last, first] = name.split(',').map(s => s.trim());
+    formattedName = `${first} ${last}`;
+  }
+
+
+  let eta = Math.round(parseFloat(row[`eta_${row.pitch_type}`])*100) 
+  let phi = Math.round(row.spin_axis)
+
+
+  return `
+  <div class="pitch-info-boxes">
+    <div class="info-box">
+      <strong>Pitcher</strong>
+      <div>${formattedName} (${row.p_throws})</div>
+    </div>
+    <div class="info-box">
+      <strong>Pitch Type</strong>
+      <div>${getPitchName(row.pitch_type)}</div>
+    </div>
+    <div class="info-box">
+      <strong>Release Speed</strong>
+      <div>${row.release_speed} MPH</div>
+    </div>
+  </div>
+`;
+
+}
+
+function getDynamicInfo(row, IVB, HB) {
+
+  const name = row.player_name;
+
+  let formattedName = name;
+  if (typeof name === "string" && name.includes(",")) {
+    const [last, first] = name.split(',').map(s => s.trim());
+    formattedName = `${first} ${last}`;
+  }
+
+
+  let eta = Math.round(parseFloat(row[`eta_${row.pitch_type}`])*100) 
+  let phi = Math.round(row.spin_axis)
+
+  return `
+      <h3 style="text-align: center;"><strong>Movement Information</strong></h3>
+      <p><strong>Spin Rate:</strong> ${row.release_spin_rate} RPM</p>
+      <p><strong>Spin Axis:</strong> ${phi}&deg</p>
+      <p><strong>Spin Efficiency:</strong> ${eta}%</p>
+      <p><strong>Induced Vertical Break:</strong> ${IVB} in.</p>
+      <p><strong>Horizontal Break:</strong> ${HB} in.</p>
+    `;
 }
 
 // -------------------------- Async helpers --------------------------
@@ -108,6 +172,7 @@ window.onclick = function(event) {
 
 function showRow(row, button) {
   const output = document.getElementById("output");
+  const dynamic_output = document.getElementById("dynamic-output");
   if (data_folder == "../assets/savant_data/backup") {
     document.getElementById("dateDisplay").innerText = `Selection of pitches from ${row.game_date.slice(0, 4)} season`;
   }
@@ -116,29 +181,19 @@ function showRow(row, button) {
 
   }
   
-  const hand = row.p_throws;
+  
   const IVB = (parseFloat(row.pfx_z) * 12).toFixed(2);
-  const HB = (parseFloat(row.pfx_x) * 12).toFixed(2);
+  const HB = Math.abs((parseFloat(row.pfx_x) * 12)).toFixed(2);
 
-  const name = row.player_name;
-  let formattedName = name;
-  if (typeof name === "string" && name.includes(",")) {
-    const [last, first] = name.split(',').map(s => s.trim());
-    formattedName = `${first} ${last}`;
-  }
 
-  const rowInfo = `
-      <h3><strong>Pitch Information</strong></h3>
-      <p><strong>Pitcher:</strong> ${formattedName} (${hand})</p>
-      <p><strong>Pitch Type:</strong> ${getPitchName(row.pitch_type)}</p>
-      <p><strong>Release Speed:</strong> ${row.release_speed} MPH</p>
-      <p><strong>Spin Rate:</strong> ${row.release_spin_rate} RPM</p>
-      <p><strong>Induced Vertical Break:</strong> ${IVB} in.</p>
-      <p><strong>Horizontal Break:</strong> ${HB} in.</p>
-    `;
+  output.innerHTML = getStaticInfo(row);
+  dynamic_output.innerHTML = getDynamicInfo(row, IVB, HB);
 
-  output.innerHTML = rowInfo;
-  plot_traj(row);
+
+  [C_T, C_L, C_S, data_nospin, omega_hat] = plot_traj(row);
+
+  animatePitch(omega_hat)
+
 }
 
 function parse_csv(button, file) {

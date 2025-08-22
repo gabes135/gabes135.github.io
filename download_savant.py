@@ -8,6 +8,8 @@ import os
 # start_date = "2025-07-29"
 # end_date = "2025-08-03"
 
+df_eta = pd.read_csv('assets/savant_data/eta.csv')
+
 today = datetime.datetime.now()
 yesterday  = today - datetime.timedelta(days = 1)
 yesteryesterday  = today - datetime.timedelta(days = 2)
@@ -39,6 +41,8 @@ print(f'Adding new files to {folder}.')
 url = f'https://baseballsavant.mlb.com/statcast_search/csv?all=true&hfPT=&hfAB=&hfBBT=&hfPR=&hfZ=&stadium=&hfBBL=&hfNewZones=&hfGT=R%7CPO%7CS%7C=&hfSea=&hfSit=&player_type=pitcher&hfOuts=&opponent=&pitcher_throws=&batter_stands=&hfSA=&game_date_gt={start_date}&game_date_lt={end_date}&team=&position=&hfRO=&home_road=&hfFlag=&metric_1=&hfInn=&min_pitches=0&min_results=0&group_by=&sort_col=pitches&player_event_sort=api_p_release_speed&sort_order=desc&min_abs=0&type=details'
 data = requests.get(url)
 df = pd.read_csv(io.StringIO(data.text))
+
+df = pd.merge(df, df_eta, left_on = 'pitcher', right_on = 'entity_id')
 
 df = df[df.description.isin(['swinging_strike', 'called_strike', 'swinging_strike_blocked'])]
 
