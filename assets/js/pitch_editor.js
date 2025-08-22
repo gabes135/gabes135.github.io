@@ -86,7 +86,7 @@ function getStaticInfo(row) {
 
 }
 
-function getDynamicInfo(row, IVB, HB) {
+function getDynamicInfo(row, IVB, HB, set_rpm=false, set_phi=false) {
 
   const name = row.player_name;
 
@@ -96,13 +96,28 @@ function getDynamicInfo(row, IVB, HB) {
     formattedName = `${first} ${last}`;
   }
 
+  
+  let rpm
+  if (!set_rpm) {
+    rpm = Math.round(row.release_spin_rate)
+  }
+  else{
+    rpm = Math.round(set_rpm)
+  }
+  
+  let phi
+  if (!set_phi) {
+    phi = Math.round(row.spin_axis)
+  }
+  else{
+    phi = Math.round(set_phi)
+  }
 
   let eta = Math.round(parseFloat(row[`eta_${row.pitch_type}`])*100) 
-  let phi = Math.round(row.spin_axis)
-
+  
   return `
       <h3 style="text-align: center;"><strong>Movement Information</strong></h3>
-      <p><strong>Spin Rate:</strong> ${row.release_spin_rate} RPM</p>
+      <p><strong>Spin Rate:</strong> ${rpm} RPM</p>
       <p><strong>Spin Axis:</strong> ${phi}&deg</p>
       <p><strong>Spin Efficiency:</strong> ${eta}%</p>
       <p><strong>Induced Vertical Break:</strong> ${IVB} in.</p>
@@ -285,7 +300,6 @@ function updatePitchPlot() {
     spin_axis_val.innerHTML = `${parseInt(axisVal)}&deg`;
 
     // Compute f_L based on spin rate
-    console.log(spin_rate.row)
     const ratio = spinVal / spin_rate.row['release_spin_rate'];
 
     const S = (1/B) * Math.log(A/(A-C_T))
@@ -325,7 +339,7 @@ function updatePitchPlot() {
     Plotly.restyle('plot', { x: [x_diff], y: [y_diff], z: [z_diff] }, 2);
 
 
-    dynamic_output.innerHTML = getDynamicInfo(spin_rate.row, IVB, HB);
+    dynamic_output.innerHTML = getDynamicInfo(spin_rate.row, IVB, HB, spinVal, axisVal);
 }
 
 // Attach same function to both sliders
