@@ -191,8 +191,7 @@ function showRow(row, button) {
 
 
   [C_T, C_L, C_S, data_nospin, omega_hat] = plot_traj(row);
-
-  animatePitch(omega_hat)
+  animatePitch(omega_hat, parseFloat(row.release_spin_rate))
 
 }
 

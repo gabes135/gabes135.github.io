@@ -19,6 +19,7 @@ let axis_y = []
 let axis_z = []
 
 let currentOmega = [0, 0, 1]; // default axis
+let animationRunning = false;
 
 
 function generateSphere(x_center, y_center, z_center, radius, resolution) {
@@ -84,6 +85,10 @@ function rotateVec(vec, k, theta) {
 }
 
 function alignSphere(omega_hat){
+
+    
+    // 180/Math.PI 
+
     console.log("omega_hat= ", omega_hat)
     let alpha = [-omega_hat[1], omega_hat[0], 0]
     let norm = Math.hypot(...alpha);
@@ -175,8 +180,9 @@ function update() {
     requestAnimationFrame(update);
 }
 
-function animatePitch(omega_hat){
-
+function animatePitch(omega_hat, omega_mag){
+    // omega_hat = [1/Math.sqrt(2), 0, 1/Math.sqrt(2)]
+    theta = ((omega_mag * 0.10472)  / 60) * .04
     currentOmega = omega_hat; // overwrite global axis
 
     // const { X, Y, Z } = 
@@ -185,7 +191,7 @@ function animatePitch(omega_hat){
     alignSphere([0, 0, 1])
     alignSphere(currentOmega)
 
-    const sphere = [{
+    const sphere = {
         type: 'surface',
         x: x_sph,
         y: y_sph,
@@ -197,9 +203,9 @@ function animatePitch(omega_hat){
         cmin: 0,
         cmax: 1
         // Optional: set a colorscale
-    }];
+    };
 
-    const poleLine = [{
+    const poleLine = {
         type: 'scatter3d',
         mode: 'lines',
         x: poleX,
@@ -207,9 +213,9 @@ function animatePitch(omega_hat){
         z: poleZ,
         line: { color: 'red', width: 4 }, // make it visible
         hoverinfo: 'none'
-    }];
+    };
 
-    const spinAxisVec = [{
+    const spinAxisVec = {
         type: 'scatter3d',
         mode: 'lines',
         x: axis_x,
@@ -217,15 +223,46 @@ function animatePitch(omega_hat){
         z: axis_z,
         line: { color: 'black', width: 6 }, // make it visible
         hoverinfo: 'none'
-    }];
+    };
+
+    let dx = axis_x[1];
+    let dy = axis_y[1];
+    let dz = axis_z[1];
+
+    // normalize
+    let mag = Math.sqrt(dx*dx + dy*dy + dz*dz);
+    dx /= mag;
+    dy /= mag;
+    dz /= mag;
+
+    // scale by fixed arrowhead length (say 0.3)
+    let scale = 0.1;
+    dx *= scale;
+    dy *= scale;
+    dz *= scale;
+
+    const arrowHead = {
+        type: "cone",
+        x: [axis_x[1]],
+        y: [axis_y[1]],
+        z: [axis_z[1]],              // base of cone at the tip of axis
+        u: [dx],
+        v: [dy],
+        w: [dz],            // direction (pointing +z)
+        anchor: "tail",
+        showscale: false,
+        sizemode: "absolute",
+        sizeref: .25,
+        colorscale: [[0, "black"], [1, "black"]]
+      };
 
     const axisSettings = {
           showgrid: false,
-          showline: false,
-          zeroline: false,
+          showline: true,
+          zeroline: true,
           showticks: false,
-          showticklabels: false,
-          visible: false
+          showticklabels: true,
+          visible: true
         };
 
     const layout = {
@@ -237,9 +274,9 @@ function animatePitch(omega_hat){
         },
         showlegend : false,
         scene: {
-            xaxis: { ...axisSettings, range: [-1.2, 1.2]},
-            yaxis: { ...axisSettings, range: [-1.2, 1.2]},
-            zaxis: { ...axisSettings, range: [-1.2, 1.2]},
+            xaxis: { ...axisSettings, range: [1.3, -1.3]},
+            yaxis: { ...axisSettings, range: [1.3, -1.3]},
+            zaxis: { ...axisSettings, range: [-1.3, 1.3]},
             aspectmode: 'cube', // Ensures equal scaling for axes
             camera: {
             eye: {x: 0, y: 2, z: 0},   // move the camera along +Y
@@ -249,11 +286,13 @@ function animatePitch(omega_hat){
     };
 
 
-    Plotly.newPlot('spin_axis_plot', [...sphere, ...poleLine, ...spinAxisVec], layout);
+    Plotly.newPlot('spin_axis_plot', [sphere, poleLine, spinAxisVec, arrowHead], layout);
     // Plotly.newPlot('spin_axis', [...sphere, ...poleLine], layout);
 
-
-    requestAnimationFrame(update);
+    if (!animationRunning) {
+        animationRunning = true;
+        requestAnimationFrame(update);
+    }
 
 }
 
