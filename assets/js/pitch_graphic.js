@@ -13,6 +13,7 @@ const pitchNames = {
   KN: 'Knuckleball',
   FS: 'Splitter',
   ST: 'Sweeper',
+  SV: 'Slurve',
   UN: 'Unknown'
 };
 
