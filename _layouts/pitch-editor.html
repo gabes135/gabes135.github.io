@@ -18,6 +18,10 @@ layout: wide
 <body >
   <script src="../assets/js/papaparse.min.js"></script>
   <script src="https://cdn.plot.ly/plotly-3.0.1.min.js" charset="utf-8"></script>
+  <script src="https://cdn.babylonjs.com/babylon.js"></script>
+
+
+
 
   <h2 class="menu-title">Top Pitches by:</h2>
   <div id="menu-bar"></div>
@@ -58,6 +62,14 @@ layout: wide
       </div>
       <p id="spin_axis_value" class="slide-text"></p>
     </div>
+
+    <div class="slider-wrapper">
+      <p class="slide-title"><strong>Spin Efficiency:</strong></p>
+      <div class="slidecontainer">
+        <input type="range" min="10" max="100" class="slider" step="1" id="efficiency">
+      </div>
+      <p id="efficiency_value" class="slide-text"></p>
+    </div>
   </div>
 
 
@@ -68,9 +80,12 @@ layout: wide
         <div id="dynamic-output"></div>
       </div>
 
-<!--        <div class="spin-axis-wrapper">
-         <div id="spin_axis_plot"></div>
-      </div> -->
+        <div class="spin-axis-wrapper">
+         <!-- <div id="spin_axis_plot"></div> -->
+          <div class="spin-axis-title">Spin Axis (Catcher POV)</div>
+         <canvas id="spin_axis_plot"></canvas>
+      </div>
+
       
     </div>
 
@@ -99,7 +114,8 @@ layout: wide
   </div>
 </div> -->
 
- <script src="../assets/js/spin_axis.js"></script>
+ <script src="../assets/js/spin_axis_v2.js"></script>
+ <!-- <script src="../assets/js/spin_axis_v2.js"></script> -->
   <script src="../assets/js/pitch_editor.js"></script>
 
 

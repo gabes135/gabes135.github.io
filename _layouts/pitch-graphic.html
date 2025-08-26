@@ -18,6 +18,9 @@ layout: wide
 <body >
   <script src="../assets/js/papaparse.min.js"></script>
   <script src="https://cdn.plot.ly/plotly-3.0.1.min.js" charset="utf-8"></script>
+  <script src="https://cdn.babylonjs.com/babylon.js"></script>
+
+
 
   <h2 class="menu-title">Top Pitches by:</h2>
   <div id="menu-bar"></div>
@@ -49,9 +52,16 @@ layout: wide
         <div id="dynamic-output"></div>
       </div>
 
-  <!--     <div class="spin-axis-wrapper">
-         <div id="spin_axis_plot"></div>
-      </div> -->
+      <div class="spin-axis-wrapper">
+         <!-- <div id="spin_axis_plot"></div> -->
+          <div class="spin-axis-title">Spin Axis (Catcher POV)</div>
+         <canvas id="spin_axis_plot"></canvas>
+      </div>
+
+
+        
+
+ 
 
     </div>
 
@@ -83,8 +93,8 @@ layout: wide
   </div>
 </div> -->
 
-<script src="../assets/js/spin_axis.js"></script>
-
+<!-- <script src="../assets/js/spin_axis.js"></script> -->
+ <script src="../assets/js/spin_axis_v2.js"></script>
 
 
 </body>

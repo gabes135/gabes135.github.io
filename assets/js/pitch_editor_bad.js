@@ -1,0 +1,382 @@
+import { animatePitch } from "../js/spin_axis.js";
+
+
+
+// -------------------------- Global variables --------------------------
+const button_ids = ["z_p", "z_n", "x_g", "x_a"];
+const pitchNames = {
+  FF: 'Four-Seam Fastball',
+  FT: 'Two-Seam Fastball',
+  SI: 'Sinker',
+  SL: 'Slider',
+  CU: 'Curveball',
+  CH: 'Changeup',
+  KC: 'Knuckle Curve',
+  EP: 'Eephus',
+  SC: 'Screwball',
+  KN: 'Knuckleball',
+  FS: 'Splitter',
+  ST: 'Sweeper',
+  SV: 'Slurve',
+  UN: 'Unknown'
+};
+
+let dropdownConfig = [];   // make globally accessible
+let datasets = {};         // global datasets for each button
+let data_folder = "";      // global data folder path
+
+const spin_rate = document.getElementById("spin_rate");
+const spin_rate_val = document.getElementById("spin_rate_value");
+
+
+const spin_axis = document.getElementById("spin_axis");
+const spin_axis_val = document.getElementById("spin_axis_value");
+
+
+
+const A = 0.336;
+const B = 6.041;
+let C_T;
+let C_S;
+let C_L; 
+let S;
+let S_prime;
+let C_L_prime;
+let f_L;
+let data_nospin;
+let x_diff;
+let y_diff;
+let z_diff;
+let omega_hat = [];
+let omega_xz;
+let rowInfo;
+const output = document.getElementById("output");
+const dynamic_output = document.getElementById("dynamic-output");
+
+// -------------------------- Utility functions --------------------------
+function getPitchName(code) {
+  return pitchNames[code] || 'Unknown Pitch';
+}
+function getStaticInfo(row) {
+
+  const name = row.player_name;
+
+  let formattedName = name;
+  if (typeof name === "string" && name.includes(",")) {
+    const [last, first] = name.split(',').map(s => s.trim());
+    formattedName = `${first} ${last}`;
+  }
+
+
+  let eta = Math.round(parseFloat(row[`eta_${row.pitch_type}`])*100) 
+  let phi = Math.round(row.spin_axis)
+
+
+  return `
+  <div class="pitch-info-boxes">
+    <div class="info-box">
+      <strong>Pitcher</strong>
+      <div>${formattedName} (${row.p_throws})</div>
+    </div>
+    <div class="info-box">
+      <strong>Pitch Type</strong>
+      <div>${getPitchName(row.pitch_type)}</div>
+    </div>
+    <div class="info-box">
+      <strong>Release Speed</strong>
+      <div>${row.release_speed} MPH</div>
+    </div>
+  </div>
+`;
+
+}
+
+function getDynamicInfo(row, IVB, HB, set_rpm=false, set_phi=false) {
+
+  const name = row.player_name;
+
+  let formattedName = name;
+  if (typeof name === "string" && name.includes(",")) {
+    const [last, first] = name.split(',').map(s => s.trim());
+    formattedName = `${first} ${last}`;
+  }
+
+  
+  let rpm
+  if (!set_rpm) {
+    rpm = Math.round(row.release_spin_rate)
+  }
+  else{
+    rpm = Math.round(set_rpm)
+  }
+  
+  let phi
+  if (!set_phi) {
+    phi = Math.round(row.spin_axis)
+  }
+  else{
+    phi = Math.round(set_phi)
+  }
+
+  let eta = Math.round(parseFloat(row[`eta_${row.pitch_type}`])*100) 
+  
+  return `
+      <h3 style="text-align: center;"><strong>Movement Information</strong></h3>
+      <p><strong>Spin Rate:</strong> ${rpm} RPM</p>
+      <p><strong>Spin Axis:</strong> ${phi}&deg</p>
+      <p><strong>Spin Efficiency:</strong> ${eta}%</p>
+      <p><strong>Induced Vertical Break:</strong> ${IVB} in.</p>
+      <p><strong>Horizontal Break:</strong> ${HB} in.</p>
+    `;
+}
+// -------------------------- Async helpers --------------------------
+async function fileExists(path) {
+  try {
+    const res = await fetch(path, { method: 'HEAD' });
+    return res.ok;
+  } catch {
+    return false;
+  }
+}
+
+async function getDataFolder() {
+  const today = new Date();
+  const yesterday = new Date(today);
+  yesterday.setDate(yesterday.getDate() - 1);
+  const dateStr = yesterday.toISOString().split('T')[0];
+
+  const dailyFolder = `../assets/savant_data/${dateStr}`;
+  const backupFolder = "../assets/savant_data/backup";
+
+  const exists = await fileExists(`${dailyFolder}/data_z_pos.csv`);
+  return exists ? dailyFolder : backupFolder;
+}
+
+async function initDropdownConfig() {
+  data_folder = await getDataFolder(); // update global folder
+
+  dropdownConfig = [
+    { id: "z_p", label: "Rise", csv: `${data_folder}/data_z_pos.csv` },
+    { id: "z_n", label: "Drop", csv: `${data_folder}/data_z_neg.csv` },
+    { id: "x_g", label: "Glove Side Break", csv: `${data_folder}/data_x_glove.csv` },
+    { id: "x_a", label: "Arm Side Break", csv: `${data_folder}/data_x_arm.csv` }
+  ];
+
+  console.log("Using data folder:", data_folder);
+}
+
+// -------------------------- Dropdown and UI functions --------------------------
+function createMenuBar() {
+  const menuBar = document.getElementById("menu-bar");
+  menuBar.innerHTML = ""; // clear previous content
+
+  dropdownConfig.forEach(cfg => {
+    const wrapper = document.createElement("div");
+    wrapper.className = "dropdown";
+
+    wrapper.innerHTML = `
+      <button onclick="toggleDropdown('${cfg.id}')" class="dropbtn">
+        ${cfg.label}
+        <img src="../assets/images/down.png" alt="▼" style="width:20px; height:20px;
+         vertical-align:middle;padding-bottom:4px; pointer-events: none;">
+      </button>
+      <div id="myDropdown_${cfg.id}" class="dropdown-content"></div>
+    `;
+
+    menuBar.appendChild(wrapper);
+
+    // Load CSV for this dropdown
+    parse_csv(`myDropdown_${cfg.id}`, cfg.csv);
+  });
+}
+
+function toggleDropdown(id_show) {
+  const clickedMenu = document.getElementById(`myDropdown_${id_show}`);
+  const isOpen = clickedMenu.classList.contains('show');
+
+  // Close all dropdowns
+  button_ids.forEach(id => document.getElementById(`myDropdown_${id}`).classList.remove('show'));
+
+  if (!isOpen) {
+    clickedMenu.classList.add('show');
+  }
+}
+
+// Close dropdown if user clicks outside
+window.onclick = function(event) {
+  if (!event.target.matches('.dropbtn')) {
+    document.querySelectorAll(".dropdown-content").forEach(d => d.classList.remove('show'));
+  }
+};
+
+function showRow(row, button) {
+  if (data_folder == "../assets/savant_data/backup") {
+    document.getElementById("dateDisplay").innerText = `Selection of pitches from ${row.game_date.slice(0, 4)} season`;
+  }
+  else {
+    document.getElementById("dateDisplay").innerText = `Last updated ${row.game_date}`;
+
+  }
+  
+  const IVB = (parseFloat(row.pfx_z) * 12).toFixed(2);
+  const HB = Math.abs((parseFloat(row.pfx_x) * 12)).toFixed(2);
+
+
+  output.innerHTML = getStaticInfo(row);
+  dynamic_output.innerHTML = getDynamicInfo(row, IVB, HB);
+
+
+  [C_T, C_L, C_S, data_nospin, omega_hat] = plot_traj(row);
+
+  animatePitch(omega_hat, parseFloat(row.release_spin_rate))
+
+  omega_xz = Math.sqrt(Math.pow(omega_hat[0], 2) + Math.pow(omega_hat[2], 2))
+  const spin_dir = (360 + ((180/Math.PI) * Math.atan2(omega_hat[2], omega_hat[0])))%360
+
+
+  spin_rate.value = parseInt(row.release_spin_rate)
+  spin_rate_val.innerHTML = `${parseInt(row.release_spin_rate)} RPM`;
+  spin_rate.row = row;
+
+  spin_axis.value = spin_dir
+  spin_axis_val.innerHTML = `${parseInt(spin_dir)}&deg`;
+  spin_axis.row = row;
+
+
+}
+
+
+function parse_csv(button, file) {
+  Papa.parse(file, {
+    download: true,
+    header: true,
+    complete: function(results) {
+      datasets[button] = results.data;
+
+      const dropdown = document.getElementById(button);
+      dropdown.innerHTML = "";
+
+      datasets[button].forEach((row, index) => {
+        const a = document.createElement("a");
+
+        let len = "";
+        let text = "";
+        if (button == "myDropdown_x_g" || button == "myDropdown_x_a") {
+          len = (parseFloat(row.pfx_x) * 12).toFixed(1);
+          text = "HB";
+        } else {
+          len = (parseFloat(row.pfx_z) * 12).toFixed(1);
+          text = "IVB";
+        }
+
+        let formattedName = row.player_name;
+        if (typeof formattedName === "string" && formattedName.includes(",")) {
+          const [last, first] = formattedName.split(',').map(s => s.trim());
+          formattedName = `${first} ${last}`;
+        }
+
+        a.textContent = `${formattedName} - ${row.pitch_type} - ${text}: ${len} in.`;
+        a.href = "#";
+        a.dataset.index = index;
+        a.addEventListener("click", function(e) {
+          e.preventDefault();
+          const idx = parseInt(this.dataset.index);
+          showRow(datasets[button][idx], button);
+        });
+        dropdown.appendChild(a);
+      });
+
+      if (datasets[button].length && button == "myDropdown_z_p") {
+        showRow(datasets[button][0], button);
+      }
+    }
+  });
+}
+
+// -------------------------- Slider Updates --------------------------
+
+function updatePitchPlot() {
+
+
+    if (animationFrameId !== null) {
+        cancelAnimationFrame(animationFrameId);
+        animationFrameId = null;
+    }
+
+    // Read slider values
+    const spinVal = parseFloat(spin_rate.value);
+    const axisVal = parseFloat(spin_axis.value);
+
+    // Update display text
+    spin_rate_val.innerHTML = `${spinVal} RPM`;
+    spin_axis_val.innerHTML = `${parseInt(axisVal)}&deg`;
+
+    // Compute f_L based on spin rate
+    const ratio = spinVal / spin_rate.row['release_spin_rate'];
+
+    const S = (1/B) * Math.log(A/(A-C_T))
+    const S_prime = S * ratio;
+    const C_T_prime = A * (1 - Math.exp(-B * S_prime));
+    const f_L = C_T_prime / C_T;
+
+    
+    const omega_hat_prime = [...omega_hat];
+    omega_hat_prime[0] = omega_xz * Math.cos((Math.PI/180) * axisVal)
+    omega_hat_prime[2] = omega_xz * Math.sin((Math.PI/180) * axisVal)
+
+
+  
+    currentOmega[0] = omega_hat_prime[0]; 
+    currentOmega[1] = omega_hat[1];                              
+    currentOmega[2] = omega_hat_prime[2];
+
+    
+    generateSphere(0, 0, 0, 1, 20);
+    generateStich(1.01, 50);
+    alignSphere([0, 0, 1]);
+    alignSphere(currentOmega);
+    theta = ((spinVal * 0.10472)  / 60) * .04
+    update();
+    console.log('New theta', theta)
+    
+
+    // Recalculate trajectory
+    const data_prime = recalcTraj(spin_rate.row, f_L, omega_hat_prime);
+
+    //  change this if changed in plotter.js
+    let scale_factor = .05 
+    let IVB = (Math.abs(data_prime[3].at(-2) - data_nospin[3].at(-2))*(12/scale_factor)).toFixed(2)
+    let HB = (Math.abs(data_prime[1].at(-2) - data_nospin[1].at(-2))*(12/scale_factor)).toFixed(2)
+
+    // Compute diff line
+    const [x_diff, y_diff, z_diff] = generateDiff(data_prime, data_nospin);
+
+    // Update Plotly traces
+    Plotly.restyle('plot', { x: [data_prime[1]], y: [data_prime[2]], z: [data_prime[3]] }, 0);
+    Plotly.restyle('plot', { x: [[data_prime[1].at(-2)]], y: [[data_prime[2].at(-2)]], z: [[data_prime[3].at(-2)]] }, 4);
+    Plotly.restyle('plot', { x: [x_diff], y: [y_diff], z: [z_diff] }, 2);
+
+
+    // alignSphere([0, 0, 1])
+    // alignSphere(currentOmega)
+
+
+    dynamic_output.innerHTML = getDynamicInfo(spin_rate.row, IVB, HB, spinVal, axisVal);
+}
+
+// Attach same function to both sliders
+spin_rate.oninput = updatePitchPlot;
+spin_axis.oninput = updatePitchPlot;
+
+
+
+
+
+
+async function main() {
+  await initDropdownConfig(); // ensures data_folder and dropdownConfig are ready
+  createMenuBar();             // safe to use dropdownConfig now
+}
+
+// call main
+main();

@@ -28,22 +28,20 @@ const spin_rate_val = document.getElementById("spin_rate_value");
 const spin_axis = document.getElementById("spin_axis");
 const spin_axis_val = document.getElementById("spin_axis_value");
 
+const efficiency = document.getElementById("efficiency");
+const efficiency_val = document.getElementById("efficiency_value");
+
 
 
 const A = 0.336;
 const B = 6.041;
-let C_T;
-let C_S;
-let C_L; 
-let S;
 let S_prime;
-let C_L_prime;
+let S, C_T, C_L, C_S, omega_hat, eta_val, phi, v0_hat, hand;
 let f_L;
 let data_nospin;
 let x_diff;
 let y_diff;
 let z_diff;
-let omega_hat = [];
 let omega_xz;
 let rowInfo;
 const output = document.getElementById("output");
@@ -87,7 +85,7 @@ function getStaticInfo(row) {
 
 }
 
-function getDynamicInfo(row, IVB, HB, set_rpm=false, set_phi=false) {
+function getDynamicInfo(row, IVB, HB, set_rpm=false, set_phi=false, set_eta=false) {
 
   const name = row.player_name;
 
@@ -114,11 +112,19 @@ function getDynamicInfo(row, IVB, HB, set_rpm=false, set_phi=false) {
     phi = Math.round(set_phi)
   }
 
-  let eta = Math.round(parseFloat(row[`eta_${row.pitch_type}`])*100) 
+
+
+  let eta
+  if (!set_eta) {
+    eta = Math.round(parseFloat(row[`eta_${row.pitch_type}`])*100) 
+  }
+  else{
+    eta = parseInt(set_eta*100)
+  }
   
   return `
       <h3 style="text-align: center;"><strong>Movement Information</strong></h3>
-      <p><strong>Spin Rate:</strong> ${rpm} RPM</p>
+      <p><strong>Spin Rate:</strong> ${Math.round(rpm)} RPM</p>
       <p><strong>Spin Axis:</strong> ${phi}&deg</p>
       <p><strong>Spin Efficiency:</strong> ${eta}%</p>
       <p><strong>Induced Vertical Break:</strong> ${IVB} in.</p>
@@ -136,10 +142,16 @@ async function fileExists(path) {
 }
 
 async function getDataFolder() {
+
   const today = new Date();
   const yesterday = new Date(today);
   yesterday.setDate(yesterday.getDate() - 1);
-  const dateStr = yesterday.toISOString().split('T')[0];
+  // const dateStr = yesterday.toString().split('T')[0];
+  const year = yesterday.getFullYear();
+  const month = String(yesterday.getMonth() + 1).padStart(2, '0'); // months are 0-based
+  const day = String(yesterday.getDate()).padStart(2, '0');
+  const dateStr = `${year}-${month}-${day}`;
+
 
   const dailyFolder = `../assets/savant_data/${dateStr}`;
   const backupFolder = "../assets/savant_data/backup";
@@ -222,9 +234,9 @@ function showRow(row, button) {
   dynamic_output.innerHTML = getDynamicInfo(row, IVB, HB);
 
 
-  [C_T, C_L, C_S, data_nospin, omega_hat] = plot_traj(row);
+  [C_T, C_L, C_S, data_nospin, omega_hat, eta_val, phi, v0_hat, hand] = plot_traj(row);
 
-  // animatePitch(omega_hat)
+  animatePitch(omega_hat, parseFloat(row.release_spin_rate))
 
   omega_xz = Math.sqrt(Math.pow(omega_hat[0], 2) + Math.pow(omega_hat[2], 2))
   const spin_dir = (360 + ((180/Math.PI) * Math.atan2(omega_hat[2], omega_hat[0])))%360
@@ -237,6 +249,10 @@ function showRow(row, button) {
   spin_axis.value = spin_dir
   spin_axis_val.innerHTML = `${parseInt(spin_dir)}&deg`;
   spin_axis.row = row;
+
+  efficiency.value = parseFloat(eta_val*100)
+  efficiency_val.innerHTML = `${parseInt(100*eta_val)}%`;
+  efficiency.row = row;
 
 
 }
@@ -291,14 +307,36 @@ function parse_csv(button, file) {
 
 // -------------------------- Slider Updates --------------------------
 
+
+function get_theta(eta, phi, v0_hat, hand){
+  let costheta_s = Math.sqrt(1-eta ** 2)
+  let alpha = v0_hat[0] * Math.cos(phi) + v0_hat[2] * Math.sin(phi)
+  let beta = v0_hat[1]
+  let gamma = hand * costheta_s
+  let rho = Math.sqrt(alpha ** 2 + beta ** 2)
+  let chi = Math.atan2(beta, alpha)
+  return  Math.asin(gamma/rho) - chi
+}
+
 function updatePitchPlot() {
+
+
+    // if (animationFrameId !== null) {
+    //     cancelAnimationFrame(animationFrameId);
+    //     animationFrameId = null;
+    // }
+
     // Read slider values
     const spinVal = parseFloat(spin_rate.value);
     const axisVal = parseFloat(spin_axis.value);
+    const etaVal = parseFloat(efficiency.value)*.01;
 
     // Update display text
     spin_rate_val.innerHTML = `${spinVal} RPM`;
     spin_axis_val.innerHTML = `${parseInt(axisVal)}&deg`;
+    efficiency_val.innerHTML = `${parseInt(100*etaVal)}%`;
+
+
 
     // Compute f_L based on spin rate
     const ratio = spinVal / spin_rate.row['release_spin_rate'];
@@ -308,20 +346,19 @@ function updatePitchPlot() {
     const C_T_prime = A * (1 - Math.exp(-B * S_prime));
     const f_L = C_T_prime / C_T;
 
-    
-    const omega_hat_prime = [...omega_hat];
-    omega_hat_prime[0] = omega_xz * Math.cos((Math.PI/180) * axisVal)
-    omega_hat_prime[2] = omega_xz * Math.sin((Math.PI/180) * axisVal)
-    console.log(omega_hat_prime)
+    theta = get_theta(etaVal, (Math.PI/180) *axisVal, v0_hat, hand)
 
-    // alignSphere([0, 0, 1])
-    // alignSphere(omega_hat_prime)
-    // currentOmega[0] = omega_hat_prime[0]; // X component
-    // currentOmega[1] = omega_hat[1];                              // Y component
-    // currentOmega[2] = omega_hat_prime[2]; // Z compo
+    let omega_hat_prime = [...omega_hat];
 
+    omega_hat_prime = [Math.sin(theta)*Math.cos((Math.PI/180) *axisVal),
+                       Math.cos(theta),
+                       Math.sin(theta)*Math.sin((Math.PI/180) * axisVal)]
+    // omega_hat_prime[0] = omega_xz * Math.cos((Math.PI/180) * axisVal)
+    // omega_hat_prime[2] = omega_xz * Math.sin((Math.PI/180) * axisVal)
+
+
+    animatePitch(omega_hat_prime, spinVal)
     
-    // animatePitch(omega_hat)
 
     // Recalculate trajectory
     const data_prime = recalcTraj(spin_rate.row, f_L, omega_hat_prime);
@@ -340,12 +377,17 @@ function updatePitchPlot() {
     Plotly.restyle('plot', { x: [x_diff], y: [y_diff], z: [z_diff] }, 2);
 
 
-    dynamic_output.innerHTML = getDynamicInfo(spin_rate.row, IVB, HB, spinVal, axisVal);
+    // alignSphere([0, 0, 1])
+    // alignSphere(currentOmega)
+
+
+    dynamic_output.innerHTML = getDynamicInfo(spin_rate.row, IVB, HB, spinVal, axisVal, etaVal);
 }
 
 // Attach same function to both sliders
 spin_rate.oninput = updatePitchPlot;
 spin_axis.oninput = updatePitchPlot;
+efficiency.oninput = updatePitchPlot;
 
 
 

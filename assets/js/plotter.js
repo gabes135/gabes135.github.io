@@ -113,8 +113,12 @@ function generateDiff(data, data_nospin) {
 function recalcTraj(row, f_L, omega_hat){
   pitch_state_prime = new PitchState(row, f_L);
   pitch_state_prime.omega_hat = omega_hat
+  // let delta_y = (row['release_extension'] - extVal) * pitch_state_prime.ft_to_m
+
+  // pitch_state_prime.initial_conditions[1] = pitch_state_prime.initial_conditions[1] + delta_y
   solver_prime = new ODEsolver(pitch_state_prime.derivs.bind(pitch_state_prime), pitch_state_prime.initial_conditions, 0, 1)
   data_prime = calcOdeRK4(solver_prime, 10000)
+
 
   for (let i = 1; i <= 3; i++) {
       if (data_prime[i]) {
@@ -330,7 +334,9 @@ function plot_traj(row, f_L=1) {
 
 
     // 
-    return [pitch_state.C_T, pitch_state.C_L, pitch_state.C_S, data_nospin, pitch_state.omega_hat]
+    return [pitch_state.C_T, pitch_state.C_L,
+            pitch_state.C_S, data_nospin, pitch_state.omega_hat,
+            pitch_state.eta, pitch_state.phi, pitch_state.v0_hat, pitch_state.hand]
 
 }
 

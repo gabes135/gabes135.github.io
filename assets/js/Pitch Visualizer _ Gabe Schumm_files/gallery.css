@@ -1,0 +1,283 @@
+/* Gallery container styling */
+.gallery {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px; /* Increased gap for better spacing */
+  justify-content: center; /* Center the gallery items */
+  padding: 20px; /* Add some padding around the gallery */
+  background-color: #f9f9f9; /* Light background color */
+  max-height: 300px; /* Set a maximum height for the gallery */
+  overflow: hidden; /* Hide overflow if gallery exceeds max-height */
+}
+
+/* Individual gallery item styling */
+.gallery-item {
+  flex: 1 1 calc(33.333% - 30px); /* Responsive flex item with space for gap */
+  box-sizing: border-box;
+  overflow: hidden; /* Ensure items don’t overflow */
+  border: 2px solid #ddd; /* Add a light border */
+  border-radius: 8px; /* Rounded corners */
+  background-color: #fff; /* White background for each item */
+  height: 100%; /* Ensure gallery items stretch to fill available height */
+  display: flex;
+  justify-content: center;
+  align-items: center; /* Center the images within the gallery item */
+}
+
+/* Image styling within each gallery item */
+.gallery-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain; /* Scale image to fit the container, maintaining aspect ratio */
+  display: block;
+  border-radius: 8px; /* Match the border-radius of the container */
+  transition: transform 0.2s; /* Smooth hover effect */
+}
+
+/* Hover effects for gallery items */
+.gallery-item:hover {
+  transform: scale(1.05); /* Slight zoom effect */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
+}
+
+.gallery-item img:hover {
+  transform: scale(1.1); /* Zoom the image slightly on hover */
+}
+
+/* Responsive adjustments */
+@media (max-width: 1200px) {
+  .gallery-item {
+    flex: 1 1 calc(50% - 30px); /* 2 items per row on medium screens */
+  }
+}
+
+@media (max-width: 768px) {
+  .gallery-item {
+    flex: 1 1 calc(100% - 30px); /* 1 item per row on small screens */
+  }
+}
+
+.slider-item {
+  position: relative;
+  width: 300px;
+  max-height: 500px;
+  overflow: hidden;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  background-color: #fff;
+  margin: 0 10px;
+  flex-shrink: 0;
+}
+
+.slider-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top;
+  transition: transform 0.5s ease;
+  display: block;
+  border-radius: 8px;
+  z-index: 0;
+  position: relative;
+}
+
+.slider-item:hover img {
+  transform: scale(1.2);
+}
+
+/* Overlay and text remain the same */
+
+
+
+.slider-item:hover::before {
+  content: '';                    /* Add the overlay */
+  position: absolute;
+  transition: transform 0.5s ease;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.50); /* 50% opaque grey */
+  z-index: 1;        
+  pointer-events: none;
+}
+
+.slider-item .title {
+  position: absolute;
+  top: 10%; /* Instead of 0 or 50% */
+  left: 10%; /* Top-left corner with a little margin */
+  transform: none; /* Remove center-translate */
+  color: white;
+  font-size: 1.3rem;
+  font-weight: bold;
+  text-align: left;
+  z-index: 3;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  background-color: rgba(0,0,0,0.4); /* optional background for readability */
+  padding: 4px 8px;
+  border-radius: 4px;
+  max-width: 60%;     /* Optional: prevent text from getting too wide */
+  word-wrap: break-word;
+}
+.slider-item:hover .title {
+  opacity: 1;                     /* Make the text visible on hover */
+}
+
+
+/* Text styling on hover */
+.slider-item .description {
+  position: absolute;
+  top: 40%;
+  left: 10%;
+  color: white;                      /* White text */
+  font-size: 1.1rem;                 /* Font size */
+  font-weight: normal;                 /* Bold text */
+  text-align: left;
+  z-index: 3;                        /* Ensure text is on top of the overlay */
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  background-color: rgba(0,0,0,0.4); /* optional background for readability */
+  padding: 4px 8px;
+  max-width: 80%;     /* Optional: prevent text from getting too wide */
+  word-wrap: break-word;
+  border-radius: 4px;
+}
+
+/* Show description text on hover */
+.slider-item:hover .description {
+  opacity: 1;                      /* Make the text visible on hover */
+}
+
+
+
+.post-preview {
+  margin-bottom: 2rem;
+}
+
+.preview-container {
+  display: flex;
+  align-items: flex-start;
+  margin-top: 0.5rem;
+}
+
+
+.preview-image {
+  width: 300px;
+  height: 300px;
+  object-fit: cover;
+  object-position: top left;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  padding: 4px;
+  background-color: white;
+  transition: all 0.3s ease;
+   margin-right: 20px;
+}
+
+.preview-text {
+  flex: 1;
+}
+
+.preview-image:hover {
+  object-fit: contain;
+  width: 400px;
+  height: auto;
+
+}
+
+
+
+/* Button styling */
+.arrow-button {
+ width: 50px;  /* Set the width of the button */
+  height: 50px;  /* Set the height of the button */
+  background-image: url('/assets/images/left2.png');  /* Replace with the path to your arrow image */
+  background-size: contain;  /* Ensure the image fits the button without stretching */
+  background-repeat: no-repeat;  /* Prevent the image from repeating */
+  background-position: center;  /* Center the image inside the button */
+  border: none;  /* Remove default border */
+  cursor: pointer;  /* Change cursor to a pointer when hovered */
+  outline: none;  /* Remove the outline when focused */
+  transition: transform 0.3s ease;  /* Optional: smooth transition effect on hover */
+  background-color: transparent;
+}
+
+/* Hover effect */
+.arrow-button:hover {
+  transform: scale(1.2);  /* Slightly increase the button size on hover */
+}
+
+
+
+.float-left-figure {
+  float: left;
+  width: 48%;
+  margin-right: 50px;
+  margin-bottom: 10px;
+}
+
+.float-left-figure img {
+  width: 100%;
+  height: auto;
+  border-radius: 5px;
+  display: block; /* Ensures no space below image */
+}
+
+.float-left-figure figcaption {
+  font-style: italic;
+  color: #555;
+  font-size: 14px;
+  margin-top: 5px;
+  text-align: left;
+}
+
+
+.center-figure {
+  float: center;
+  width: 98%;
+  margin-right: 50px;
+  margin-bottom: 10px;
+}
+
+.center-figure img {
+  width: 100%;
+  height: auto;
+  border-radius: 5px;
+  display: block; /* Ensures no space below image */
+}
+
+.center-figure figcaption {
+  font-style: italic;
+  color: #555;
+  font-size: 14px;
+  margin-top: 5px;
+  text-align: center;
+}
+
+/* Define a reusable class for framed, centered figures with captions */
+.framed-figure {
+  text-align: center;
+  border: 2px solid #ccc;
+  padding: 15px;
+  background-color: #f9f9f9;
+  display: block;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  width: 100%; /* Adjust width as needed */
+  margin: 20px auto; /* Adds space above and below the figure */
+}
+
+.framed-figure img {
+  max-width: 100%;  /* Ensures image is responsive */
+  height: auto;
+  border-radius: 5px; /* Optional: adds rounded corners to the image */
+}
+
+.framed-figure figcaption {
+  font-style: italic;
+  margin-top: 10px;
+  color: #555;
+  font-size: 14px;
+}

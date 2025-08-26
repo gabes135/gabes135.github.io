@@ -25,6 +25,7 @@ let C_L;
 let S;
 let data_nospin;
 let omega_hat = [];
+let eta;
 
 
 // -------------------------- Utility functions --------------------------
@@ -82,7 +83,7 @@ function getDynamicInfo(row, IVB, HB) {
 
   return `
       <h3 style="text-align: center;"><strong>Movement Information</strong></h3>
-      <p><strong>Spin Rate:</strong> ${row.release_spin_rate} RPM</p>
+      <p><strong>Spin Rate:</strong> ${Math.round(row.release_spin_rate)} RPM</p>
       <p><strong>Spin Axis:</strong> ${phi}&deg</p>
       <p><strong>Spin Efficiency:</strong> ${eta}%</p>
       <p><strong>Induced Vertical Break:</strong> ${IVB} in.</p>
@@ -104,7 +105,11 @@ async function getDataFolder() {
   const today = new Date();
   const yesterday = new Date(today);
   yesterday.setDate(yesterday.getDate() - 1);
-  const dateStr = yesterday.toISOString().split('T')[0];
+  // const dateStr = yesterday.toISOString().split('T')[0];
+  const year = yesterday.getFullYear();
+  const month = String(yesterday.getMonth() + 1).padStart(2, '0'); // months are 0-based
+  const day = String(yesterday.getDate()).padStart(2, '0');
+  const dateStr = `${year}-${month}-${day}`;
 
   const dailyFolder = `../assets/savant_data/${dateStr}`;
   const backupFolder = "../assets/savant_data/backup";
@@ -191,7 +196,7 @@ function showRow(row, button) {
   dynamic_output.innerHTML = getDynamicInfo(row, IVB, HB);
 
 
-  [C_T, C_L, C_S, data_nospin, omega_hat] = plot_traj(row);
+  [C_T, C_L, C_S, data_nospin, omega_hat, eta_val, phi, v0_hat, hand] = plot_traj(row);
   animatePitch(omega_hat, parseFloat(row.release_spin_rate))
 
 }

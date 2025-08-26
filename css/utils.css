@@ -196,7 +196,8 @@ h1 a.black-link:hover {
 /* Inner text in pitch_info_wrapper */
 .pitch_info_wrapper {
   text-align: left;   
-  font-size: 16px;       /* slightly smaller font */
+  font-size: 16px;
+   line-height: .9;        /* slightly smaller font */
 }
 
 /* Inner div text inside info-box */
@@ -232,19 +233,32 @@ h1 a.black-link:hover {
   background: #fff;
   box-shadow: 0 2px 6px rgba(0,0,0,0.1);
 
-  /* Fix the height smaller */
-  height: 250px;        /* adjust as needed */
-  width: 100%;          /* full width of left column */
+  height: 250px;        
+  width: 100%;    
   
-  /* Center the spin-axis plot vertically */
   display: flex;
+  flex-direction: column;
   justify-content: center;   /* horizontal centering if needed */
   align-items: center;       /* vertical centering */
 }
 
+.spin-axis-title {
+  font-size: 18px;
+
+  font-weight: bold;
+  margin-top: 8px;
+  margin-bottom: 4px;   /* space between title and canvas */
+  text-align: center;
+}
+
 #spin_axis_plot {
-  width: 100%;      /* leave some margin inside wrapper */
-  height: 100%;     /* fill most of wrapper */
+  width: 70%;     
+  height: calc(70% - 20px); /* reduce height to account for title */
+}
+
+#spin_axis_plot {
+  width: 90%;      /* leave some margin inside wrapper */
+  height: 90%;     /* fill most of wrapper */
 }
 
 
@@ -276,7 +290,7 @@ h1 a.black-link:hover {
 
 
 .slide-title {
-  width: 12%;
+  width: 22%;
   font-size: 20px;
   display: flex;
   justify-content: flex-start;
@@ -299,7 +313,7 @@ h1 a.black-link:hover {
 }
 
 .slidecontainer {
-  width: 75%;
+  width: 70%;
   display: flex;
   justify-content: center;
   align-items: center;   /* vertical centering */

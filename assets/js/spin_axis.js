@@ -8,15 +8,19 @@ let x_sph = [];
 let y_sph = [];
 let z_sph = [];
 
-let poleX = [];
-let poleY = [];
-let poleZ = [];
+let x_seam = [];
+let y_seam = [];
+let z_seam = [];
 
 let theta = Math.PI / 80
 
 let axis_x = []
 let axis_y = []
 let axis_z = []
+
+let dx
+let dy
+let dz
 
 let currentOmega = [0, 0, 1]; // default axis
 let animationRunning = false;
@@ -44,22 +48,34 @@ function generateSphere(x_center, y_center, z_center, radius, resolution) {
         z_sph.push(rowZ);
     }
     // return { X, Y, Z };
-    console.log('sphere 0', x_sph[0][0], y_sph[0][0],z_sph[0][0] )
+    // console.log('sphere 0', x_sph[0][0], y_sph[0][0],z_sph[0][0] )
 }
 
-function generateStich(x_center, y_center, z_center, radius, resolution) {
+function generateStich(radius, resolution) {
     const v = Array.from({ length: resolution }, (_, i) => (i / (resolution - 1)) * Math.PI);
     
-    poleX = [];
-    poleY = [];
-    poleZ = [];
+    // poleX = [];
+    // poleY = [];
+    // poleZ = [];
 
-    for (let j = 0; j < 50; j++) {
-        const v = (j / (50 - 1)) * Math.PI;
-        poleX.push(radius * Math.cos(0) * Math.sin(v)); // cos(0) = 1
-        poleY.push(radius * Math.sin(0) * Math.sin(v)); // sin(0) = 0
-        poleZ.push(radius * Math.cos(v));
-    }
+    // for (let j = 0; j < 50; j++) {
+    //     const v = (j / (50 - 1)) * Math.PI;
+    //     poleX.push(radius * Math.cos(0) * Math.sin(v)); // cos(0) = 1
+    //     poleY.push(radius * Math.sin(0) * Math.sin(v)); // sin(0) = 0
+    //     poleZ.push(radius * Math.cos(v));
+    // }
+
+
+    const t = Array.from({length: resolution}, (_, i) => -Math.PI + 2 * Math.PI * i / (resolution-1));
+
+    // Seam 1
+    x_seam = [], y_seam = [], z_seam = [];
+    t.forEach(tt => {
+        let phi = (Math.PI / 2) * Math.cos(tt);
+        x_seam.push(radius * Math.sin(tt) * Math.cos(phi));
+        y_seam.push(radius * Math.sin(tt) * Math.sin(phi));
+        z_seam.push(radius * Math.cos(tt));
+    });
 }
 
 function rotateVec(vec, k, theta) {
@@ -89,7 +105,7 @@ function alignSphere(omega_hat){
     
     // 180/Math.PI 
 
-    console.log("omega_hat= ", omega_hat)
+    // console.log("omega_hat= ", omega_hat)
     let alpha = [-omega_hat[1], omega_hat[0], 0]
     let norm = Math.hypot(...alpha);
     if (norm == 0) {
@@ -111,18 +127,27 @@ function alignSphere(omega_hat){
       }
     }
 
-    for (let i = 0; i < poleX.length; i++) {
+    for (let i = 0; i < x_seam.length; i++) {
 
-        new_vec = rotateVec([poleX[i], poleY[i], poleZ[i]], alpha, phi)
+        new_vec = rotateVec([x_seam[i], y_seam[i], z_seam[i]], alpha, phi)
 
-        poleX[i] = new_vec[0]
-        poleY[i] = new_vec[1]
-        poleZ[i] = new_vec[2]
+        x_seam[i] = new_vec[0]
+        y_seam[i] = new_vec[1]
+        z_seam[i] = new_vec[2]
         }
 
-    axis_x = [-omega_hat[0]*1.5, omega_hat[0]*1.5]
-    axis_y = [-omega_hat[1]*1.5, omega_hat[1]*1.5]
-    axis_z = [-omega_hat[2]*1.5, omega_hat[2]*1.5]
+    axis_x = [-omega_hat[0]*1.2, omega_hat[0]*1.2]
+    axis_y = [-omega_hat[1]*1.2, omega_hat[1]*1.2]
+    axis_z = [-omega_hat[2]*1.2, omega_hat[2]*1.2]
+
+    dx = axis_x[1]
+    dy = axis_y[1]
+    dz = axis_z[1];
+    let mag = Math.sqrt(dx*dx + dy*dy + dz*dz);
+    let scale = 0.1;
+    dx = (dx/mag) * scale;
+    dy = (dy/mag) * scale;
+    dz = (dz/mag) * scale;
 }
 
 function rotateSphere(omega_hat){
@@ -130,24 +155,24 @@ function rotateSphere(omega_hat){
     // cosTheta = Math.cos(theta)
     // sinTheta = Math.sin(theta)
     let new_vec = []
-    for (let i = 0; i < x_sph.length; i++) {
-      for (let j = 0; j < x_sph[i].length; j++) {
+    // for (let i = 0; i < x_sph.length; i++) {
+    //   for (let j = 0; j < x_sph[i].length; j++) {
 
-          new_vec = rotateVec([x_sph[i][j], y_sph[i][j], z_sph[i][j]], omega_hat, theta)
+    //       new_vec = rotateVec([x_sph[i][j], y_sph[i][j], z_sph[i][j]], omega_hat, theta)
           
-          x_sph[i][j] = new_vec[0]
-          y_sph[i][j] = new_vec[1]
-          z_sph[i][j] = new_vec[2]
-      }
-    }
+    //       x_sph[i][j] = new_vec[0]
+    //       y_sph[i][j] = new_vec[1]
+    //       z_sph[i][j] = new_vec[2]
+    //   }
+    // }
     
-    for (let i = 0; i < poleX.length; i++) {
+    for (let i = 0; i < x_seam.length; i++) {
 
-        new_vec = rotateVec([poleX[i], poleY[i], poleZ[i]], omega_hat, theta)
+        new_vec = rotateVec([x_seam[i], y_seam[i], z_seam[i]], omega_hat, theta)
 
-        poleX[i] = new_vec[0]
-        poleY[i] = new_vec[1]
-        poleZ[i] = new_vec[2]
+        x_seam[i] = new_vec[0]
+        y_seam[i] = new_vec[1]
+        z_seam[i] = new_vec[2]
         }
 
     for (let i = 0; i < axis_x.length; i++) {
@@ -166,19 +191,21 @@ function rotateSphere(omega_hat){
 function update() {
     rotateSphere(currentOmega);
 
-    Plotly.animate('spin_axis_plot', {
-        data: [
-            { x: x_sph, y: y_sph, z: z_sph }, // 2D arrays
-            { x: poleX, y: poleY, z: poleZ }  // 1D arrays
-        ]
-    }, {
-        transition: { duration: 0 },
-        frame: { duration: 0, redraw: true }
+    // Compute arrow vector
+    
+
+    Plotly.restyle('spin_axis_plot', {
+        x: [x_sph, x_seam, axis_x, [axis_x[1]]],
+        y: [y_sph, y_seam, axis_y, [axis_y[1]]],
+        z: [z_sph, z_seam, axis_z, [axis_z[1]]],
+        u: [[dx]],
+        v: [[dy]],
+        w: [[dz]]
     });
 
-
-    requestAnimationFrame(update);
+    animationFrameId = requestAnimationFrame(update);
 }
+
 
 function animatePitch(omega_hat, omega_mag){
     // omega_hat = [1/Math.sqrt(2), 0, 1/Math.sqrt(2)]
@@ -186,8 +213,8 @@ function animatePitch(omega_hat, omega_mag){
     currentOmega = omega_hat; // overwrite global axis
 
     // const { X, Y, Z } = 
-    generateSphere(0, 0, 0, 1, 50); // Center (0,0,0), radius 1, resolution 50
-    generateStich(0, 0, 0, 1.01, 50)
+    generateSphere(0, 0, 0, 1, 20); // Center (0,0,0), radius 1, resolution 50
+    generateStich(1.01, 50)
     alignSphere([0, 0, 1])
     alignSphere(currentOmega)
 
@@ -196,21 +223,29 @@ function animatePitch(omega_hat, omega_mag){
         x: x_sph,
         y: y_sph,
         z: z_sph,
-        opacity: .5,
+        opacity: .9,
         showscale: false,
         hoverinfo: 'none',
-        colorscale: [[0, 'white'], [1, 'white']], // solid white
+        colorscale: [[0, '#FFFFFA'], [1, '#FFFFFA']], // solid white
         cmin: 0,
-        cmax: 1
+        cmax: 1,
+        lighting: {
+            // Ambient light with no shadows
+            ambient: .8, 
+            diffuse: .3,
+            fresnel: .1,
+            specular: 0,
+            roughness: 0
+          }
         // Optional: set a colorscale
     };
 
-    const poleLine = {
+    const seamLine = {
         type: 'scatter3d',
         mode: 'lines',
-        x: poleX,
-        y: poleY,
-        z: poleZ,
+        x: x_seam,
+        y: y_seam,
+        z: z_seam,
         line: { color: 'red', width: 4 }, // make it visible
         hoverinfo: 'none'
     };
@@ -225,9 +260,9 @@ function animatePitch(omega_hat, omega_mag){
         hoverinfo: 'none'
     };
 
-    let dx = axis_x[1];
-    let dy = axis_y[1];
-    let dz = axis_z[1];
+    dx = axis_x[1];
+    dy = axis_y[1];
+    dz = axis_z[1];
 
     // normalize
     let mag = Math.sqrt(dx*dx + dy*dy + dz*dz);
@@ -258,11 +293,11 @@ function animatePitch(omega_hat, omega_mag){
 
     const axisSettings = {
           showgrid: false,
-          showline: true,
-          zeroline: true,
+          showline: false,
+          zeroline: false,
           showticks: false,
-          showticklabels: true,
-          visible: true
+          showticklabels: false,
+          visible: false
         };
 
     const layout = {
@@ -286,7 +321,7 @@ function animatePitch(omega_hat, omega_mag){
     };
 
 
-    Plotly.newPlot('spin_axis_plot', [sphere, poleLine, spinAxisVec, arrowHead], layout);
+    Plotly.newPlot('spin_axis_plot', [sphere, seamLine, spinAxisVec, arrowHead], layout);
     // Plotly.newPlot('spin_axis', [...sphere, ...poleLine], layout);
 
     if (!animationRunning) {

@@ -96,6 +96,8 @@ class PitchState {
         this.state[5] = vz_rel;
     }
 
+
+
     get_coeffs() {
         const state = this.state;
 
@@ -106,7 +108,6 @@ class PitchState {
         let vfz =  v_init[2] + this.t_f * state[8]
 
         let v0 = [(v_init[0] + vfx)/2, (v_init[1] + vfy)/2, (v_init[2] + vfz)/2]
-
         let v0_mag = Math.hypot(...v0);
         let v0_hat = v0.map(val => val / v0_mag);
 
@@ -161,6 +162,8 @@ class PitchState {
         this.sgn = sgn;
         this.theta = theta;
         this.eta = eta;
+
+        this.v0_hat = v0_hat;
     }
 
 
