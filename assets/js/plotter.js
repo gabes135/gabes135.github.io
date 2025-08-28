@@ -437,6 +437,7 @@ function generate_trajectory(pitch_state){
             data[i] = data[i].map((val) => val * m_to_feet);
     };
 
+    data[1] = data[1].map((val) => val * -1);
     pitch_state.data = data
 
 }
