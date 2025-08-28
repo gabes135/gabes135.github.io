@@ -21,12 +21,7 @@ let dropdownConfig = [];   // make globally accessible
 let datasets = {};         // global datasets for each button
 let data_folder = "";      // global data folder path
 
-let C_L; 
-let S;
-let data_nospin;
-let omega_hat = [];
-let eta;
-
+let pitch_state
 
 // -------------------------- Utility functions --------------------------
 function getPitchName(code) {
@@ -68,15 +63,6 @@ function getStaticInfo(row) {
 }
 
 function getDynamicInfo(row, IVB, HB) {
-
-  const name = row.player_name;
-
-  let formattedName = name;
-  if (typeof name === "string" && name.includes(",")) {
-    const [last, first] = name.split(',').map(s => s.trim());
-    formattedName = `${first} ${last}`;
-  }
-
 
   let eta = Math.round(parseFloat(row[`eta_${row.pitch_type}`])*100) 
   let phi = Math.round(row.spin_axis)
@@ -196,8 +182,8 @@ function showRow(row, button) {
   dynamic_output.innerHTML = getDynamicInfo(row, IVB, HB);
 
 
-  [C_T, C_L, C_S, data_nospin, omega_hat, eta_val, phi, v0_hat, hand] = plot_traj(row);
-  animatePitch(omega_hat, parseFloat(row.release_spin_rate))
+  pitch_state = plot_traj(row, true);
+  animatePitch(pitch_state.omega_hat, parseFloat(row.release_spin_rate))
 
 }
 
@@ -247,6 +233,10 @@ function parse_csv(button, file) {
     }
   });
 }
+
+const cameraButton = document.getElementById('cameraButtonId');
+
+cameraButton.addEventListener('click', reset_camera);
 
 // -------------------------- Main initialization --------------------------
 async function main() {

@@ -24,7 +24,6 @@ let data_folder = "";      // global data folder path
 const spin_rate = document.getElementById("spin_rate");
 const spin_rate_val = document.getElementById("spin_rate_value");
 
-
 const spin_axis = document.getElementById("spin_axis");
 const spin_axis_val = document.getElementById("spin_axis_value");
 
@@ -35,15 +34,8 @@ const efficiency_val = document.getElementById("efficiency_value");
 
 const A = 0.336;
 const B = 6.041;
-let S_prime;
-let S, C_T, C_L, C_S, omega_hat, eta_val, phi, v0_hat, hand;
-let f_L;
-let data_nospin;
-let x_diff;
-let y_diff;
-let z_diff;
-let omega_xz;
-let rowInfo;
+let pitch_state, data_nospin
+
 const output = document.getElementById("output");
 const dynamic_output = document.getElementById("dynamic-output");
 
@@ -234,12 +226,20 @@ function showRow(row, button) {
   dynamic_output.innerHTML = getDynamicInfo(row, IVB, HB);
 
 
-  [C_T, C_L, C_S, data_nospin, omega_hat, eta_val, phi, v0_hat, hand] = plot_traj(row);
+  pitch_state = plot_traj(row, false);
+  data_nospin = pitch_state.data_nospin
 
-  animatePitch(omega_hat, parseFloat(row.release_spin_rate))
+  // // Second trajectory plotted is no longer spinless, instead original to compare to edited
+  // Plotly.restyle('plot', { x: [pitch_state.data_0[1]], y: [pitch_state.data_0[2]], z: [pitch_state.data_0[3]] }, 1);
+  // Plotly.restyle('plot', { x: [[pitch_state.data_0[1].at(-2)]], y: [[pitch_state.data_0[2].at(-2)]], z: [[pitch_state.data_0[3].at(-2)]] }, 5);
+  // const [x_diff, y_diff, z_diff] = generateDiff(pitch_state.data_0, pitch_state.data_0);
+  // Plotly.restyle('plot', { x: [x_diff], y: [y_diff], z: [z_diff] }, 2);
 
-  omega_xz = Math.sqrt(Math.pow(omega_hat[0], 2) + Math.pow(omega_hat[2], 2))
-  const spin_dir = (360 + ((180/Math.PI) * Math.atan2(omega_hat[2], omega_hat[0])))%360
+
+ 
+  animatePitch(pitch_state.omega_hat, parseFloat(row.release_spin_rate), pitch_state.v0_hat)
+
+  const spin_dir = (360 + ((180/Math.PI) * Math.atan2(pitch_state.omega_hat[2], pitch_state.omega_hat[0])))%360
 
 
   spin_rate.value = parseInt(row.release_spin_rate)
@@ -250,9 +250,12 @@ function showRow(row, button) {
   spin_axis_val.innerHTML = `${parseInt(spin_dir)}&deg`;
   spin_axis.row = row;
 
-  efficiency.value = parseFloat(eta_val*100)
-  efficiency_val.innerHTML = `${parseInt(100*eta_val)}%`;
+  efficiency.value = parseFloat(pitch_state.eta*100)
+  efficiency_val.innerHTML = `${parseInt(100*pitch_state.eta)}%`;
   efficiency.row = row;
+
+  console.log('State:', pitch_state)
+
 
 
 }
@@ -310,9 +313,9 @@ function parse_csv(button, file) {
 
 function get_theta(eta, phi, v0_hat, hand){
   let costheta_s = Math.sqrt(1-eta ** 2)
-  let alpha = v0_hat[0] * Math.cos(phi) + v0_hat[2] * Math.sin(phi)
-  let beta = v0_hat[1]
-  let gamma = hand * costheta_s
+  let alpha = pitch_state.v0_hat[0] * Math.cos(pitch_state.phi) + pitch_state.v0_hat[2] * Math.sin(pitch_state.phi)
+  let beta = pitch_state.v0_hat[1]
+  let gamma = pitch_state.hand * costheta_s
   let rho = Math.sqrt(alpha ** 2 + beta ** 2)
   let chi = Math.atan2(beta, alpha)
   return  Math.asin(gamma/rho) - chi
@@ -321,19 +324,14 @@ function get_theta(eta, phi, v0_hat, hand){
 function updatePitchPlot() {
 
 
-    // if (animationFrameId !== null) {
-    //     cancelAnimationFrame(animationFrameId);
-    //     animationFrameId = null;
-    // }
-
     // Read slider values
     const spinVal = parseFloat(spin_rate.value);
-    const axisVal = parseFloat(spin_axis.value);
+    const phiVal = parseFloat(spin_axis.value);
     const etaVal = parseFloat(efficiency.value)*.01;
 
     // Update display text
     spin_rate_val.innerHTML = `${spinVal} RPM`;
-    spin_axis_val.innerHTML = `${parseInt(axisVal)}&deg`;
+    spin_axis_val.innerHTML = `${parseInt(phiVal)}&deg`;
     efficiency_val.innerHTML = `${parseInt(100*etaVal)}%`;
 
 
@@ -341,54 +339,47 @@ function updatePitchPlot() {
     // Compute f_L based on spin rate
     const ratio = spinVal / spin_rate.row['release_spin_rate'];
 
-    const S = (1/B) * Math.log(A/(A-C_T))
+    const S = (1/B) * Math.log(A/(A-pitch_state.C_T))
     const S_prime = S * ratio;
     const C_T_prime = A * (1 - Math.exp(-B * S_prime));
-    const f_L = C_T_prime / C_T;
+    const f_L = C_T_prime / pitch_state.C_T;
 
-    theta = get_theta(etaVal, (Math.PI/180) *axisVal, v0_hat, hand)
-
-    let omega_hat_prime = [...omega_hat];
-
-    omega_hat_prime = [Math.sin(theta)*Math.cos((Math.PI/180) *axisVal),
+    let phiRad = (Math.PI/180) * phiVal
+    let theta = get_theta(etaVal, phiRad, pitch_state.v0_hat, pitch_state.hand)
+    let omega_hat_prime = [Math.sin(theta)*Math.cos(phiRad),
                        Math.cos(theta),
-                       Math.sin(theta)*Math.sin((Math.PI/180) * axisVal)]
-    // omega_hat_prime[0] = omega_xz * Math.cos((Math.PI/180) * axisVal)
-    // omega_hat_prime[2] = omega_xz * Math.sin((Math.PI/180) * axisVal)
-
-
-    animatePitch(omega_hat_prime, spinVal)
+                       Math.sin(theta)*Math.sin(phiRad)]
     
 
+    animatePitch(omega_hat_prime, spinVal, pitch_state.v0_hat)
+    
+    
     // Recalculate trajectory
-    const data_prime = recalcTraj(spin_rate.row, f_L, omega_hat_prime);
+    const pitch_state_prime = recalcTraj(spin_rate.row, f_L, omega_hat_prime);
+    data_prime = pitch_state_prime.data
+
 
     //  change this if changed in plotter.js
-    let scale_factor = .05 
-    let IVB = (Math.abs(data_prime[3].at(-2) - data_nospin[3].at(-2))*(12/scale_factor)).toFixed(2)
-    let HB = (Math.abs(data_prime[1].at(-2) - data_nospin[1].at(-2))*(12/scale_factor)).toFixed(2)
+    let IVB = (Math.abs(data_prime[3].at(-2) - data_nospin[3].at(-2))*(12/pitch_state.scale_factor)).toFixed(2)
+    let HB = (Math.abs(data_prime[1].at(-2) - data_nospin[1].at(-2))*(12/pitch_state.scale_factor)).toFixed(2)
 
     // Compute diff line
-    const [x_diff, y_diff, z_diff] = generateDiff(data_prime, data_nospin);
+    // const [x_diff, y_diff, z_diff] = generateDiff(data_prime, pitch_state.data_0);
 
     // Update Plotly traces
-    Plotly.restyle('plot', { x: [data_prime[1]], y: [data_prime[2]], z: [data_prime[3]] }, 0);
-    Plotly.restyle('plot', { x: [[data_prime[1].at(-2)]], y: [[data_prime[2].at(-2)]], z: [[data_prime[3].at(-2)]] }, 4);
-    Plotly.restyle('plot', { x: [x_diff], y: [y_diff], z: [z_diff] }, 2);
+    // Plotly.restyle('plot', { x: [data_prime[1]], y: [data_prime[2]], z: [data_prime[3]] }, 0);
+    // Plotly.restyle('plot', { x: [[data_prime[1].at(-2)]], y: [[data_prime[2].at(-2)]], z: [[data_prime[3].at(-2)]] }, 4);
+    // Plotly.restyle('plot', { x: [x_diff], y: [y_diff], z: [z_diff] }, 2);
 
 
-    // alignSphere([0, 0, 1])
-    // alignSphere(currentOmega)
 
-
-    dynamic_output.innerHTML = getDynamicInfo(spin_rate.row, IVB, HB, spinVal, axisVal, etaVal);
+    dynamic_output.innerHTML = getDynamicInfo(spin_rate.row, IVB, HB, spinVal, phiVal, etaVal);
 }
 
 // Attach same function to both sliders
 spin_rate.oninput = updatePitchPlot;
 spin_axis.oninput = updatePitchPlot;
 efficiency.oninput = updatePitchPlot;
-
 
 
 

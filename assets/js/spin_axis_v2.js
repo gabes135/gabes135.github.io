@@ -1,5 +1,5 @@
 let scene, engine, light;
-let sphereMesh, seamMesh, axisMesh, arrowMesh;
+let sphereMesh, seamMesh, axisMesh, arrowMesh, veloMesh, varrowMesh;
 let currentOmega = [0, 0, 1];
 let theta, points; // rotation per frame
 let initialized = false;
@@ -23,7 +23,8 @@ function initBabylon() {
     camera.attachControl(canvas, true);
     camera.inputs.removeByType("ArcRotateCameraPointersInput"); // disables mouse drag rotation
     camera.inputs.removeByType("ArcRotateCameraKeyboardMoveInput"); // optional: disable keyboard rotation
-
+    camera.lowerRadiusLimit = camera.radius;
+    camera.upperRadiusLimit = camera.radius;
 
     // Lighting
     light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(0, 0, 1), scene);
@@ -69,7 +70,7 @@ function generateSeam(resolution = 100) {
 }
 
 function generateSpinAxis(omega_hat) {
-    // Spin axis line (black)
+
     points = []
     points.push(new BABYLON.Vector3(-omega_hat[0]*1.2, -omega_hat[1]*1.2, -omega_hat[2]*1.2));
     points.push(new BABYLON.Vector3(omega_hat[0]*1.3, omega_hat[1]*1.3, omega_hat[2]*1.3));
@@ -100,8 +101,40 @@ function generateSpinAxis(omega_hat) {
 
 }
 
+function generateVeloAxis(v0_hat) {
+
+    points = []
+    points.push(new BABYLON.Vector3(0, 0, 0));
+    points.push(new BABYLON.Vector3(v0_hat[0]*1.3, v0_hat[1]*1.3, v0_hat[2]*1.3));
+
+
+    veloMesh = BABYLON.MeshBuilder.CreateTube("axis", {path: points, radius: 0.04, updatable:true}, scene);
+    veloMesh.material = new BABYLON.StandardMaterial("arrowMat", scene);
+    veloMesh.material.diffuseColor = new BABYLON.Color3(0, 0, 1);
+    veloMesh.material.specularColor = new BABYLON.Color3(0,0,0); // no shine
+
+
+    // Arrowhead (cone)
+    varrowMesh = BABYLON.MeshBuilder.CreateCylinder("arrow", { diameterTop: 0, diameterBottom: 0.2, height: 0.2 }, scene);
+    varrowMesh.material = new BABYLON.StandardMaterial("arrowMat", scene);
+    varrowMesh.material.diffuseColor = new BABYLON.Color3(0, 0, 1);
+    varrowMesh.material.specularColor = new BABYLON.Color3(0,0,0); // no shine
+ 
+    // Position arrow at the tip of the axis
+    varrowMesh.position = points[1].clone();
+    
+    const axis_path = new BABYLON.Path3D(points);
+    const curve = axis_path.getCurve(); // create the curve
+    const tangents = axis_path.getTangents();  //array of tangents to the curve
+    const normals = axis_path.getNormals(); //array of normals to the curve
+    const binormals = axis_path.getBinormals(); //array of binormals to curve
+    varrowMesh.rotation =  BABYLON.Vector3.RotationFromAxis(binormals[1], tangents[1], normals[1]);
+
+
+}
+
 // Rotate sphere along currentOmega
-function rotateSphere(omega_mag) {
+function rotateSeams(omega_mag) {
     const axis = new BABYLON.Vector3(currentOmega[0], currentOmega[1], currentOmega[2]);
     theta = -((omega_mag * 0.10472)  / 60) * .01
     seamMesh.rotate(axis, theta, BABYLON.Space.WORLD);
@@ -154,18 +187,20 @@ function updateAnimation(omega_hat) {
 
 
 // Animate pitch (public)
-function animatePitch(omega_hat, omega_mag) {
+function animatePitch(omega_hat, omega_mag, v0_hat=[0, 0, 0]) {
     currentOmega = omega_hat.map((v,i) => i===0 ? -v : v)
+    currentV0 = v0_hat.map((v,i) => i===0 ? -v : v)
 
     if (!initialized) {
         initBabylon();
         generateSeam();
         generateSphere();
         generateSpinAxis(currentOmega);
+        // generateVeloAxis(currentV0);
 
         engine.runRenderLoop(() => {
             scene.render();
-            rotateSphere(omega_mag);
+            rotateSeams(omega_mag);
         });
 
          initialized = true;
@@ -176,7 +211,7 @@ function animatePitch(omega_hat, omega_mag) {
         engine.stopRenderLoop();
         engine.runRenderLoop(() => {
             scene.render();
-            rotateSphere(omega_mag);
+            rotateSeams(omega_mag);
         });
      }
 

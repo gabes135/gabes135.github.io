@@ -42,10 +42,36 @@ class ODEsolver {
 
         }
 
+        ts = ts.slice(0, lastIndex + 1);
+        ys = ys.slice(0, lastIndex + 1);
+
+        const nPoints = 5000
+
+        const interpTs = Array.from({length: nPoints}, (_, k) => ts[0] + (ts.at(-1) - ts[0]) * k / (nPoints - 1));
+        const interpYs = Array.from({length: nPoints}, () => Array(this.y0.length).fill(0));
+
+        for (let j = 0; j < this.y0.length; j++) {
+            for (let i = 0; i < nPoints; i++) {
+                const t = interpTs[i];
+                // Find surrounding indices
+                let idx = ts.findIndex(val => val >= t);
+                if (idx === 0) {
+                    interpYs[i][j] = ys[0][j];
+                } else if (idx === -1) {
+                    interpYs[i][j] = ys.at(-1)[j];
+                } else {
+                    const t0 = ts[idx - 1], t1 = ts[idx];
+                    const y0 = ys[idx - 1][j], y1 = ys[idx][j];
+                    const alpha = (t - t0) / (t1 - t0);
+                    interpYs[i][j] = y0 * (1 - alpha) + y1 * alpha;
+                }
+            }
+        }
+
 
          return {
-            ts: ts.slice(0, lastIndex + 1),
-            ys: ys.slice(0, lastIndex + 1)
+            ts: interpTs,
+            ys: interpYs
         };
     }
 

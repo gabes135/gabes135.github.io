@@ -18,7 +18,13 @@ layout: wide
 <body >
   <script src="../assets/js/papaparse.min.js"></script>
   <script src="https://cdn.plot.ly/plotly-3.0.1.min.js" charset="utf-8"></script>
+
   <script src="https://cdn.babylonjs.com/babylon.js"></script>
+  <script src="../assets/js/babylon/babylon.grassProceduralTexture.js"></script>
+  <script src="../assets/js/babylon/babylon.roadProceduralTexture.js"></script>
+  <script src="../assets/js/babylon/earcut.min.js"></script>
+
+    
 
 
 
@@ -90,7 +96,12 @@ layout: wide
     </div>
 
     <div class="plot-wrapper">
-      <div id="plot"></div>
+      <!-- <div id="plot"></div> -->
+      <canvas id="plot"></canvas>
+       <div class="plot-legend">
+        <div><span style="color:black;">●</span> Edited Pitch</div>
+        <div><span style="color:rgba(0, 0, 0, 0.33);">●</span> Original Pitch</div>
+        </div>
     </div>
   </div>
 </div>

@@ -18,17 +18,24 @@ layout: wide
 <body >
   <script src="../assets/js/papaparse.min.js"></script>
   <script src="https://cdn.plot.ly/plotly-3.0.1.min.js" charset="utf-8"></script>
+
   <script src="https://cdn.babylonjs.com/babylon.js"></script>
+  <script src="../assets/js/babylon/babylon.grassProceduralTexture.js"></script>
+  <script src="../assets/js/babylon/babylon.roadProceduralTexture.js"></script>
+  <script src="../assets/js/babylon/earcut.min.js"></script>
+
+    
 
 
 
   <h2 class="menu-title">Top Pitches by:</h2>
   <div id="menu-bar"></div>
 
-  <!-- <script src="../assets/js/slider.js"></script> -->
+
   <script src="../assets/js/ode.js"></script>
+  <!-- <script src="../assets/js/plotter_old.js"></script> -->
   <script src="../assets/js/plotter.js"></script>
-  <script src="../assets/js/pitch_graphic.js"></script>
+
   <script src="../assets/js/traj.js"></script>
 
   
@@ -59,15 +66,26 @@ layout: wide
       </div>
 
 
-        
-
  
 
     </div>
 
-    <div class="plot-wrapper">
-      <div id="plot"></div>
+ <div class="plot-wrapper">
+  <!-- <div id="plot"></div> -->
+  <canvas id="plot"></canvas>
+
+    <div class="plot-legend">
+      <div><span style="color:black;">●</span> With Spin</div>
+      <div><span style="color:rgba(0, 0, 0, 0.33);">●</span> Without Spin</div>
     </div>
+
+
+  <!-- Camera button bottom-left -->
+  <button id="cameraButtonId" class="camera-button">Reposition Camera</button>
+</div>
+
+
+
   </div>
 </div>
 
@@ -94,7 +112,9 @@ layout: wide
 </div> -->
 
 <!-- <script src="../assets/js/spin_axis.js"></script> -->
+<script src="../assets/js/pitch_graphic.js"></script>
  <script src="../assets/js/spin_axis_v2.js"></script>
+   
 
 
 </body>
