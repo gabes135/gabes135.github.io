@@ -229,6 +229,7 @@ function showRow(row, button) {
   pitch_state = plot_traj(row, false);
   data_nospin = pitch_state.data_nospin
 
+
   // // Second trajectory plotted is no longer spinless, instead original to compare to edited
   // Plotly.restyle('plot', { x: [pitch_state.data_0[1]], y: [pitch_state.data_0[2]], z: [pitch_state.data_0[3]] }, 1);
   // Plotly.restyle('plot', { x: [[pitch_state.data_0[1].at(-2)]], y: [[pitch_state.data_0[2].at(-2)]], z: [[pitch_state.data_0[3].at(-2)]] }, 5);
@@ -255,6 +256,7 @@ function showRow(row, button) {
   efficiency.row = row;
 
   console.log('State:', pitch_state)
+  // takeScreenShot()
 
 
 
@@ -383,6 +385,8 @@ efficiency.oninput = updatePitchPlot;
 
 
 
+const cameraButton = document.getElementById('cameraButtonId');
+cameraButton.addEventListener('click', reset_camera);
 
 
 async function main() {

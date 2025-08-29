@@ -437,13 +437,46 @@ function generate_trajectory(pitch_state){
             data[i] = data[i].map((val) => val * m_to_feet);
     };
 
-    data[1] = data[1].map((val) => val * -1);
+    data[1] = data[1].map((val) => val * -1); // in babylon, x axis is flipped
     pitch_state.data = data
 
 }
 }
 
 
+function takeScreenShot(){
+    
+
+    plot_camera.alpha = 5*Math.PI/8
+    plot_camera.beta = Math.PI*(15/32) 
+
+    plot_scene.getMeshByName("pitch").isVisible = false;
+    plot_scene.getMeshByName("start").isVisible = false;
+    plot_scene.getMeshByName("end").isVisible = false;
+    plot_scene.getMeshByName("kzone").isVisible = false;
+    plot_scene.getMeshByName("kzone_border").isVisible = false;
+  
+
+   
+    BABYLON.Tools.CreateScreenshotUsingRenderTarget(
+    plot_engine,
+    plot_camera,
+    { width: 1920, height: 1080 },
+    (img) => {
+            // You can save the image string or download
+            const a = document.createElement("a");
+            a.href = img;
+            a.download = "screenshot.png";
+            a.click();
+        },
+        { antialias: true }
+    );
+
+    // plot_scene.getMeshByName("pitch").isVisible = true;
+    // plot_scene.getMeshByName("end").isVisible = true;
+  
+
+}
 
 function generateDiff(data, data_nospin) {
     if (data_nospin[3].at(-2) < data[3].at(-2)) {
@@ -491,6 +524,7 @@ function recalcTraj(row, f_L, omega_hat){
           data[i] = data[i].map((val) => val * m_to_feet);
     }
     };
+    data[1] = data[1].map((val) => val * -1); // in babylon, x axis is flipped
 
     pitch_state.data = data
 

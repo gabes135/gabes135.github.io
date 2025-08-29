@@ -234,6 +234,34 @@
 }
 
 
+.float-right-figure {
+  float: right;
+  width: 38%;
+  margin-left: 50px;
+  margin-bottom: 10px;
+  border: 2px solid #ccc;
+  padding: 15px;
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.float-right-figure img {
+  width: 100%;
+  height: auto;
+  border-radius: 5px;
+  display: block; /* Ensures no space below image */
+}
+
+.float-right-figure figcaption {
+  font-style: italic;
+  color: #555;
+  font-size: 16px;
+  margin-top: 5px;
+  text-align: center;
+}
+
+
 .center-figure {
   float: center;
   width: 98%;
