@@ -51,10 +51,9 @@ function generateSeam(resolution = 100) {
     let seamRadius = 1.01
     for (let i = 0; i < resolution; i++) {
         const t = -Math.PI + 2 * Math.PI * i / (resolution - 1);
-        const phi = (Math.PI / 2) * Math.cos(t);
-        const x = seamRadius * Math.sin(t) * Math.cos(phi);
-        const y = seamRadius * Math.sin(t) * Math.sin(phi);
-        const z = seamRadius * Math.cos(t);
+        const x = seamRadius * Math.cos(t) ** 3;
+        const y = seamRadius * Math.sin(t) ** 3;
+        const z = seamRadius * (Math.sqrt(3) / 2) * Math.sin(2*t);
         points.push(new BABYLON.Vector3(x, y, z));
     }
 
@@ -66,6 +65,9 @@ function generateSeam(resolution = 100) {
     // stringMat.emissiveColor = new BABYLON.Color3(0.1,0.1,0.1); // subtle glow
 
     seamMesh.material = stringMat
+
+    const axis = new BABYLON.Vector3(-0.3574, 0.8629, -0.3574);
+    seamMesh.rotate(axis, 98.421*Math.PI/180, BABYLON.Space.WORLD)
 
 }
 
@@ -101,41 +103,10 @@ function generateSpinAxis(omega_hat) {
 
 }
 
-function generateVeloAxis(v0_hat) {
-
-    points = []
-    points.push(new BABYLON.Vector3(0, 0, 0));
-    points.push(new BABYLON.Vector3(v0_hat[0]*1.3, v0_hat[1]*1.3, v0_hat[2]*1.3));
-
-
-    veloMesh = BABYLON.MeshBuilder.CreateTube("axis", {path: points, radius: 0.04, updatable:true}, scene);
-    veloMesh.material = new BABYLON.StandardMaterial("arrowMat", scene);
-    veloMesh.material.diffuseColor = new BABYLON.Color3(0, 0, 1);
-    veloMesh.material.specularColor = new BABYLON.Color3(0,0,0); // no shine
-
-
-    // Arrowhead (cone)
-    varrowMesh = BABYLON.MeshBuilder.CreateCylinder("arrow", { diameterTop: 0, diameterBottom: 0.2, height: 0.2 }, scene);
-    varrowMesh.material = new BABYLON.StandardMaterial("arrowMat", scene);
-    varrowMesh.material.diffuseColor = new BABYLON.Color3(0, 0, 1);
-    varrowMesh.material.specularColor = new BABYLON.Color3(0,0,0); // no shine
- 
-    // Position arrow at the tip of the axis
-    varrowMesh.position = points[1].clone();
-    
-    const axis_path = new BABYLON.Path3D(points);
-    const curve = axis_path.getCurve(); // create the curve
-    const tangents = axis_path.getTangents();  //array of tangents to the curve
-    const normals = axis_path.getNormals(); //array of normals to the curve
-    const binormals = axis_path.getBinormals(); //array of binormals to curve
-    varrowMesh.rotation =  BABYLON.Vector3.RotationFromAxis(binormals[1], tangents[1], normals[1]);
-
-
-}
 
 // Rotate sphere along currentOmega
-function rotateSeams(omega_mag) {
-    const axis = new BABYLON.Vector3(currentOmega[0], currentOmega[1], currentOmega[2]);
+function rotateSeams(omega_hat, omega_mag) {
+    const axis = new BABYLON.Vector3(omega_hat[0], omega_hat[1], omega_hat[2]);
     theta = -((omega_mag * 0.10472)  / 60) * .01
     seamMesh.rotate(axis, theta, BABYLON.Space.WORLD);
 
@@ -144,43 +115,12 @@ function rotateSeams(omega_mag) {
 function updateAnimation(omega_hat) {
 
     axisMesh.dispose();
+    arrowMesh.dispose();
     seamMesh.dispose();
 
-    points = [];
-    const seamRadius = 1.01;
-    for (let i = 0; i < 100; i++) {
-        const t = -Math.PI + 2 * Math.PI * i / 99;
-        const phi = (Math.PI / 2) * Math.cos(t);
-        points.push(new BABYLON.Vector3(
-            seamRadius * Math.sin(t) * Math.cos(phi),
-            seamRadius * Math.sin(t) * Math.sin(phi),
-            seamRadius * Math.cos(t)
-        ));
-    }
- 
-    seamMesh = BABYLON.MeshBuilder.CreateTube("tube", {path: points, radius: 0.02, updatable:true}, scene);
-    seamMesh.material = new BABYLON.StandardMaterial("stringMat", scene);
-    seamMesh.material.diffuseColor = new BABYLON.Color3(1,0,0);
-    seamMesh.material.specularColor = new BABYLON.Color3(0,0,0);
 
-
-   points = [
-        new BABYLON.Vector3(-omega_hat[0]*1.2, -omega_hat[1]*1.2, -omega_hat[2]*1.2),
-        new BABYLON.Vector3(omega_hat[0]*1.3, omega_hat[1]*1.3, omega_hat[2]*1.3)
-    ];
-
-    axisMesh = BABYLON.MeshBuilder.CreateTube("axis", { path: points, radius: 0.04 }, scene);
-    axisMesh.material = new BABYLON.StandardMaterial("arrowMat", scene);
-    axisMesh.material.diffuseColor = new BABYLON.Color3(0,0,0);
-
-    
-    arrowMesh.position = points[1].clone();
-    const axis_path = new BABYLON.Path3D(points);
-    const curve = axis_path.getCurve();
-    const tangents = axis_path.getTangents();
-    const normals = axis_path.getNormals();
-    const binormals = axis_path.getBinormals();
-    arrowMesh.rotation = BABYLON.Vector3.RotationFromAxis(binormals[1], tangents[1], normals[1]);
+    generateSpinAxis(omega_hat)
+    generateSeam()
 }
 
 
@@ -200,7 +140,7 @@ function animatePitch(omega_hat, omega_mag, v0_hat=[0, 0, 0]) {
 
         engine.runRenderLoop(() => {
             scene.render();
-            rotateSeams(omega_mag);
+            rotateSeams(currentOmega, omega_mag);
         });
 
          initialized = true;
@@ -211,7 +151,7 @@ function animatePitch(omega_hat, omega_mag, v0_hat=[0, 0, 0]) {
         engine.stopRenderLoop();
         engine.runRenderLoop(() => {
             scene.render();
-            rotateSeams(omega_mag);
+            rotateSeams(currentOmega, omega_mag);
         });
      }
 
