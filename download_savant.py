@@ -45,6 +45,7 @@ df = pd.read_csv(io.StringIO(data.text))
 df = pd.merge(df, df_eta, left_on = 'pitcher', right_on = 'entity_id')
 
 df = df[df.description.isin(['swinging_strike', 'called_strike', 'swinging_strike_blocked'])]
+df = df[~df.spin_axis.isna()]
 
 if df.shape[0] == 0:	
 	print("No data to export.")
