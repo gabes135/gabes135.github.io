@@ -1,5 +1,5 @@
 let scene, engine, light;
-let sphereMesh, seamMesh, axisMesh, arrowMesh, veloMesh, varrowMesh;
+let sphereMesh, seamMesh, axisMesh, arrowMesh, varrowMesh, allStitches;
 let currentOmega = [0, 0, 1];
 let theta, points; // rotation per frame
 let initialized = false;
@@ -21,8 +21,8 @@ function initBabylon() {
         scene
     );
     camera.attachControl(canvas, true);
-    camera.inputs.removeByType("ArcRotateCameraPointersInput"); // disables mouse drag rotation
-    camera.inputs.removeByType("ArcRotateCameraKeyboardMoveInput"); // optional: disable keyboard rotation
+    // camera.inputs.removeByType("ArcRotateCameraPointersInput"); // disables mouse drag rotation
+    // camera.inputs.removeByType("ArcRotateCameraKeyboardMoveInput"); // optional: disable keyboard rotation
     camera.lowerRadiusLimit = camera.radius;
     camera.upperRadiusLimit = camera.radius;
 
@@ -66,10 +66,74 @@ function generateSeam(resolution = 100) {
 
     seamMesh.material = stringMat
 
-    const axis = new BABYLON.Vector3(-0.3574, 0.8629, -0.3574);
-    seamMesh.rotate(axis, 98.421*Math.PI/180, BABYLON.Space.WORLD)
+    addStitchesViaPath3D(points, plot_scene); // every 8th point, diagonal stitch
+
 
 }
+
+
+// call after you create `points` and seamMesh
+function addStitchesViaPath3D(points, scene, opts = {}) {
+    const step = opts.step || 100;               // how many points between stitches
+    const stitchLength = opts.length || 0.08;  // total stitch length
+    const stitchRadius = opts.radius || 0.02;  // tube radius for stitch
+    const angle = (opts.angle !== undefined) ? opts.angle : Math.PI / 4; // rotation about tangent
+    const seamOffset = (opts.seamOffset !== undefined) ? opts.seamOffset : 0.02; // offset from seam center outward
+    const seamRadius = (opts.seamRadius !== undefined) ? opts.seamRadius : 1.01; // used to push stitches outward
+    const stitchMat = new BABYLON.StandardMaterial("stitchMat", scene);
+    stitchMat.diffuseColor = new BABYLON.Color3(1, 0, 0);
+    stitchMat.specularColor = new BABYLON.Color3(0, 0, 0);
+
+    const path3d = new BABYLON.Path3D(points);
+    const curve = path3d.getCurve();       // sampled curve points
+    const tangents = path3d.getTangents();
+    const normals = path3d.getNormals();
+    const binormals = path3d.getBinormals();
+
+    const stitches = [];
+
+    for (let i = 0; i < curve.length; i += step) {
+        const p = curve[i].clone();        // world-space center position
+        const t = tangents[i].clone().normalize();   // tangent along seam
+        const n = normals[i].clone().normalize();    // normal (points "out" of seam)
+        const b = binormals[i].clone().normalize();  // binormal (perp to t and n)
+
+        // rotate binormal around tangent to get diagonal stitch direction
+        const R = BABYLON.Matrix.RotationAxis(t, angle); 
+        const stitchDir = BABYLON.Vector3.TransformCoordinates(b, R).normalize();
+
+        // optionally offset outward a bit so stitch sits on top of seam
+        const center = p.add(n.scale(seamOffset)); // tweak seamOffset to taste
+
+        const half = stitchDir.scale(stitchLength * 0.5);
+        const p1 = center.add(half.scale(-1));
+        const p2 = center.add(half);
+
+        // create a short tube for the stitch
+        const tube = BABYLON.MeshBuilder.CreateTube("stitch", {
+            path: [p1, p2],
+            radius: stitchRadius,
+            updatable: false,
+            sideOrientation: BABYLON.Mesh.DOUBLESIDE
+        }, scene);
+
+        tube.material = stitchMat;
+        stitches.push(tube);
+    }
+
+    // Merge (dispose originals) -> single draw call
+    
+    const allStitches = BABYLON.Mesh.MergeMeshes(stitches, true, true, undefined, false, true);
+
+    allStitches.name = "allStitches";
+    allStitches.material = stitchMat;
+    return allStitches;
+        
+    
+
+}
+
+
 
 function generateSpinAxis(omega_hat) {
 
@@ -104,6 +168,44 @@ function generateSpinAxis(omega_hat) {
 }
 
 
+
+function quaternionFromUnitVectors(from, to) {
+    const f = from.normalize();
+    const t = to.normalize();
+    const dot = BABYLON.Vector3.Dot(f, t);
+
+    if (dot < -0.999999) {
+        // Opposite direction: rotate 180° around an orthogonal axis
+        let ortho = new BABYLON.Vector3(1, 0, 0);
+        if (Math.abs(f.x) > 0.9) {
+            ortho = new BABYLON.Vector3(0, 1, 0);
+        }
+        const axis = BABYLON.Vector3.Cross(f, ortho).normalize();
+        return BABYLON.Quaternion.RotationAxis(axis, Math.PI);
+    }
+
+    const axis = BABYLON.Vector3.Cross(f, t);
+    const s = Math.sqrt((1 + dot) * 2);
+    const invs = 1 / s;
+
+    return new BABYLON.Quaternion(
+        axis.x * invs,
+        axis.y * invs,
+        axis.z * invs,
+        s * 0.5
+    ).normalize();
+}
+
+function alignSeams(seamMesh, omega_hat){
+    const from = new BABYLON.Vector3(Math.SQRT1_2, Math.SQRT1_2, 0);
+    const axis = new BABYLON.Vector3(omega_hat[0], omega_hat[1], omega_hat[2]);
+
+    const q = quaternionFromUnitVectors(from, axis);
+
+    seamMesh.rotationQuaternion = q;
+}
+
+
 // Rotate sphere along currentOmega
 function rotateSeams(omega_hat, omega_mag) {
     const axis = new BABYLON.Vector3(omega_hat[0], omega_hat[1], omega_hat[2]);
@@ -126,17 +228,22 @@ function updateAnimation(omega_hat) {
 
 
 
+
+
 // Animate pitch (public)
 function animatePitch(omega_hat, omega_mag, v0_hat=[0, 0, 0]) {
     currentOmega = omega_hat.map((v,i) => i===0 ? -v : v)
     currentV0 = v0_hat.map((v,i) => i===0 ? -v : v)
 
+
     if (!initialized) {
         initBabylon();
-        generateSeam();
+
         generateSphere();
         generateSpinAxis(currentOmega);
-        // generateVeloAxis(currentV0);
+
+        generateSeam();
+        alignSeams(seamMesh, currentOmega)
 
         engine.runRenderLoop(() => {
             scene.render();
@@ -147,6 +254,8 @@ function animatePitch(omega_hat, omega_mag, v0_hat=[0, 0, 0]) {
      }
      else{
         updateAnimation(currentOmega);
+        alignSeams(seamMesh, currentOmega)
+
         
         engine.stopRenderLoop();
         engine.runRenderLoop(() => {
