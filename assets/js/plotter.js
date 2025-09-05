@@ -598,7 +598,7 @@ function plot_traj(row, noSpin=true) {
             plot_scene.getMeshByName("end_nospin").position.set(data_nospin[1].at(-2), data_nospin[2].at(-2), data_nospin[3].at(-2));
             
             diff_points = generateDiff(data, data_nospin)
-            console.log(diff_points)
+            
             vertices = makeVector3List(diff_points[0], diff_points[1], diff_points[2])
             BABYLON.MeshBuilder.CreateLines("diff", {
                 points: vertices,  // new path array
