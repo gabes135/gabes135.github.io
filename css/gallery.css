@@ -244,13 +244,18 @@
   background-color: #f9f9f9;
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+   box-sizing: border-box; 
 }
 
-.float-right-figure img {
+.float-right-figure img,
+.float-right-figure video {
   width: 100%;
   height: auto;
   border-radius: 5px;
-  display: block; /* Ensures no space below image */
+  display: block; /* Ensures no space below */
+}
+.float-right-figure img + img {
+  margin-top: 10px;
 }
 
 .float-right-figure figcaption {
@@ -274,6 +279,14 @@
   height: auto;
   border-radius: 5px;
   display: block; /* Ensures no space below image */
+}
+
+
+.center-figure video {
+  width: 100%;
+  height: auto;
+  border-radius: 5px;
+  display: block; /* removes inline spacing */
 }
 
 .center-figure figcaption {
@@ -308,4 +321,36 @@
   margin-top: 10px;
   color: #555;
   font-size: 14px;
+}
+
+
+
+.video-row {
+  display: flex;
+  justify-content: center;   /* center them horizontally */
+  gap: 20px;                 /* space between videos */
+  margin: 20px 0;
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.video-row figure {
+  width: 48%;                /* each figure takes ~half the row */
+  margin: 0;                 /* reset default margins */
+  text-align: center;        /* center caption text */
+}
+
+.video-row video {
+  width: 100%;               /* fill figure width */
+  height: auto;
+  border-radius: 5px;
+  display: block;
+}
+
+.video-row figcaption {
+  font-style: italic;
+  color: #555;
+  font-size: 14px;
+  margin-top: 5px;
 }
