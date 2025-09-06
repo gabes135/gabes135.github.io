@@ -1,8 +1,16 @@
 ---
 layout: wide
+meta_tags: |
+  <meta property="og:title" content="MLB Pitch Visualizer" />
+  <meta property="og:description" content="Interactive Statcast-based tool to explore pitch movement." />
+  <meta property="og:image" content="https://gabes135.github.io/pitch-graphic/assets/pitch_traj/preview.png" />
+  <meta property="og:url" content="https://gabes135.github.io/pitch-graphic/" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="MLB Pitch Visualizer" />
+  <meta name="twitter:description" content="Interactive Statcast-based tool to explore pitch movement." />
+  <meta name="twitter:image" content="https://gabes135.github.io/pitch-graphic/assets/pitch_traj/preview.png" />
 ---
 
-<html>
 
 <div class="header-row">
 
@@ -15,7 +23,6 @@ layout: wide
 </div>
 {{ content }}
 
-<body >
   <script src="../assets/js/papaparse.min.js"></script>
   <script src="https://cdn.plot.ly/plotly-3.0.1.min.js" charset="utf-8"></script>
 
@@ -114,8 +121,9 @@ layout: wide
 <!-- <script src="../assets/js/spin_axis.js"></script> -->
 <script src="../assets/js/pitch_graphic.js"></script>
  <script src="../assets/js/spin_axis_v2.js"></script>
+
+<script src="{{ '/assets/js/jquery-3.7.1.min.js' | relative_url }}"></script>
+<script src="{{ '/assets/slick/slick.min.js' | relative_url }}"></script>
    
 
 
-</body>
-</html>

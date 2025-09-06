@@ -1,7 +1,9 @@
 <!DOCTYPE html>
-<html lang="{{ page.lang | default: site.lang | default: "en" }}">
-
   {%- include head.html -%}
+
+  {% if page.meta_tags %}
+    {{ page.meta_tags | safe }}
+  {% endif %}
 
   <body>
 
@@ -14,10 +16,6 @@
     </main>
 
     {%- include footer.html -%}
-
-
-<script src="{{ '/assets/js/jquery-3.7.1.min.js' | relative_url }}"></script>
-<script src="{{ '/assets/slick/slick.min.js' | relative_url }}"></script>
 
 <script>
   $(document).ready(function(){
@@ -40,4 +38,3 @@
 
   </body>
 
-</html>
