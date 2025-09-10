@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+  <style>
+    body { margin: 0; }
+    #plot { width: 100%; height: 100vh; }
+  </style>
+</head>
+<body>
+<div id="plot"></div>
+
+<script>
+// ---------------- Vector utilities ----------------
+function dotVectors(v1, v2) {
+  return v1[0]*v2[0] + v1[1]*v2[1] + v1[2]*v2[2];
+}
+
+function crossVectors(a, b) {
+  return [
+    a[1]*b[2] - a[2]*b[1],
+    a[2]*b[0] - a[0]*b[2],
+    a[0]*b[1] - a[1]*b[0]
+  ];
+}
+
+function norm(v) {
+  return Math.sqrt(dotVectors(v, v));
+}
+
+function scaleVec(v, s) {
+  return [v[0]*s, v[1]*s, v[2]*s];
+}
+
+function addVec(a, b) {
+  return [a[0]+b[0], a[1]+b[1], a[2]+b[2]];
+}
+
+function rotateVec(vec, k, theta) {
+  const kNorm = scaleVec(k, 1.0 / norm(k));
+  const cosT = Math.cos(theta);
+  const sinT = Math.sin(theta);
+
+  const term1 = scaleVec(vec, cosT);
+  const term2 = scaleVec(crossVectors(kNorm, vec), sinT);
+  const term3 = scaleVec(kNorm, dotVectors(kNorm, vec) * (1 - cosT));
+  return addVec(addVec(term1, term2), term3);
+}
+
+// ---------------- Geometry generators ----------------
+function generateSphere(xc, yc, zc, radius, resolution) {
+  const u = Array.from({length: resolution*2}, (_, i) => 2*Math.PI*i/(resolution*2-1));
+  const v = Array.from({length: resolution}, (_, i) => Math.PI*i/(resolution-1));
+
+  const x = [], y = [], z = [];
+  for (let i=0; i<u.length; i++) {
+    const rowX = [], rowY = [], rowZ = [];
+    for (let j=0; j<v.length; j++) {
+      rowX.push(Math.cos(u[i]) * Math.sin(v[j]) * radius + xc);
+      rowY.push(Math.sin(u[i]) * Math.sin(v[j]) * radius + yc);
+      rowZ.push(Math.cos(v[j]) * radius + zc);
+    }
+    x.push(rowX); y.push(rowY); z.push(rowZ);
+  }
+  return {x, y, z};
+}
+
+function generateStitch(radius, resolution) {
+  const t = Array.from({length: resolution}, (_, i) => -Math.PI + 2*Math.PI*i/(resolution-1));
+  const x = [], y = [], z = [];
+  for (let tt of t) {
+    x.push(radius * Math.pow(Math.cos(tt), 3));
+    y.push(radius * Math.pow(Math.sin(tt), 3));
+    z.push(radius * (Math.sqrt(3)/2) * Math.sin(2*tt));
+  }
+  return {x, y, z};
+}
+
+function rotateStitch(points, k, theta) {
+  return points.map(p => rotateVec(p, k, theta));
+}
+
+function alignPoints(points, omegaHat) {
+  let alpha = [-omegaHat[1], omegaHat[0], 0.0];
+  let n = norm(alpha);
+  if (n === 0) return points;
+  alpha = scaleVec(alpha, 1/n);
+  const phi = Math.acos(omegaHat[2]);
+  return points.map(p => rotateVec(p, alpha, phi));
+}
+
+// ---------------- Plotting helpers ----------------
+function getVec(axis, c, annotations, text) {
+  const vec = {
+    type: "scatter3d",
+    x: [0, axis[0]],
+    y: [0, axis[1]],
+    z: [0, axis[2]],
+    mode: "lines",
+    line: {color: c, width: 8},
+    hoverinfo: "skip"
+  };
+
+  const arrow = {
+    type: "cone",
+    x: [axis[0]],
+    y: [axis[1]],
+    z: [axis[2]],
+    u: [axis[0]],
+    v: [axis[1]],
+    w: [axis[2]],
+    anchor: "tail",
+    showscale: false,
+    sizemode: "absolute",
+    sizeref: 0.25,
+    colorscale: [[0, c], [1, c]]
+  };
+
+  if (text) {
+    const annotation = {
+      type: "scatter3d",
+      x: [axis[0]*1.2],
+      y: [axis[1]*1.2],
+      z: [axis[2]*1.2],
+      mode: "text",
+      text: [text],
+      textposition: "top center",
+      textfont: {color: "black", size: 12},
+      showlegend: false
+    };
+    annotations.push(annotation);
+  }
+
+  return [vec, arrow];
+}
+
+// ---------------- Main plot ----------------
+function plotPitch(omegaHat, omegaMag, k, alpha, t) {
+  // Sphere
+  const sph = generateSphere(0,0,0,1,40);
+  const sphere = {
+    type: "surface",
+    x: sph.x, y: sph.y, z: sph.z,
+    opacity: 1,
+    showscale: false,
+    colorscale: [[0, "#FFFFFA"], [1, "#FFFFFA"]],
+    hoverinfo: "skip"
+  };
+
+  // Seam
+  let seam = generateStitch(1.01, 100);
+  let seamPoints = seam.x.map((xi,i) => [seam.x[i], seam.y[i], seam.z[i]]);
+  seamPoints = rotateStitch(seamPoints, k, alpha);
+  seamPoints = alignPoints(seamPoints, crossVectors([0,-1,0], omegaHat));
+  seamPoints = rotateStitch(seamPoints, omegaHat, t);
+  const seamX = seamPoints.map(p=>p[0]);
+  const seamY = seamPoints.map(p=>p[1]);
+  const seamZ = seamPoints.map(p=>p[2]);
+  const seamLine = {
+    type: "scatter3d",
+    x: seamX, y: seamY, z: seamZ,
+    mode: "lines",
+    line: {color:"red", width:8},
+    hoverinfo: "skip"
+  };
+
+  const elements = [sphere, seamLine];
+  const annotations = [];
+
+  elements.push(...getVec(scaleVec(omegaHat,1.2),'black',annotations,'Spin-Axis'));
+  const velo = [0, -1.2, -0.2];
+  elements.push(...getVec(scaleVec(velo,1.2),'gray',annotations,'Velocity'));
+  elements.push(...getVec(scaleVec(velo,-1.2),'purple',annotations,'Drag'));
+  const magnus = crossVectors(omegaHat, velo);
+  elements.push(...getVec(scaleVec(magnus,1.2),'blue',annotations,'Magnus'));
+  const ssw = crossVectors(omegaHat, magnus);
+  elements.push(...getVec(scaleVec(ssw,1.2),'red',annotations,'Side'));
+
+  const grav = [0, 0, -1];
+  elements.push(...getVec(scaleVec(grav,1.2),'green',annotations,'Gravity'));
+
+
+  elements.push(...annotations);
+
+  const layout = {
+    margin: {l:0, r:0, t:0, b:0},
+    scene: {
+      xaxis: {visible:false, range:[-2.3,2.3]},
+      yaxis: {visible:false, range:[-2.3,2.3]},
+      zaxis: {visible:false, range:[-2.3,2.3]},
+      aspectmode: "cube",
+      camera: {eye:{x:-.3,y:-1,z:0.1}, up:{x:0,y:0,z:1}}
+    },
+    showlegend:false
+  };
+
+  Plotly.newPlot("plot", elements, layout);
+}
+
+// ---------------- Run it ----------------
+const omegaHat = [-0.8501448643320205, -0.5027742712166834, -0.15643446504023104]
+plotPitch(omegaHat, 1.0, [0,0,1], 45*Math.PI/180, 0);
+
+</script>
+</body>
+</html>
