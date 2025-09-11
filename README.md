@@ -1,1 +1,1 @@
-Private source code for my personal website
+Public source code for my personal website
