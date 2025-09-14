@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Pitch Visualizer | Gabe Schumm</title>
+<meta name="generator" content="Jekyll v4.4.1" />
+<meta property="og:title" content="Pitch Visualizer" />
+<meta name="author" content="Gabe Schumm" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Computational physicist dipping his toes into sports analytics" />
+<meta property="og:description" content="Computational physicist dipping his toes into sports analytics" />
+<meta property="og:site_name" content="Gabe Schumm" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Pitch Visualizer" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","author":{"@type":"Person","name":"Gabe Schumm"},"description":"Computational physicist dipping his toes into sports analytics","headline":"Pitch Visualizer","url":"/pitch-visualizer/"}</script>
+<!-- End Jekyll SEO tag -->
+<link id="main-stylesheet" rel="stylesheet" href="/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="/feed.xml" title="Gabe Schumm" /><script async src="https://www.googletagmanager.com/gtag/js?id=G-Y5ZQG0R3WG"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){window.dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-Y5ZQG0R3WG');
+</script>
+
+
+
+<script type="text/javascript" async 
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+
+
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/images/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/images/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/assets/images/favicon-16x16.png">
+<link rel="manifest" href="/assets/images/site.webmanifest">
+<link rel="mask-icon" href="/assets/images/safari-pinned-tab.svg" color="#5bbad5">
+
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+Bhaijaan+2:wght@400..800&family=Gabarito:wght@400..900&family=Inconsolata:wght@200..900&family=Inter:wght@100..900&family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Nanum+Gothic+Coding:wght@400;700&family=Ojuju:wght@200..800&family=PT+Sans:ital,wght@0,400;0,700;1,400;1,700&family=Raleway:ital,wght@0,100..900;1,100..900&family=Roboto+Mono:ital,wght@0,100..700;1,100..700&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Sometype+Mono:ital,wght@0,400..700;1,400..700&family=Ysabeau:ital,wght@0,1..1000;1,1..1000&display=swap" rel="stylesheet"></head>
+<body class="wide"><header class="site-header">
+
+  <div class="wrapper">
+    <a class="site-title" rel="author" href="/">Gabe Schumm</a>
+      <nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon"></span>
+        </label>
+
+        <div class="nav-items">
+  <a class="nav-item" href="/portfolio/">Portfolio</a>
+  <a class="nav-item" href="/pitch-visualizer/">Pitch Visualizer</a>
+  <a class="nav-item" href="/resume/">Resume</a>
+</div>
+
+      </nav>
+  </div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <div class="header-row">
+  <h1 class="page-heading">Pitch Visualizer</h1>
+  <a href="/pitch-editor/">
+      <button class="pitch-btn">Pitch Editor</button>
+  </a>
+</div>
+
+ <p>Choose a pitch from either of the drop down menus to plot the simulated trajectory with and without spin induced movement. The menu options are updated each day with the pitches with the largest induced vertical break (positive, rise and negative, drop) and horizontal break (glove side, think slider, and arm side, think sinker). A short primer on the process used to create this simulation can be  be found <a href="/pitching-primer/">here</a>.</p>
+
+<p>To see how spin rate, spin axis, and spin efficiency affect pitch motion, you can interact with the <a href="/pitch-editor/">pitch editor</a>.</p>
+
+
+
+<h2 class="menu-title">Top Pitches by:</h2>
+<div id="menu-bar"></div>
+
+<p id="dateDisplay" style="font-size:14px; padding-left: 8px; margin-top: -15px"></p>
+
+
+
+
+<div class="pitch-viz-wrapper" >
+ 
+  <div class="pitch-info-top">
+      <div id="output"></div>
+  </div>
+
+
+  <div class="pitch-viz-container">
+    
+    <div class="left-column">
+
+      <div class="pitch_info_wrapper">
+        <div id="dynamic-output"></div>
+      </div>
+
+      <div class="spin-axis-wrapper">
+        <div class="spin-axis-title">Spin Axis (Catcher POV)</div>
+        <canvas id="spin_axis_plot"></canvas>
+      </div>
+
+    </div>
+
+  <div class="pitch-plot-wrapper">
+
+  <canvas id="plot"></canvas>
+
+  <div class="plot-legend">
+    <div><span style="color:black;">●</span> With Spin</div>
+    <div><span style="color:rgba(0, 0, 0, 0.33);">●</span> Without Spin</div>
+  </div>
+  <button id="cameraButtonId" class="camera-button">Reposition Camera</button>
+
+  </div>
+
+
+
+  </div>
+</div>
+
+
+
+
+
+
+
+<script src="../assets/js/papaparse/papaparse.min.js"></script>
+
+<script src="https://cdn.plot.ly/plotly-3.0.1.min.js" charset="utf-8"></script>
+
+<script src="https://cdn.babylonjs.com/babylon.js"></script>
+<script src="../assets/js/babylon/babylon.grassProceduralTexture.js"></script>
+<script src="../assets/js/babylon/babylon.roadProceduralTexture.js"></script>
+<script src="../assets/js/babylon/earcut.min.js"></script>
+
+<!-- <p>jekyll.environment: production</p>
+<p>js_suffix: .min.js</p> -->
+
+<script src="../assets/js/traj/ode.min.js"></script>
+<script src="../assets/js/traj/plotter.min.js"></script>
+<script src="../assets/js/traj/traj.min.js"></script>
+<script src="../assets/js/traj/pitch-visualizer.min.js"></script>
+<script src="../assets/js/traj/spin_axis.min.js"></script>
+
+      </div>
+    </main><link id="fa-stylesheet" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@latest/css/all.min.css">
+
+<footer class="site-footer h-card">
+  <data class="u-url" value="/"></data>
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col">
+        <ul class="contact-list">
+          <li class="p-name">Gabe Schumm</li>
+          <li><a class="u-email" href="mailto:gabes135@gmail.com">gabes135  at gmail  dot com</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <p>Computational physicist dipping his toes into sports analytics</p>
+      </div>
+    </div>
+
+    <div class="social-links"><ul class="social-media-list"><li>
+    <a rel="me" href="https://github.com/gabes135" target="_blank" title="GitHub">
+      <span class="grey fa-brands fa-github fa-lg"></span>
+    </a>
+  </li><li>
+    <a rel="me" href="https://www.linkedin.com/in/gschumm/" target="_blank" title="LinkedIn">
+      <span class="grey fa-brands fa-linkedin fa-lg"></span>
+    </a>
+  </li><li>
+    <a rel="me" href="https://bsky.app/profile/stripester.bsky.social" target="_blank" title="Bluesky">
+      <span class="grey fa-brands fa-bluesky fa-lg"></span>
+    </a>
+  </li>
+</ul>
+</div>
+
+  </div>
+
+</footer>
+
+
+<script src="/assets/js/slick/jquery-3.7.1.min.js"></script>
+<script src="/assets/js/slick/slick.min.js"></script>
+
+<script>
+  $(document).ready(function(){
+    $('.post-slider').slick({
+      slidesToShow: 1,
+      slidesToScroll: 1,
+      accessibility: true,
+      centerMode: true,
+      variableWidth: false,
+      dots: true,
+      swipe:true,
+      draggable: true,
+      autoplay: true,
+      autoplaySpeed: 10000,
+
+    });
+  });
+</script></body>
+
+</html>

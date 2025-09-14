@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Evolution of the NBA Shot Chart | Gabe Schumm</title>
+<meta name="generator" content="Jekyll v4.4.1" />
+<meta property="og:title" content="Evolution of the NBA Shot Chart" />
+<meta name="author" content="Gabe Schumm" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="The rise of the three point shot in the NBA is well documented and well understood. In this post, I explore this trend in further detail using shot chart data scraped from the NBA Stats website and managed using the peewee Python ORM." />
+<meta property="og:description" content="The rise of the three point shot in the NBA is well documented and well understood. In this post, I explore this trend in further detail using shot chart data scraped from the NBA Stats website and managed using the peewee Python ORM." />
+<meta property="og:site_name" content="Gabe Schumm" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2025-05-30T00:00:00+00:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Evolution of the NBA Shot Chart" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Gabe Schumm"},"dateModified":"2025-05-30T00:00:00+00:00","datePublished":"2025-05-30T00:00:00+00:00","description":"The rise of the three point shot in the NBA is well documented and well understood. In this post, I explore this trend in further detail using shot chart data scraped from the NBA Stats website and managed using the peewee Python ORM.","headline":"Evolution of the NBA Shot Chart","mainEntityOfPage":{"@type":"WebPage","@id":"/shot_chart/"},"url":"/shot_chart/"}</script>
+<!-- End Jekyll SEO tag -->
+<link id="main-stylesheet" rel="stylesheet" href="/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="/feed.xml" title="Gabe Schumm" /><script async src="https://www.googletagmanager.com/gtag/js?id=G-Y5ZQG0R3WG"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){window.dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-Y5ZQG0R3WG');
+</script>
+
+
+
+<script type="text/javascript" async 
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+
+
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/images/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/images/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/assets/images/favicon-16x16.png">
+<link rel="manifest" href="/assets/images/site.webmanifest">
+<link rel="mask-icon" href="/assets/images/safari-pinned-tab.svg" color="#5bbad5">
+
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+Bhaijaan+2:wght@400..800&family=Gabarito:wght@400..900&family=Inconsolata:wght@200..900&family=Inter:wght@100..900&family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Nanum+Gothic+Coding:wght@400;700&family=Ojuju:wght@200..800&family=PT+Sans:ital,wght@0,400;0,700;1,400;1,700&family=Raleway:ital,wght@0,100..900;1,100..900&family=Roboto+Mono:ital,wght@0,100..700;1,100..700&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Sometype+Mono:ital,wght@0,400..700;1,400..700&family=Ysabeau:ital,wght@0,1..1000;1,1..1000&display=swap" rel="stylesheet"></head>
+<body class=""><header class="site-header">
+
+  <div class="wrapper">
+    <a class="site-title" rel="author" href="/">Gabe Schumm</a>
+      <nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon"></span>
+        </label>
+
+        <div class="nav-items">
+  <a class="nav-item" href="/portfolio/">Portfolio</a>
+  <a class="nav-item" href="/pitch-visualizer/">Pitch Visualizer</a>
+  <a class="nav-item" href="/resume/">Resume</a>
+</div>
+
+      </nav>
+  </div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <a href="/portfolio/">
+  <button class="arrow-button"></button>
+</a>
+
+<article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Evolution of the NBA Shot Chart</h1>
+    <div class="post-meta">
+      <time class="dt-published" datetime="2025-05-30T00:00:00+00:00" itemprop="datePublished">
+        May 30, 2025
+      </time>
+    </div>
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <div style="text-align: center;">
+<video width="640" height="360" controls="" autoplay="" loop="" muted="" playsinline="">
+  <source src="/assets/sports/hm_gif.webm" type="video/webm" />
+  Your browser does not support the video tag.
+</video>
+<p style="font-size: 14px; color: #666; margin-top: 5px;">
+    Evolution of the NBA jump shot heatmap. Demar Derozan must be lonely on the deep-two's islands!
+  </p>
+</div>
+
+<p>I was sent a link to a <a href="https://github.com/DomSamangy/NBA_Shots_04_25">GitHub repo</a> containing every shot attempted in the NBA from the 2004 to 2024 season, and felt the gears start turning in my head. With such a rich, dense set of data, there was sure to be some insights to be gained. The data was stored in CSV files, one per season, which made loading, processing, and visualizing the year by year data difficult. Seeking a better approach, I was led to <a href="https://github.com/mpope9/nba-sql"><code class="language-plaintext highlighter-rouge">nba-sql</code></a>, a Python based library that can be used to scrape all sorts of data from stats.nba.com. What was appealing to me about this library was that the data could be stored in an SQLite relational database. In addition to being better equipped to handle and query this large quantity of data, this approach also provided a nice playground to brush up on my SQL and learn about object-relational mapping (ORM). You can read about my ORM journey at the end of the post.</p>
+
+<p>To generate the animation above, I scraped the entire shot chart data base for each year from 1997-98 to 2024-25, which required some minor modifications to the <code class="language-plaintext highlighter-rouge">nba-sql</code> library (at first, only the most recent seasons shot chart data was accessible). To isolate jumpers, I filtered out all layups and dunks by removing any attempts in the restricted area. This likely included some non-jump shot attempts, just outside the resricted area (e.g. floaters), but was more reliable than using the shot descriptions included in the dataset (the descriptions included fluctuated dramatically year-to-year). I then generated heatmaps for each year, stitching the results into an animation showing the evoluation over the past ~30 years.</p>
+
+<p>I found the gradual formation of the “deep-two’s” islands interesting. What once were hotspots for shot attemps in the 90’s became nearly compltely removed from the game in the 20’s (save for Demar Derozan, our mid range king). These shots have of course migrated to the three point line, but have also trickled into the paint. We can analyze this more carefully by breaking down the shot attempts by zone.</p>
+
+<h2 id="jump-shot-attempts-by-zone">Jump Shot Attempts by Zone</h2>
+
+<p><img src="/assets/sports/jump_shot_zone.png" alt="jumper" /></p>
+
+<p>The share of jump shots attempted in the mid range (blue) has shrunk from nearly 55% in 1997 to just 14% in 2024! Meanwhile three attempts (green) have increased from 24% to 58%, and paint shots (red) from 21% to 28%.</p>
+
+<p>Another way to visualize this trend is through the average shot distance over time, shown in the bottom right panel. From 1999 to 2019, the average shot distance increased by 3 feet, which one might be tempted to attribute to the substitution of deep twos (~22 footers) for threes (~25 footer). But it’s not that simple, and I think the sharp dip in average shot distance around 2010 highlights this. Shot distance is much more granular than jump shot zone distribution and better captures the slow change in basketball philosophy that occured during the past two decades.</p>
+
+<h2 id="jump-shot-attempts-by-distance">Jump Shot Attempts by Distance</h2>
+
+<p>My first thought was that the dip in average shot distance could be result of the embrace of the corner three. Maybe teams and players were beginning to acknowledge that 3&gt;2, but were not yet ready to accept that if you practice enough, you can shoot a high volume of 25 footers at a reasonable clip. The corner three would be like the gateway drug, its a closer shot than an above the break three, but still takes full advtange of the fact that more points is better.</p>
+
+<p><img src="/assets/sports/corner.png" alt="corner" /></p>
+
+<p>This was not borne out in the data. While distribution of threes showed a small tilt towards corner shots, this trend plateaued by the mid-2000’s. In fact, there is actually a dip in the share of threes shot from the corners around 2016, which is right around the time when “deep three’s” entered the playbook.</p>
+
+<p><img src="../assets/gif/double_bang.gif" alt="Bang Bang" style="display:block; margin-left:auto; margin-right:auto" /></p>
+
+<p><img src="/assets/sports/attempts_by_dist.png" alt="attempts_by_dist" /></p>
+
+<p>I then broke down the yearly distrubition of shot attempts by distance, splitting into 4 foot ranges (4-8 ft., 8-12 ft., etc.). These ranges are depicted in the upper left inset of the above plot. The dip in the average shot distance around 2010 can be attributed to a decrease in the number of deep two’s taken (blue, 16-20 ft.), coupled with an increase in the number shots near the rim (red, 4-8 ft.) and a relative plateau in the number of threes attempted (green, 24+ ft.). So it seems that the mid range was on its decline, but the three point revolution had not yet fully commenced.</p>
+
+<p>I think that this embrace of the paint jumper can more or less be tied to the decline of the big man. Looking at the top shot attempters in this distance range by year, the 90’s and early 00’s were dominated by bigs (Shaq and Duncan), but by 2010, we start to see more big guards and forwards (Kobe and Shawn Marion crop up in the top 5). In this current area, the list of top shooters in the 4-8 ft. range is <em>filled</em> with big guards, like Harden, Luka, Cade Cunningham, and Josh Giddey. As the paint got less clogged, more shots opened up close to the basket, and players started to take advantage.</p>
+
+<p><img src="/assets/sports/height_hm.png" alt="height" /></p>
+
+<p>I look foward to playing around more with this dataset and the others accessible using <code class="language-plaintext highlighter-rouge">nba-sql</code>!</p>
+
+<h2 id="nba_api"><code class="language-plaintext highlighter-rouge">nba_api</code></h2>
+<p>The first task was to get familiar with the <code class="language-plaintext highlighter-rouge">nba-sql</code> library. This library draws quite a lot from the popular <a href="https://github.com/swar/nba_api"><code class="language-plaintext highlighter-rouge">nba_api</code></a> Python library, which I have used for simple queries over the years. Both use the Python <code class="language-plaintext highlighter-rouge">requests</code> package to scrape the NBA’s stats webpages for data (from “endpoints” - undocumented locations within stats.nba.com containing undocumented sets of data), but <code class="language-plaintext highlighter-rouge">nba_api</code> simply returns the results of these queries as pandas DataFrames. This is really only helpful for lightweight data analysis, highlighting the main purpose of <code class="language-plaintext highlighter-rouge">nba_api</code>:</p>
+<blockquote>
+  <p>A significant purpose of this package is to continuously map and analyze as many endpoints on NBA.com as possible. The documentation and analysis of the endpoints and parameters in this package are some of the most extensive information available. At the same time, NBA.com does not provide information regarding new, changed, or removed endpoints.</p>
+</blockquote>
+
+<h2 id="nba-sql"><code class="language-plaintext highlighter-rouge">nba-sql</code></h2>
+<p>The <code class="language-plaintext highlighter-rouge">nba-sql</code> library allows you to scrape data from ten different endpoints:</p>
+<ul>
+  <li>player_season</li>
+  <li>player_game_log</li>
+  <li>play_by_play</li>
+  <li>play_by_playv3</li>
+  <li>pgtt</li>
+  <li>shot_chart_detail</li>
+  <li>game</li>
+  <li>event_message_type</li>
+  <li>team</li>
+  <li>player</li>
+</ul>
+
+<p>In all cases, the general framework of collecting the data is the same:</p>
+<ul>
+  <li>Determine a set of parameters for the query (e.g. a list of game id’s number for player_game_log or a collection of (player id, team id, season) trios for short_chart_detail).</li>
+  <li>Use the <code class="language-plaintext highlighter-rouge">requests</code> package to <code class="language-plaintext highlighter-rouge">get</code> the data contained in the endpoint. The previously determined parameters, along with some predefined defaults, are fed into the <code class="language-plaintext highlighter-rouge">get</code> function, which essentially tacks them on in a specific way to the end of stats.nba.com/stats/{endpoint}/ before accessing the webpage. A “header” is also passed along in the request, which is a list of settings that are used to trick stats.nba.com into thinking that the site is being visited by a human using a browser, rather than a data-scraping bot. My understanding is that many websites that host data are okay with scraping, as long as some guidelines are met (minimum time between requests, for example). But if you aren’t careful, yor IP address can be blocked from accessing a site (this has happened to me with baseball-reference many times…).</li>
+  <li>The data is generally stored in some type of table. After identifying the columns of interest (this is where <code class="language-plaintext highlighter-rouge">nba_api</code> comes in), the desired values from each row in the table are stored in an array.</li>
+  <li>This array (list of data rows) is then <code class="language-plaintext highlighter-rouge">populate</code>d into an SQLite database <code class="language-plaintext highlighter-rouge">nba_sql.db</code>. This is done using the python library <a href="https://docs.peewee-orm.com/en/latest/">peewee</a>. This is my first experience using an ORM - in my <a href="/contracts/">previous data scraping projects</a>, the datasets were either small or the data structures were simple enough to use flat CSV files. An ORM allows you to use Python object oriented programing principles to create, insert data into, and modify SQL databases. This is particularly useful for relationship databases, where the rows of the various tables are related to each other using keys (player id, team id, and game id being examples). In <code class="language-plaintext highlighter-rouge">nba-sql</code> a selection of tables (peewee <code class="language-plaintext highlighter-rouge">Model</code> objects), corresponding to stats.nba.com endpoints, have been defined with their corresponding fields. During the <code class="language-plaintext highlighter-rouge">populate</code> stage, the data is inserted into these tables (<code class="language-plaintext highlighter-rouge">model</code>s), which are bound to a local <code class="language-plaintext highlighter-rouge">nba_sql.db</code> database file. This file can then be queried as pleased.</li>
+</ul>
+
+\[\tilde{}\]
+
+
+  </div>
+
+  <a class="u-url" href="/shot_chart/" hidden></a>
+</article>
+
+      </div>
+    </main><link id="fa-stylesheet" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@latest/css/all.min.css">
+
+<footer class="site-footer h-card">
+  <data class="u-url" value="/"></data>
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col">
+        <ul class="contact-list">
+          <li class="p-name">Gabe Schumm</li>
+          <li><a class="u-email" href="mailto:gabes135@gmail.com">gabes135  at gmail  dot com</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <p>Computational physicist dipping his toes into sports analytics</p>
+      </div>
+    </div>
+
+    <div class="social-links"><ul class="social-media-list"><li>
+    <a rel="me" href="https://github.com/gabes135" target="_blank" title="GitHub">
+      <span class="grey fa-brands fa-github fa-lg"></span>
+    </a>
+  </li><li>
+    <a rel="me" href="https://www.linkedin.com/in/gschumm/" target="_blank" title="LinkedIn">
+      <span class="grey fa-brands fa-linkedin fa-lg"></span>
+    </a>
+  </li><li>
+    <a rel="me" href="https://bsky.app/profile/stripester.bsky.social" target="_blank" title="Bluesky">
+      <span class="grey fa-brands fa-bluesky fa-lg"></span>
+    </a>
+  </li>
+</ul>
+</div>
+
+  </div>
+
+</footer>
+
+
+<script src="/assets/js/slick/jquery-3.7.1.min.js"></script>
+<script src="/assets/js/slick/slick.min.js"></script>
+
+<script>
+  $(document).ready(function(){
+    $('.post-slider').slick({
+      slidesToShow: 1,
+      slidesToScroll: 1,
+      accessibility: true,
+      centerMode: true,
+      variableWidth: false,
+      dots: true,
+      swipe:true,
+      draggable: true,
+      autoplay: true,
+      autoplaySpeed: 10000,
+
+    });
+  });
+</script></body>
+
+</html>
