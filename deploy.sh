@@ -33,16 +33,16 @@ echo "Running minify script..."
 echo "Preparing deployment folder..."
 cd "$PUBLIC_DIR"
 
-# Init repo if not already
-git init
-git remote add origin "$PUBLIC_REPO"
+# # Init repo if not already
+# git init
+# git remote add origin "$PUBLIC_REPO"
 
-# Set identity
-git config user.name "github-actions"
-git config user.email "github-actions@github.com"
+# # Set identity
+# git config user.name "github-actions"
+# git config user.email "github-actions@github.com"
 
 # Ensure branch main exists
-git checkout -B main
+# git checkout -B main
 
 # Remove non-minified JS
 for file in "${DEL_JS_FILES[@]}"; do
@@ -54,6 +54,6 @@ git add -A
 git commit -m "Deploy site: $(date +"%Y-%m-%d %H:%M:%S")" || true
 
 # Push
-git push -u origin main --force
+git push -u origin main
 
 echo "Deployment complete!"
