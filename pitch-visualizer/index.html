@@ -109,14 +109,23 @@
 
   <div class="pitch-plot-wrapper">
 
-  <canvas id="plot"></canvas>
+    <canvas id="plot"></canvas>
 
-  <div class="plot-legend">
-    <div><span style="color:black;">●</span> With Spin</div>
-    <div><span style="color:rgba(0, 0, 0, 0.33);">●</span> Without Spin</div>
-  </div>
-  <button id="cameraButtonId" class="camera-button">Reposition Camera</button>
-
+    <div class="plot-legend">
+      <!-- <div><span style="color:black;">●</span> With Spin</div>
+      <div><span style="color:rgba(0, 0, 0, 0.33);">●</span> Without Spin</div> -->
+      <div>
+        <span style="display:inline-block; width:20px; height:4px; background-color:black; vertical-align:middle;"></span> With Spin
+      </div>
+      <div>
+        <span style="display:inline-block; width:20px; height:4px; background-color:rgba(0,0,0,0.33); vertical-align:middle;"></span> Without Spin
+        <div><span style="color:rgba(0, 0, 0, 1);">●</span> Decision Point</div>
+      </div>
+    </div>
+    <div class='camera-wrapper'> 
+      <button id="cameraButtonId" class="camera-button">Home Plate</button>
+      <button id="cameraDPButtonId" class="camera-button">Decision Point</button>
+    </div>
   </div>
 
 

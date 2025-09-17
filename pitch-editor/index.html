@@ -139,11 +139,18 @@
       <canvas id="plot"></canvas>
 
       <div class="plot-legend">
-        <div><span style="color:black;">●</span> Edited Pitch</div>
-        <div><span style="color:rgba(0, 0, 0, 0.33);">●</span> Original Pitch</div>
+        <div>
+          <span style="display:inline-block; width:20px; border-bottom:2px solid black; margin-right:6px;"></span> Edited Pitch
+        </div>
+        <div>
+          <span style="display:inline-block; width:20px; border-bottom:2px solid rgba(0, 0, 0, 0.33); margin-right:6px;"></span> Original Pitch
+        </div>
+        <div><span style="color:rgba(0, 0, 0, 1);">●</span> Decision Point</div>
       </div>
-      <button id="cameraButtonId" class="camera-button">Reposition Camera</button>
-
+      <div class='camera-wrapper'> 
+        <button id="cameraButtonId" class="camera-button">Home Plate</button>
+        <button id="cameraDPButtonId" class="camera-button">Decision Point</button>
+      </div>
     </div>
 
 
