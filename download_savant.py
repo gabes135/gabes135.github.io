@@ -31,7 +31,7 @@ if len(to_del)>0:
 	os.remove(folder_old+"/data_z_pos.csv")
 	os.remove(folder_old+"/data_x_arm.csv")
 	os.remove(folder_old+"/data_x_glove.csv")
-os.rmdir(folder_old)
+	os.rmdir(folder_old)
 	
 
 folder = f'assets/savant_data/{start_date}'
