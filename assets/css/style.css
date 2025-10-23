@@ -544,13 +544,19 @@ body.wide .wrapper { max-width: 1000px; }
 
 .hover-zoom_small:hover { transform: scale(1.2); z-index: 2; }
 
+.pitch-btn-container { display: flex; align-items: center; gap: 0.75rem; }
+
 .pitch-btn { background-color: #fff; /* white background */ color: #000; /* black text */ border: 2px solid #000; /* black border */ border-radius: 8px; /* rounded corners */ padding: 4px 8px; /* vertical and horizontal padding */ font-family: inherit; /* use website font */ font-size: 20px; /* adjust size as needed */ cursor: pointer; /* pointer on hover */ transition: background 0.2s, color 0.2s; /* smooth hover effect */ }
 
 .pitch-btn:hover { background-color: #000; /* invert on hover */ color: #fff; }
 
-.header-row { display: flex; align-items: top; /* vertically centers the text and button */ justify-content: space-between; /* optional: pushes them to edges */ /*gap: 10px;                 /* optional spacing between title and button */ }
+.header-row { display: flex; align-items: center; /* vertically centers the text and button */ justify-content: space-between; /* optional: pushes them to edges */ /*gap: 10px;                 /* optional spacing between title and button */ }
+
+#menu-bar-wrapper { display: flex; flex-direction: column; /* stack rows vertically */ gap: 0px; /* space between top and bottom rows */ }
 
 #menu-bar { display: flex; gap: 40px; /* space between dropdowns */ align-items: center; padding-bottom: 20px; }
+
+#menu-bar-bottom { display: flex; gap: 40px; /* space between dropdowns in the same row */ align-items: center; padding-bottom: 20px; }
 
 .menu-title { font-size: 28px; margin-bottom: 3px; /* smaller space below this heading only */ }
 
@@ -562,23 +568,27 @@ body.wide .wrapper { max-width: 1000px; }
 /* The container <div> - needed to position the dropdown content */
 .dropdown { position: relative; display: inline-block; }
 
-/* Dropdown Content (Hidden by Default) */
-.dropdown-content { display: none; position: absolute; background-color: #f9f9f9; min-width: 500px; max-height: 400px; /* Limit height */ overflow-y: auto; /* Add vertical scrollbar */ box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2); z-index: 1; }
+/* Shared dropdown styles */
+.dropdown-content, .dropdown-content-search, .dropdown-content-pitches { display: none; position: absolute; background-color: #f9f9f9; max-height: 400px; overflow-y: auto; box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2); z-index: 1; }
 
-/* Links inside the dropdown */
-.dropdown-content a { color: black; padding: 14px 16px; text-decoration: none; display: block; }
+/* Different widths */
+.dropdown-content { max-width: 400px; }
 
-/* Change color of dropdown links on hover */
-.dropdown-content a:hover { background-color: #ddd; }
+.dropdown-content-search { max-width: 300px; }
+
+.dropdown-content-pitches { max-width: 800px; }
+
+/* Links inside both dropdowns */
+.dropdown-content a, .dropdown-content-search a, .dropdown-content-pitches a { color: black; padding: 14px 16px; text-decoration: none; display: block; }
+
+.dropdown-content a:hover, .dropdown-content-search a:hover, .dropdown-content-pitches a:hover { background-color: #ddd; }
+
+.dropdown-content input, .dropdown-content-search input, .dropdown-content-pitches input { box-sizing: border-box; background-image: url("../images/searchicon.png"); background-position: 14px 12px; background-repeat: no-repeat; font-size: 16px; padding: 14px 20px 12px 45px; min-width: 500px; border: none; border-bottom: 1px solid #ddd; }
+
+.dropdown-content input:focus, .dropdown-content-search input:focus, .dropdown-content-pitches input:focus { outline: 3px solid #ddd; }
 
 /* Show the dropdown menu (use JS to add this class to the .dropdown-content container when the user clicks on the dropdown button) */
 .show { display: block; }
-
-/* The search field */
-.dropdown-content input { box-sizing: border-box; background-image: url("../images/searchicon.png"); background-position: 14px 12px; background-repeat: no-repeat; font-size: 16px; padding: 14px 20px 12px 45px; min-width: 500px; border: none; border-bottom: 1px solid #ddd; }
-
-/* The search field when it gets focus/clicked on */
-.dropdown-content input:focus { outline: 3px solid #ddd; }
 
 .pitch-info-boxes { display: flex; gap: 20px; /* spacing between boxes */ margin-top: 10px; /* no border or background here */ }
 
@@ -632,5 +642,27 @@ body.wide .wrapper { max-width: 1000px; }
 .slider::-moz-range-thumb { width: 25px; height: 25px; background: #95d0fc; border-radius: 70%; cursor: pointer; }
 
 .slider::-webkit-slider-runnable-track { height: 15px; /*border-radius: 5px;*/ background: #d3d3d3; border-radius: 5px; }
+
+.payload-container { display: flex; align-items: center; gap: 12px; font-family: sans-serif; font-size: 16px; padding: 2px 12px; background-color: #f4f4f4; border-radius: 8px; }
+
+.payload-name { color: black; font-weight: bold; }
+
+.payload-ptype { color: black; }
+
+.payload-dates { color: black; font-size: 14px; }
+
+.payload-separator { color: #ccc; margin: 0 0px; font-weight: 300; }
+
+.query-btn { background-color: #fff; /* white background */ color: #000; /* black text */ border: 2px solid #000; /* black border */ border-radius: 8px; /* rounded corners */ padding: 4px 8px; /* vertical and horizontal padding */ font-family: inherit; /* use website font */ font-size: 20px; /* adjust size as needed */ cursor: pointer; /* pointer on hover */ transition: background 0.2s, color 0.2s; /* smooth hover effect */ }
+
+.query-btn:hover { background-color: #000; /* invert on hover */ color: #fff; }
+
+.query-row { display: flex; align-items: start; }
+
+.query-container { display: flex; align-items: center; gap: 0.5rem; position: relative; padding-top: 0.2rem; padding-right: 0.5rem; padding-left: 0.5rem; }
+
+.loading-icon { width: 1.2em; /* reserves space even when hidden */ text-align: center; font-size: 20px; visibility: hidden; /* keeps space reserved */ }
+
+.loading-icon.active { visibility: visible; }
 
 /*# sourceMappingURL=style.css.map */

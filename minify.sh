@@ -13,6 +13,7 @@ fi
 FILES_TO_MINIFY=(
   "ode.js"
   "pitch-visualizer.js"
+  "pitch-search.js"
   "spin_axis.js"
   "plotter.js"
 )
