@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Distribution of Annual Salaries and Total Contract Values for each of the Big Four Sports Leagues | Gabe Schumm</title>
+<meta name="generator" content="Jekyll v4.2.2" />
+<meta property="og:title" content="Distribution of Annual Salaries and Total Contract Values for each of the Big Four Sports Leagues" />
+<meta name="author" content="Gabe Schumm" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Why do the types of contracts given out in each of the big four men’s sports leagues differ so much? I explored this by looking at the distribution of salaries (annual and total) across all players in each league." />
+<meta property="og:description" content="Why do the types of contracts given out in each of the big four men’s sports leagues differ so much? I explored this by looking at the distribution of salaries (annual and total) across all players in each league." />
+<meta property="og:site_name" content="Gabe Schumm" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2025-01-15T00:00:00-05:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Distribution of Annual Salaries and Total Contract Values for each of the Big Four Sports Leagues" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Gabe Schumm"},"dateModified":"2025-01-15T00:00:00-05:00","datePublished":"2025-01-15T00:00:00-05:00","description":"Why do the types of contracts given out in each of the big four men’s sports leagues differ so much? I explored this by looking at the distribution of salaries (annual and total) across all players in each league.","headline":"Distribution of Annual Salaries and Total Contract Values for each of the Big Four Sports Leagues","mainEntityOfPage":{"@type":"WebPage","@id":"/contracts/"},"url":"/contracts/"}</script>
+<!-- End Jekyll SEO tag -->
+<link id="main-stylesheet" rel="stylesheet" href="/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="/feed.xml" title="Gabe Schumm" /><script async src="https://www.googletagmanager.com/gtag/js?id=G-Y5ZQG0R3WG"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){window.dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-Y5ZQG0R3WG');
+</script>
+
+
+
+<script type="text/javascript" async 
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+</script>
+
+
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/images/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/images/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/assets/images/favicon-16x16.png">
+<link rel="manifest" href="/assets/images/site.webmanifest">
+<link rel="mask-icon" href="/assets/images/safari-pinned-tab.svg" color="#5bbad5">
+
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+Bhaijaan+2:wght@400..800&family=Gabarito:wght@400..900&family=Inconsolata:wght@200..900&family=Inter:wght@100..900&family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Nanum+Gothic+Coding:wght@400;700&family=Ojuju:wght@200..800&family=PT+Sans:ital,wght@0,400;0,700;1,400;1,700&family=Raleway:ital,wght@0,100..900;1,100..900&family=Roboto+Mono:ital,wght@0,100..700;1,100..700&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Sometype+Mono:ital,wght@0,400..700;1,400..700&family=Ysabeau:ital,wght@0,1..1000;1,1..1000&display=swap" rel="stylesheet"></head>
+<body class=""><header class="site-header">
+
+  <div class="wrapper">
+    <a class="site-title" rel="author" href="/">Gabe Schumm</a>
+      <nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon"></span>
+        </label>
+
+        <div class="nav-items">
+  <a class="nav-item" href="/portfolio/">Portfolio</a>
+  <a class="nav-item" href="/pitch-visualizer/">Pitch Visualizer</a>
+  <a class="nav-item" href="/resume/">Resume</a>
+</div>
+
+      </nav>
+  </div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <a href="/portfolio/">
+  <button class="arrow-button"></button>
+</a>
+
+<article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Distribution of Annual Salaries and Total Contract Values for each of the Big Four Sports Leagues</h1>
+    <div class="post-meta">
+      <time class="dt-published" datetime="2025-01-15T00:00:00-05:00" itemprop="datePublished">
+        Jan 15, 2025
+      </time>
+    </div>
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <p><img src="/assets/sports/salaries.png" alt="Salaries" /></p>
+
+<p>With the signing of Juan Soto’s record setting 15 year, $765 million contract, I was curious how this number compared to the rest of the salaries in the MLB, as well as those across each of the Big Four American sports.</p>
+
+<p>The contract information for each MLB, NBA, NFL, and NHL player is available on <a href="https://www.spotrac.com/">https://www.spotrac.com/</a>. To create these plots, I scraped the site using the Python library <code class="language-plaintext highlighter-rouge">BeautifulSoup</code> and collected all individual player AAV’s and contract lengths. I used these to create histograms, which I have plotted as smooth kernel density estimations.</p>
+
+<p>It’s fascinating how different the spread of AAV’s are in each league. The NBA’s is starkly different from the rest, with a long tail and a broad belly. The NBA is the smallest of the four leagues, as well as the leauge where individual players have the most impact. Perhaps this creates a market where it can be justified to give any contract to anybody? Fred VanVleet could organize our young core? $43 million should do! Jonathan Issac has DPOY potential? $25 million! Brandon Ingram is a proffesional scorer? $36 million! John Collins jumped over a plane in a dunk contest? $27 million!
+If you squint your eyes, you can see why X team gave out Y contract to Z player, even if its looks horrible in hindsight (well, except for a <a href="https://en.wikipedia.org/wiki/Timofey_Mozgov#Los_Angeles_Lakers_(2016%E2%80%932017)">few</a>). In the NBA it can be worth it to take the risk becuase sometimes, something will click, and that bad contract may actually be just fine.</p>
+
+<p><img src="../assets/gif/wiggins.gif" alt="Forever greatful" style="display:block; margin-left:auto; margin-right:auto" /></p>
+
+<p>We can contrast that with the MLB, where the most widely used Sabermetric stat is literally called wins above <em>replacement</em>. There are so many players than can do an alright enough job that to really value a player, you need to compare them to what the <a href="https://www.mlb.com/glossary/advanced-stats/wins-above-replacement">MLB defines as</a> as “a Minor League replacement or a readily available fill-in free agent.” So someone not in the major leagues. Baseball is just as much about winning on the margins as it is about rostering the highest profile, highest paid stats (didn’t someone write a book about this?). As a result, it’s harder to justify giving out big money to someone who just may play at an All Star level; better to spread that money out a amongst your roster so that you don’t put out an infield of replacement players.</p>
+
+<p><img src="/assets/sports/contract_values.png" alt="Contract Values" /></p>
+
+<p>The distribution of total contract values is a different story. There are a ton of high AAV contracts in the NBA, but they just aren’t that long. As a result, the broad belly seen in the distribution of average annual salaries doesn’t stand out here. The MLB, and the NFL to some extent, are composed mostly of short contracts with (relatively)small AAV’s, so the total contract values are pretty sharply peaked below $50 million. But there are some clear outlier large constracts in these two leagues. Soto and Ohtani headline the list, but Mike Trout was really the first to do it. What strikes me about these three contracts is that no one really thinks of these are overpays. I think you can say the same thing about Patrick Mahomes. The “stars and studs” nature of roster building in the MLB and NFL means that only the elite of the elite get these mind-blowingly large contracts (unlike in the NBA, if you were to ask someone outside of Boston).</p>
+
+\[\tilde{}\]
+
+
+  </div>
+
+  <a class="u-url" href="/contracts/" hidden></a>
+</article>
+
+      </div>
+    </main><link id="fa-stylesheet" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@latest/css/all.min.css">
+
+<footer class="site-footer h-card">
+  <data class="u-url" value="/"></data>
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col">
+        <ul class="contact-list">
+          <li class="p-name">Gabe Schumm</li>
+          <li><a class="u-email" href="mailto:gabes135@gmail.com">gabes135  at gmail  dot com</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <p>Computational physicist dipping his toes into sports analytics</p>
+      </div>
+    </div>
+
+    <div class="social-links"><ul class="social-media-list"><li>
+    <a rel="me" href="https://github.com/gabes135" target="_blank" title="GitHub">
+      <span class="grey fa-brands fa-github fa-lg"></span>
+    </a>
+  </li><li>
+    <a rel="me" href="https://www.linkedin.com/in/gschumm/" target="_blank" title="LinkedIn">
+      <span class="grey fa-brands fa-linkedin fa-lg"></span>
+    </a>
+  </li><li>
+    <a rel="me" href="https://bsky.app/profile/stripester.bsky.social" target="_blank" title="Bluesky">
+      <span class="grey fa-brands fa-bluesky fa-lg"></span>
+    </a>
+  </li>
+</ul>
+</div>
+
+  </div>
+
+</footer>
+
+
+<script src="/assets/js/slick/jquery-3.7.1.min.js"></script>
+<script src="/assets/js/slick/slick.min.js"></script>
+
+<script>
+  $(document).ready(function(){
+    $('.post-slider').slick({
+      slidesToShow: 1,
+      slidesToScroll: 1,
+      accessibility: true,
+      centerMode: true,
+      variableWidth: false,
+      dots: true,
+      swipe:true,
+      draggable: true,
+      autoplay: true,
+      autoplaySpeed: 10000,
+
+    });
+  });
+</script></body>
+
+</html>
