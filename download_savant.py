@@ -19,20 +19,18 @@ end_date = yesterday.strftime("%Y-%m-%d")##"2025-08-03"
 
 
 
-to_del = [d for d in os.listdir('assets/savant_data/') if '-' in d]
+to_del = [d for d in os.listdir('assets/savant_data/') if '-' in d][0]
 
-if len(to_del)>0:
-	to_del=to_del[0]
-	folder_old = folder = f'assets/savant_data/{to_del}'
-	
+folder_old = folder = f'assets/savant_data/{to_del}'
+if os.path.isdir(folder_old):
 	print(f'Removing old files from {folder_old}.')
-
+	
 	os.remove(folder_old+"/data_z_neg.csv")
 	os.remove(folder_old+"/data_z_pos.csv")
 	os.remove(folder_old+"/data_x_arm.csv")
 	os.remove(folder_old+"/data_x_glove.csv")
 	os.rmdir(folder_old)
-	
+
 
 folder = f'assets/savant_data/{start_date}'
 os.makedirs(folder, exist_ok=True)
