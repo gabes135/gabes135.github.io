@@ -169,12 +169,21 @@ function plotPitch(omegaHat, omegaMag, k, alpha, t) {
   const annotations = [];
 
   elements.push(...getVec(scaleVec(omegaHat,1.2),'black',annotations,'Spin-Axis'));
-  const velo = [0, -1.2, -0.2];
+
+
+  let velo = [0, -1.2, -0.2];
+  velo = scaleVec(velo, 1/norm(velo))
   elements.push(...getVec(scaleVec(velo,1.2),'gray',annotations,'Velocity'));
+
   elements.push(...getVec(scaleVec(velo,-1.2),'purple',annotations,'Drag'));
-  const magnus = crossVectors(omegaHat, velo);
+
+  let magnus = crossVectors(omegaHat, velo);
+  magnus = scaleVec(magnus, 1/norm(magnus))
+  console.log(norm(magnus))
   elements.push(...getVec(scaleVec(magnus,1.2),'blue',annotations,'Magnus'));
-  const ssw = crossVectors(omegaHat, magnus);
+
+  let ssw = crossVectors(velo, magnus);
+  console.log(norm(ssw))
   elements.push(...getVec(scaleVec(ssw,1.2),'red',annotations,'Side'));
 
   const grav = [0, 0, -1];
@@ -199,7 +208,10 @@ function plotPitch(omegaHat, omegaMag, k, alpha, t) {
 }
 
 // ---------------- Run it ----------------
-const omegaHat = [-0.8501448643320205, -0.5027742712166834, -0.15643446504023104]
+let omegaHat = [-0.8501448643320205, -0.5027742712166834, -0.15643446504023104]
+
+omegaHat = scaleVec(omegaHat, 1/norm(omegaHat))
+
 plotPitch(omegaHat, 1.0, [0,0,1], 45*Math.PI/180, 0);
 
 </script>
